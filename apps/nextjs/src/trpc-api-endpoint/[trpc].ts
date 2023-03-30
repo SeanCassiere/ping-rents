@@ -1,12 +1,12 @@
-import { createNextApiHandler } from "@trpc/server/adapters/next";
+// import { createNextApiHandler } from "@trpc/server/adapters/next";
 
-import { appRouter, createTRPCContext } from "@acme/api";
+// import { appRouter, createTRPCContext } from "@acme/api";
 
 // export API handler
-export default createNextApiHandler({
-  router: appRouter,
-  createContext: createTRPCContext,
-});
+// export default createNextApiHandler({
+//   router: appRouter,
+//   createContext: createTRPCContext,
+// });
 
 // If you need to enable cors, you can do so like this:
 // const handler = async (req: NextApiRequest, res: NextApiResponse) => {
