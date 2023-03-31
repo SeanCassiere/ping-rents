@@ -43,6 +43,9 @@ const getBaseUrl = () => {
 export const TRPCProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const accessToken: string | null = null;
+  const sessionId: string | null = null;
+
   const [queryClient] = React.useState(() => new QueryClient());
   const [trpcClient] = React.useState(() =>
     api.createClient({
@@ -50,6 +53,10 @@ export const TRPCProvider: React.FC<{ children: React.ReactNode }> = ({
       links: [
         httpBatchLink({
           url: `${getBaseUrl()}/trpc`,
+          headers: {
+            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+            ...(sessionId ? { "X-SESSION-ID": `${sessionId}` } : {}),
+          },
         }),
       ],
     }),
