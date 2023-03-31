@@ -14,6 +14,7 @@ import { ZodError } from "zod";
 // import { getServerSession, type Session } from "@acme/auth";
 import { prisma } from "@acme/db";
 
+type AuthUser = { userId: string; companyId: string };
 /**
  * 1. CONTEXT
  *
@@ -24,7 +25,7 @@ import { prisma } from "@acme/db";
  *
  */
 type CreateContextOptions = {
-  user: { userId: string; companyId: string } | null;
+  user: AuthUser | null;
 };
 
 /**
@@ -49,13 +50,22 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
  * @link https://trpc.io/docs/context
  */
 export const createTRPCContext = async (opts: CreateExpressContextOptions) => {
-  const { req, res } = opts;
+  const { req } = opts;
 
-  // Get the session from the server using the unstable_getServerSession wrapper function
-  // const session = await getServerSession({ req, res });
+  let decodedUser: AuthUser | null = null;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.toLowerCase().startsWith("bearer ")
+  ) {
+    const [_, token] = req.headers.authorization.split(" ");
+    // TODO: Implement auth decoding with a JWT
+    if (token) {
+      decodedUser = { userId: "1", companyId: "1" };
+    }
+  }
 
   return createInnerTRPCContext({
-    user: null,
+    user: decodedUser,
   });
 };
 
