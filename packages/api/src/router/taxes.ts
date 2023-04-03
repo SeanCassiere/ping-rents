@@ -8,19 +8,19 @@ import { TaxLogic } from "../logic/tax";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const taxesRouter = createTRPCRouter({
-  getTaxes: protectedProcedure
+  getAll: protectedProcedure
     .input(GetTaxesSchema)
     .query(async ({ ctx, input }) => {
-      return await TaxLogic.getTaxes(ctx.user, input);
+      return await TaxLogic.getAll(ctx.user, input);
     }),
-  createTax: protectedProcedure
+  create: protectedProcedure
     .input(CreateNewTaxSchema)
     .mutation(async ({ ctx, input }) => {
-      return await TaxLogic.createTaxForLocation(ctx.user, input);
+      return await TaxLogic.create(ctx.user, input);
     }),
-  updateTax: protectedProcedure
+  updateById: protectedProcedure
     .input(UpdateTaxSchema)
     .mutation(async ({ ctx, input }) => {
-      return await TaxLogic.updateTaxForLocation(ctx.user, input);
+      return await TaxLogic.updateById(ctx.user, input);
     }),
 });
