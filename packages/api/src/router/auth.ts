@@ -32,11 +32,11 @@ export const authRouter = createTRPCRouter({
   getProtectedUser: protectedProcedure.query(({ ctx }) => {
     return ctx.user;
   }),
-  initEmailLoginWithMagicLink: publicProcedure
+  emailLoginWithAccessCode: publicProcedure
     .input(z.object({ email: z.string().email() }))
     .mutation(async ({ input }) => {
       try {
-        const result = await AuthService.initEmailLoginWithMagicLink(
+        const result = await AuthService.initEmailLoginWithAccessCode(
           input.email,
         );
         return result;
@@ -47,7 +47,7 @@ export const authRouter = createTRPCRouter({
         });
       }
     }),
-  getPossibleLoginCompaniesForAccessCode: publicProcedure
+  getLoginCompaniesWithAccessCode: publicProcedure
     .input(z.object({ email: z.string().email(), accessCode: z.string() }))
     .query(async ({ input }) => {
       try {
@@ -62,7 +62,7 @@ export const authRouter = createTRPCRouter({
         });
       }
     }),
-  loginWithAccessCode: publicProcedure
+  loginWithCompanyAndAccessCode: publicProcedure
     .input(LoginWithCompanyAndUserSchema)
     .mutation(async ({ input, ctx }) => {
       try {

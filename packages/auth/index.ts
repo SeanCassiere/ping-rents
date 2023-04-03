@@ -128,7 +128,7 @@ export class AuthService {
     return { companyId: company.id, userId };
   }
 
-  static async initEmailLoginWithMagicLink(email: string) {
+  static async initEmailLoginWithAccessCode(email: string) {
     const user = await prisma.account.findFirst({
       where: { email: email.toLowerCase() },
     });
