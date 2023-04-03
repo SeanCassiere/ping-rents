@@ -296,16 +296,25 @@ importers:
 
   packages/auth:
     dependencies:
+      '@acme/date-fns':
+        specifier: '*'
+        version: link:../date-fns
       '@acme/db':
         specifier: '*'
         version: link:../db
       '@acme/validator':
         specifier: '*'
         version: link:../validator
+      nodemailer:
+        specifier: ^6.9.1
+        version: 6.9.1
     devDependencies:
       '@acme/eslint-config':
         specifier: '*'
         version: link:../config/eslint
+      '@types/nodemailer':
+        specifier: ^6.4.7
+        version: 6.4.7
       eslint:
         specifier: ^8.36.0
         version: 8.36.0
@@ -355,6 +364,22 @@ importers:
       tailwindcss:
         specifier: ^3.3.0
         version: 3.3.0(postcss@8.4.21)
+
+  packages/date-fns:
+    dependencies:
+      date-fns:
+        specifier: ^2.29.3
+        version: 2.29.3
+    devDependencies:
+      '@acme/eslint-config':
+        specifier: '*'
+        version: link:../config/eslint
+      eslint:
+        specifier: ^8.36.0
+        version: 8.36.0
+      typescript:
+        specifier: ^5.0.2
+        version: 5.0.2
 
   packages/db:
     dependencies:
@@ -3088,6 +3113,12 @@ packages:
   /@types/node@18.15.10:
     resolution: {integrity: sha512-9avDaQJczATcXgfmMAW3MIWArOO7A+m90vuCFLr8AotWf8igO/mRoYukrk2cqZVtv38tHs33retzHEilM7FpeQ==}
 
+  /@types/nodemailer@6.4.7:
+    resolution: {integrity: sha512-f5qCBGAn/f0qtRcd4SEn88c8Fp3Swct1731X4ryPKqS61/A3LmmzN8zaEz7hneJvpjFbUUgY7lru/B/7ODTazg==}
+    dependencies:
+      '@types/node': 18.15.10
+    dev: true
+
   /@types/prettier@2.7.2:
     resolution: {integrity: sha512-KufADq8uQqo1pYKVIYzfKbJfBAc0sOeXqGbFaSpv8MRmC/zXgowNZmFcbngndGk922QDmOASEXUZCaY48gs4cg==}
     dev: false
@@ -4435,6 +4466,11 @@ packages:
 
   /damerau-levenshtein@1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
+    dev: false
+
+  /date-fns@2.29.3:
+    resolution: {integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==}
+    engines: {node: '>=0.11'}
     dev: false
 
   /dayjs@1.11.7:
@@ -7818,6 +7854,11 @@ packages:
   /node-stream-zip@1.15.0:
     resolution: {integrity: sha512-LN4fydt9TqhZhThkZIVQnF9cwjU3qmUH9h78Mx/K7d3VvfRqqwthLwJEUOEL0QPZ0XQmNN7be5Ggit5+4dq3Bw==}
     engines: {node: '>=0.12.0'}
+    dev: false
+
+  /nodemailer@6.9.1:
+    resolution: {integrity: sha512-qHw7dOiU5UKNnQpXktdgQ1d3OFgRAekuvbJLcdG5dnEo/GtcTHRYM7+UfJARdOFU9WUQO8OiIamgWPmiSFHYAA==}
+    engines: {node: '>=6.0.0'}
     dev: false
 
   /nodemon@2.0.22:

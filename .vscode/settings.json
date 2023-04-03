@@ -13,6 +13,8 @@
     "app-web",
     "api",
     "auth",
-    "db"
+    "db",
+    "validator",
+    "mailer"
   ]
 }
