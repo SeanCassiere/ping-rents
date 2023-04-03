@@ -26,11 +26,8 @@ export const authRouter = createTRPCRouter({
   getSession: publicProcedure.query(({ ctx }) => {
     return ctx.user;
   }),
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can see this secret message!";
-  }),
-  getProtectedUser: protectedProcedure.query(({ ctx }) => {
-    return ctx.user;
+  getAuthUser: protectedProcedure.query(({ ctx }) => {
+    return ctx.user; // replace with an auth api call
   }),
   emailLoginWithAccessCode: publicProcedure
     .input(z.object({ email: z.string().email() }))
