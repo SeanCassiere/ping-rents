@@ -1,9 +1,14 @@
 import * as crypto from "crypto";
+import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 
 import { add } from "@acme/date-fns";
 import { prisma } from "@acme/db";
-import type { InputRegisterNewCompanyAndAccount } from "@acme/validator/src/auth";
+import { z } from "@acme/validator";
+import type {
+  InputLoginWithCompanyAndUser,
+  InputRegisterNewCompanyAndAccount,
+} from "@acme/validator/src/auth";
 
 function sha256(content: string) {
   return crypto.createHash("sha256").update(content).digest("hex");
@@ -45,8 +50,35 @@ async function setupTransport() {
 
 const accessCodeExpiryMinutes = 10;
 
+const JWT_SECRET = process.env.JWT_SECRET ?? "secret";
+
+const JwtSchema = z.object({ userId: z.string(), companyId: z.string() });
+
 export class AuthService {
   constructor() {}
+
+  static generateJWTToken(userId: string, companyId: string) {
+    const date = new Date();
+    const token = jwt.sign({ userId, companyId }, JWT_SECRET, {
+      expiresIn: "1h",
+      subject: userId,
+    });
+    return { jwt: token, date };
+  }
+
+  static verifyJWTToken(token: string) {
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+
+      if (typeof decoded === "string") {
+        return JwtSchema.parse(JSON.parse(decoded));
+      } else {
+        return JwtSchema.parse(decoded);
+      }
+    } catch (error) {
+      return null;
+    }
+  }
 
   static async registerNewCompanyAndAccount(
     input: InputRegisterNewCompanyAndAccount,
@@ -170,13 +202,82 @@ export class AuthService {
     }));
   }
 
-  static async loginWithCompanyIdAndUserId() {
-    //
+  static async userLoginWithAccessCode(payload: InputLoginWithCompanyAndUser) {
+    const accessCode = payload.accessCode;
+
+    const hashedAccessCode = sha256(accessCode);
+    const attempt = await prisma.accountLoginAttempt.findFirst({
+      where: {
+        accessCode: hashedAccessCode,
+        isUsed: false,
+        expiresAt: { gte: new Date() },
+        account: {
+          email: payload.accountEmail.toLowerCase(),
+        },
+      },
+    });
+
+    if (!attempt) {
+      throw new Error("Invalid or expired access code.");
+    }
+
+    const generatedJwt = this.generateJWTToken(
+      attempt.accountId,
+      payload.companyId,
+    );
+
+    const session = await prisma.session
+      .create({
+        data: {
+          account: { connect: { id: attempt.accountId } },
+          company: { connect: { id: payload.companyId } },
+          expiresAt: add(new Date(), { days: 7 }),
+        },
+      })
+      .catch((err) => {
+        throw new Error(err?.message ?? "Error creating session."); // eslint-disable-line
+      });
+
+    await prisma.accountLoginAttempt.update({
+      where: { id: attempt.id },
+      data: { isUsed: true },
+    });
+
     return {
-      sessionId: "",
-      accessToken: "",
-      accessTokenExpiresAt: new Date(),
-      sessionExpiresAt: new Date(),
+      sessionId: session.id,
+      accessToken: generatedJwt.jwt,
+      accessTokenExpiresAt: add(generatedJwt.date, { hours: 1 }),
+      sessionExpiresAt: session.expiresAt,
+    };
+  }
+
+  static async refreshAccessTokenWithSessionId(sessionId: string) {
+    const session = await prisma.session.findFirst({
+      where: { id: sessionId },
+    });
+
+    if (!session) {
+      throw new Error("Session not found");
+    }
+
+    if (session.expiresAt < new Date()) {
+      throw new Error("Session expired");
+    }
+
+    const generatedJwt = this.generateJWTToken(
+      session.accountId,
+      session.companyId,
+    );
+    const updatedSession = await prisma.session.update({
+      where: { id: sessionId },
+      data: { expiresAt: add(new Date(), { days: 7 }) },
+    });
+
+    return {
+      sessionId: session.id,
+      accessToken: generatedJwt.jwt,
+      accessTokenExpiresAt: add(generatedJwt.date, { hours: 1 }),
+      sessionExpiresAt: updatedSession.expiresAt,
     };
   }
 }
