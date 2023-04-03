@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  mysql:
+    image: mysql:8.0
+    restart: always
+    volumes:
+      - ./docker-volume/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_PASSWORD=password
+      - MYSQL_USER=user
+      - MYSQL_DATABASE=db
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
