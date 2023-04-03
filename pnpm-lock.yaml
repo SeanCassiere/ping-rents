@@ -216,6 +216,9 @@ importers:
       '@acme/db':
         specifier: '*'
         version: link:../../packages/db
+      '@acme/validator':
+        specifier: '*'
+        version: link:../../packages/validator
       '@trpc/server':
         specifier: ^10.18.0
         version: 10.18.0
