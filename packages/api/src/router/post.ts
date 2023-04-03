@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@acme/validator";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
@@ -9,7 +9,7 @@ export const postRouter = createTRPCRouter({
   byId: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
-      return {};
+      return { id: input.id };
     }),
   create: publicProcedure
     .input(

@@ -13,10 +13,10 @@
   "dependencies": {
     "@acme/auth": "*",
     "@acme/db": "*",
+    "@acme/validator": "*",
     "@trpc/client": "^10.18.0",
     "@trpc/server": "^10.18.0",
-    "superjson": "1.9.1",
-    "zod": "^3.21.4"
+    "superjson": "1.9.1"
   },
   "devDependencies": {
     "@acme/eslint-config": "*",
