@@ -1,4 +1,5 @@
 import { createExpressMiddleware as createTrpcExpressMiddleware } from "@trpc/server/adapters/express";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import { renderTrpcPanel } from "trpc-panel";
@@ -20,6 +21,7 @@ export async function makeExpressServer() {
       },
     }),
   );
+  app.use(cookieParser());
 
   // trpc adapter
   app.use(
