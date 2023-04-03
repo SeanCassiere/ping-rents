@@ -1,3 +1,8 @@
+import { TRPCError } from "@trpc/server";
+
+import { AuthService } from "@acme/auth";
+import { RegisterNewCompanyAndAccountSchema } from "@acme/validator/src/auth";
+
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const authRouter = createTRPCRouter({
@@ -11,4 +16,19 @@ export const authRouter = createTRPCRouter({
   getProtectedUser: protectedProcedure.query(({ ctx }) => {
     return ctx.user;
   }),
+  registerCompanyAndAccount: publicProcedure
+    .input(RegisterNewCompanyAndAccountSchema)
+    .mutation(async ({ input }) => {
+      try {
+        const registrationDetails =
+          await AuthService.registerNewCompanyAndAccount(input);
+
+        return registrationDetails;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong",
+        });
+      }
+    }),
 });
