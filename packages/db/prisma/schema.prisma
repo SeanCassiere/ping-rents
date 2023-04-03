@@ -16,6 +16,7 @@ model Company {
 
     companyAccountConnections CompanyAccountConnection[]
     locations                 Location[]
+    sessions                  Session[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -28,6 +29,7 @@ model Account {
 
     companyAccountConnections CompanyAccountConnection[]
     accountLoginAttempts      AccountLoginAttempt[]
+    sessions                  Session[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -65,4 +67,16 @@ model Location {
 
     companyId String
     company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+model Session {
+    id        String   @id @default(cuid())
+    expiresAt DateTime
+
+    accountId String
+    account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+    company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+    companyId String
+
+    createdAt DateTime @default(now())
 }
