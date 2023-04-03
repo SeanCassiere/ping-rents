@@ -9,10 +9,18 @@ import type {
 import type { AuthMetaUser } from "../trpc";
 
 class TaxController {
-  public async createTaxForLocation(
-    user: AuthMetaUser,
-    payload: InputCreateNewTax,
-  ) {
+  public async getAll(user: AuthMetaUser, payload: InputGetTaxes) {
+    const query = await prisma.tax.findMany({
+      where: {
+        companyId: user.companyId,
+        ...(payload.locationId ? { locationId: payload.locationId } : {}),
+      },
+    });
+
+    return query.map(({ companyId, ...tax }) => tax);
+  }
+
+  public async create(user: AuthMetaUser, payload: InputCreateNewTax) {
     const existing = await prisma.tax.findFirst({
       where: {
         name: payload.name,
@@ -38,7 +46,7 @@ class TaxController {
     return created;
   }
 
-  public async updateTaxForLocation(_: AuthMetaUser, payload: InputUpdateTax) {
+  public async updateById(_: AuthMetaUser, payload: InputUpdateTax) {
     const { companyId, ...updated } = await prisma.tax.update({
       where: { id: payload.taxId },
       data: {
@@ -48,17 +56,6 @@ class TaxController {
       },
     });
     return updated;
-  }
-
-  public async getTaxes(user: AuthMetaUser, payload: InputGetTaxes) {
-    const query = await prisma.tax.findMany({
-      where: {
-        companyId: user.companyId,
-        ...(payload.locationId ? { locationId: payload.locationId } : {}),
-      },
-    });
-
-    return query.map(({ companyId, ...tax }) => tax);
   }
 }
 
