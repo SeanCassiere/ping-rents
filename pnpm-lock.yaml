@@ -161,9 +161,6 @@ importers:
       next:
         specifier: ^13.2.4
         version: 13.2.4(react-dom@18.2.0)(react@18.2.0)
-      next-auth:
-        specifier: ^4.20.1
-        version: 4.20.1(next@13.2.4)(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2985,7 +2982,7 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@tanstack/react-query': 4.28.0(react-dom@18.2.0)(react-native@0.71.4)(react@18.2.0)
+      '@tanstack/react-query': 4.28.0(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client': 10.18.0(@trpc/server@10.18.0)
       '@trpc/server': 10.18.0
       react: 18.2.0
