@@ -17,6 +17,8 @@ jobs:
   build-lint:
     env:
       DATABASE_URL: file:./db.sqlite
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
     runs-on: ubuntu-latest
 
     steps:

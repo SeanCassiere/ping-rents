@@ -1,15 +1,15 @@
-import { z } from "zod";
+import { z } from "@acme/validator";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const postRouter = createTRPCRouter({
   all: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.post.findMany({ orderBy: { id: "desc" } });
+    return [];
   }),
   byId: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
-      return ctx.prisma.post.findFirst({ where: { id: input.id } });
+      return { id: input.id };
     }),
   create: publicProcedure
     .input(
@@ -19,9 +19,9 @@ export const postRouter = createTRPCRouter({
       }),
     )
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.post.create({ data: input });
+      return {};
     }),
   delete: publicProcedure.input(z.string()).mutation(({ ctx, input }) => {
-    return ctx.prisma.post.delete({ where: { id: input } });
+    return {};
   }),
 });

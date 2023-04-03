@@ -5,4 +5,6 @@ packages:
   - packages/api
   - packages/auth
   - packages/db
+  - packages/validator
+  - packages/date-fns
   - packages/config/*

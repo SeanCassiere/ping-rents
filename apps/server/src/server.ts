@@ -1,9 +1,12 @@
 import { createExpressMiddleware as createTrpcExpressMiddleware } from "@trpc/server/adapters/express";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import { renderTrpcPanel } from "trpc-panel";
 
 import { appRouter, createTRPCContext } from "@acme/api";
+
+import v1Router from "./routes/v1";
 
 export async function makeExpressServer() {
   const app = express();
@@ -20,6 +23,7 @@ export async function makeExpressServer() {
       },
     }),
   );
+  app.use(cookieParser());
 
   // trpc adapter
   app.use(
@@ -38,6 +42,8 @@ export async function makeExpressServer() {
       }),
     );
   });
+
+  app.use("/api/v1", v1Router);
 
   // health check
   app.get("/health", (_, res) => {
