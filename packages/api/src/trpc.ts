@@ -19,6 +19,8 @@ import {
 } from "@acme/validator/src/auth";
 
 type AuthUser = ReturnType<(typeof AuthService)["verifyJWTToken"]>;
+export type AuthMetaUser = NonNullable<AuthUser>;
+
 /**
  * 1. CONTEXT
  *

@@ -17,6 +17,7 @@ model Company {
     companyAccountConnections CompanyAccountConnection[]
     locations                 Location[]
     sessions                  Session[]
+    taxes                     Tax[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -65,6 +66,8 @@ model Location {
     id   String @id @default(cuid())
     name String @db.Text
 
+    taxes Tax[]
+
     companyId String
     company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 }
@@ -78,5 +81,24 @@ model Session {
     company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
     companyId String
 
+    createdAt DateTime @default(now())
+}
+
+enum EnumTaxCalculationType {
+    percentage
+}
+
+model Tax {
+    id              String                 @id @default(cuid())
+    name            String                 @db.VarChar(255)
+    value           Float                  @default(0.00) @db.Float
+    calculationType EnumTaxCalculationType
+
+    companyId  String
+    company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+    locationId String
+    location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+    updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
 }

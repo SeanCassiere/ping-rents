@@ -4,6 +4,7 @@ import { AuthService } from "@acme/auth";
 import { z } from "@acme/validator";
 import {
   COOKIE_SESSION_ID_IDENTIFIER,
+  HEADER_SESSION_ID_IDENTIFIER,
   LoginWithCompanyAndUserSchema,
   RegisterNewCompanyAndAccountSchema,
 } from "@acme/validator/src/auth";
@@ -11,6 +12,38 @@ import {
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const authRouter = createTRPCRouter({
+  getSession: publicProcedure.query(({ ctx }) => {
+    return ctx.user;
+  }),
+  getAuthUser: protectedProcedure.query(({ ctx }) => {
+    return ctx.user; // replace with an auth api call
+  }),
+  refreshAccessToken: publicProcedure.mutation(async ({ ctx }) => {
+    let sessionId: string | null = null;
+
+    const cookieSessionId = ctx.req.cookies[COOKIE_SESSION_ID_IDENTIFIER];
+    if (typeof cookieSessionId === "string") {
+      sessionId = cookieSessionId;
+    }
+
+    if (!sessionId) {
+      const fromHeader = ctx.req.headers[HEADER_SESSION_ID_IDENTIFIER];
+      if (typeof fromHeader === "string") {
+        sessionId = fromHeader;
+      }
+    }
+
+    if (!sessionId) {
+      throw new TRPCError({ code: "UNAUTHORIZED", message: "No session id" });
+    }
+
+    const result = await AuthService.refreshAccessTokenWithSessionId(sessionId);
+    ctx.res.cookie(COOKIE_SESSION_ID_IDENTIFIER, result.sessionId, {
+      httpOnly: true,
+    });
+
+    return result;
+  }),
   registerCompanyAndAccount: publicProcedure
     .input(RegisterNewCompanyAndAccountSchema)
     .mutation(async ({ input }) => {
@@ -23,15 +56,6 @@ export const authRouter = createTRPCRouter({
         });
       }
     }),
-  getSession: publicProcedure.query(({ ctx }) => {
-    return ctx.user;
-  }),
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can see this secret message!";
-  }),
-  getProtectedUser: protectedProcedure.query(({ ctx }) => {
-    return ctx.user;
-  }),
   emailLoginWithAccessCode: publicProcedure
     .input(z.object({ email: z.string().email() }))
     .mutation(async ({ input }) => {
