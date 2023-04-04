@@ -81,8 +81,14 @@ export const createTRPCContext = async (opts: CreateExpressContextOptions) => {
   }
 
   // checking for the sessionId in the cookie or the header using X-SESSION-ID
-  if (req.cookies && req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER]) {
-    sessionId = req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER];
+  if (
+    req.cookies &&
+    (req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER] ||
+      req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER.toLowerCase()])
+  ) {
+    sessionId =
+      req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER] ??
+      req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER.toLowerCase()];
   } else if (
     req.headers?.[HEADER_SESSION_ID_IDENTIFIER] &&
     typeof req.headers?.[HEADER_SESSION_ID_IDENTIFIER] === "string"
