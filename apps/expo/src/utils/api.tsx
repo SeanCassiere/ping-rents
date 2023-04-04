@@ -6,6 +6,7 @@ import { createTRPCReact } from "@trpc/react-query";
 import superjson from "superjson";
 
 import { type AppRouter } from "@acme/api";
+import { HEADER_SESSION_ID_IDENTIFIER } from "@acme/validator/src/auth";
 
 /**
  * A set of typesafe hooks for consuming your API.
@@ -28,10 +29,7 @@ export const getBaseUrl = () => {
    */
   const localhost = Constants.manifest?.debuggerHost?.split(":")[0];
   if (!localhost) {
-    // return "https://your-production-url.com";
-    throw new Error(
-      "Failed to get localhost. Please point to your production server.",
-    );
+    return "https://api-ping-rent.pingstash.com";
   }
   return `http://${localhost}:4000`;
 };
@@ -44,10 +42,7 @@ export const TRPCProvider: React.FC<{
   children: React.ReactNode;
   sessionId: string | null;
   accessToken: string | null;
-}> = ({ children }) => {
-  const accessToken: string | null = null;
-  const sessionId: string | null = null;
-
+}> = ({ children, sessionId, accessToken }) => {
   const [queryClient] = React.useState(() => new QueryClient());
   const [trpcClient] = React.useState(() =>
     api.createClient({
@@ -55,10 +50,12 @@ export const TRPCProvider: React.FC<{
       links: [
         httpBatchLink({
           url: `${getBaseUrl()}/trpc`,
-          headers: {
-            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-            ...(sessionId ? { "X-SESSION-ID": `${sessionId}` } : {}),
-          },
+          headers: () => ({
+            ...(accessToken ? { authorization: `Bearer ${accessToken}` } : {}),
+            ...(sessionId
+              ? { [HEADER_SESSION_ID_IDENTIFIER.toLowerCase()]: `${sessionId}` }
+              : {}),
+          }),
         }),
       ],
     }),

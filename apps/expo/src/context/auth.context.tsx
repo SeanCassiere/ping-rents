@@ -14,93 +14,122 @@ import {
 } from "@acme/validator/src/auth";
 
 import { getBaseUrl } from "../utils/api";
+import {
+  deleteFromSecureStore,
+  getValueFromSecureStore,
+  saveToSecureStore,
+} from "../utils/secureStore";
+
+type AuthState =
+  | {
+      accessToken: null;
+      sessionId: null;
+      mode: "logged-out";
+    }
+  | { accessToken: string; sessionId: string; mode: "logged-in" }
+  | { accessToken: null; sessionId: string; mode: "session-only-hold" };
 
 type AuthContextState = {
   isAuthed: boolean;
-  accessToken: string | null;
-  sessionId: string | null;
-  logout: () => void;
-  setLoginInfo: (info: { accessToken: string; sessionId: string }) => void;
-};
-
-type AuthState = {
-  isLoggedIn: boolean;
-  accessToken: string | null;
-  sessionId: string | null;
+  state: AuthState;
+  logout: () => Promise<void>;
+  login: (info: { accessToken: string; sessionId: string }) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextState | undefined>(undefined);
 
+// const KEY_ACCESS_TOKEN = "access-token" as const;
+const KEY_SESSION_ID = "session-id" as const;
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [authState, setAuthState] = useState<AuthState>({
-    isLoggedIn: false,
+  const [state, setState] = useState<AuthState>({
     accessToken: null,
     sessionId: null,
+    mode: "logged-out",
   });
 
-  const handleLogout = useCallback(() => {
-    setAuthState((prev) => ({
-      ...prev,
-      isLoggedIn: false,
-      accessToken: null,
-      sessionId: null,
-    }));
+  const handleLogout = useCallback(async () => {
+    await deleteFromSecureStore(KEY_SESSION_ID).then(() => {
+      setState((prev) => ({
+        ...prev,
+        accessToken: null,
+        sessionId: null,
+        mode: "logged-out",
+      }));
+    });
   }, []);
 
-  const handleLogin: AuthContextState["setLoginInfo"] = useCallback((info) => {
-    setAuthState((prev) => ({
+  const handleLogin: AuthContextState["login"] = useCallback(async (info) => {
+    await saveToSecureStore(KEY_SESSION_ID, info.sessionId);
+    setState((prev) => ({
       ...prev,
-      isLoggedIn: true,
+      mode: "logged-in",
       accessToken: info.accessToken,
       sessionId: info.sessionId,
     }));
   }, []);
 
+  const sessionId = useMemo(() => state.sessionId, [state.sessionId]);
+  const authMode = useMemo(() => state.mode, [state.mode]);
+
   const bag: AuthContextState = {
-    isAuthed: authState.isLoggedIn,
-    accessToken: authState.accessToken,
-    sessionId: authState.sessionId,
+    isAuthed: state.mode === "logged-in",
+    state,
     logout: handleLogout,
-    setLoginInfo: handleLogin,
+    login: handleLogin,
   };
 
-  const sessionId = useMemo(() => authState.sessionId, [authState.sessionId]);
-
-  // useEffect(() => {
-  //   if (sessionId) {
-  //     fetch(`${getBaseUrl()}/api/v1/auth/refresh`, {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         ...(sessionId ? { [HEADER_SESSION_ID_IDENTIFIER]: sessionId } : {}),
-  //       },
-  //     })
-  //       .then((res) => res.json())
-  //       .then((res) => {
-  //         const parsed = VerifyRefreshTokenPayloadSchema.parse(res);
-  //         if (parsed && parsed.data) {
-  //           const nowData = parsed.data;
-  //           setAuthState((prev) => ({
-  //             ...prev,
-  //             isLoggedIn: true,
-  //             accessToken: nowData.accessToken,
-  //             sessionId: nowData.sessionId,
-  //           }));
-  //         }
-  //       })
-  //       .catch((err) => {
-  //         console.log("AuthProvider.Refresh.Error", err);
-  //       });
-  //   }
-  // }, [sessionId]);
+  useEffect(() => {
+    if (sessionId && authMode === "session-only-hold") {
+      fetch(`${getBaseUrl()}/api/v1/auth/refresh`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          ...(sessionId ? { [HEADER_SESSION_ID_IDENTIFIER]: sessionId } : {}),
+        },
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          const parsed = VerifyRefreshTokenPayloadSchema.parse(res);
+          if (parsed && parsed.data) {
+            const nowData = parsed.data;
+            saveToSecureStore(KEY_SESSION_ID, nowData.sessionId).then(() => {
+              setState((prev) => ({
+                ...prev,
+                accessToken: nowData.accessToken,
+                sessionId: nowData.sessionId,
+                mode: "logged-in",
+              }));
+            });
+          }
+        })
+        .catch((err) => {
+          console.log("AuthProvider.Refresh.Error", err);
+          deleteFromSecureStore(KEY_SESSION_ID).then(() => {
+            setState((prev) => ({
+              ...prev,
+              accessToken: null,
+              sessionId: null,
+              mode: "logged-out",
+            }));
+          });
+        });
+    }
+  }, [authMode, sessionId]);
 
   useEffect(() => {
-    if (!sessionId) return;
-    setAuthState((prev) => ({
-      ...prev,
-      sessionId: null,
-    }));
-  }, [sessionId]);
+    (async () => {
+      const savedSessionId = await getValueFromSecureStore(KEY_SESSION_ID);
+      if (!savedSessionId) return;
+
+      setState((prev) => ({
+        ...prev,
+        accessToken: null,
+        sessionId: savedSessionId,
+        mode: "session-only-hold",
+      }));
+    })();
+  }, []);
 
   return <AuthContext.Provider value={bag}>{children}</AuthContext.Provider>;
 }
@@ -108,7 +137,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuthContext() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuthContext must be used within a AuthProvider");
+    throw new Error("useAuthContext must be used within an AuthProvider");
   }
   return context;
 }

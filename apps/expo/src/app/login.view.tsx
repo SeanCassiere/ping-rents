@@ -7,7 +7,7 @@ import { api } from "../utils/api";
 import { useCustomNavigation } from "../utils/useNavigation";
 
 const LoginView = () => {
-  const { setLoginInfo } = useAuthContext();
+  const { login: loginFn } = useAuthContext();
   const navigation = useCustomNavigation();
 
   const [errorText, setErrorText] = useState("");
@@ -34,8 +34,8 @@ const LoginView = () => {
   );
   const finalLoginMutation = api.auth.loginWithAccessCodeAndCompany.useMutation(
     {
-      onSuccess: (data) => {
-        setLoginInfo({
+      onSuccess: async (data) => {
+        await loginFn({
           accessToken: data.accessToken,
           sessionId: data.sessionId,
         });
@@ -105,6 +105,7 @@ const LoginView = () => {
                 placeholder="enter your email"
                 className="rounded border border-slate-400 px-4 py-1.5"
                 editable={!emailTriggerMutation.isLoading}
+                inputMode="email"
               />
             </View>
             <View className="py-1">
@@ -159,7 +160,7 @@ const LoginView = () => {
               <Pressable
                 className="mt-2"
                 onPress={() => {
-                  setStage("access-code");
+                  setStage("email");
                   setErrorText("");
                 }}
               >

@@ -20,6 +20,9 @@ const defineConfig = (): ExpoConfig => ({
   ios: {
     supportsTablet: true,
     bundleIdentifier: "your.bundle.identifier",
+    config: {
+      usesNonExemptEncryption: false,
+    },
   },
   android: {
     adaptiveIcon: {

@@ -67,6 +67,9 @@ importers:
       expo-linking:
         specifier: ~4.0.1
         version: 4.0.1(expo@48.0.9)
+      expo-secure-store:
+        specifier: ~12.1.1
+        version: 12.1.1(expo@48.0.9)
       expo-splash-screen:
         specifier: ~0.18.1
         version: 0.18.1(expo@48.0.9)
@@ -5326,6 +5329,14 @@ packages:
     dependencies:
       compare-versions: 3.6.0
       invariant: 2.2.4
+    dev: false
+
+  /expo-secure-store@12.1.1(expo@48.0.9):
+    resolution: {integrity: sha512-phD8e8mlJWaESUBCpHq0GjS3OiqZ7g+I6SpTGQpt+xSS0pEE1ZUBXnIF+WR2OvoseKiS9ODzDl85CUlut/eNKw==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 48.0.9(@babel/core@7.21.3)
     dev: false
 
   /expo-splash-screen@0.18.1(expo@48.0.9):
