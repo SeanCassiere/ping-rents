@@ -2,6 +2,7 @@ import { Button, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
+import { NativeBaseProvider } from "native-base";
 
 import { AuthProvider, useAuthContext } from "../context/auth.context";
 import { TRPCProvider, api } from "../utils/api";
@@ -11,9 +12,11 @@ function App() {
   return (
     <AuthProvider>
       <SafeAreaProvider>
-        <NavigationContainer>
-          <BottomChildren />
-        </NavigationContainer>
+        <NativeBaseProvider>
+          <NavigationContainer>
+            <BottomChildren />
+          </NavigationContainer>
+        </NativeBaseProvider>
       </SafeAreaProvider>
     </AuthProvider>
   );
@@ -43,16 +46,16 @@ function LoggedInView() {
   const { logout, isAuthed, state } = useAuthContext();
   const session = api.auth.getAuthUser.useQuery(undefined, {});
   return (
-    <View className="pt-20">
+    <View style={{ paddingTop: 20 }}>
       <Text>LoggedInView</Text>
       <Button title="Logout" onPress={logout} />
-      <View className="mx-2">
+      <View style={{ marginHorizontal: 4 }}>
         <Text>{JSON.stringify(session.data, null, 2)}</Text>
       </View>
       <View>
         <Button title="refresh" onPress={() => session.refetch()} />
       </View>
-      <View className="mx-2">
+      <View style={{ marginHorizontal: 4 }}>
         <Text>
           {JSON.stringify(
             { mode: state.mode, sessionId: state.sessionId, isAuthed },

@@ -8,9 +8,17 @@ const RegisterView = () => {
   const navigation = useCustomNavigation();
 
   return (
-    <SafeAreaView className="bg-slate-50">
-      <View className="mt-4 h-full w-full px-4">
-        <Text className="text-red-500">Registration View</Text>
+    <SafeAreaView>
+      <View
+        style={{
+          marginTop: 25,
+          paddingHorizontal: 10,
+          height: "100%",
+          width: "100%",
+          gap: 10,
+        }}
+      >
+        <Text>Registration View</Text>
         <Button
           title="Register"
           onPress={() => {

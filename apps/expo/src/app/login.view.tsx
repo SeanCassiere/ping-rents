@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Button, Pressable, Text, TextInput, View } from "react-native";
+import { Button, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Input } from "native-base";
 
 import { useAuthContext } from "../context/auth.context";
 import { api } from "../utils/api";
@@ -90,25 +91,34 @@ const LoginView = () => {
   };
 
   return (
-    <SafeAreaView className="bg-slate-50">
-      <View className="mt-4 h-full w-full px-4">
-        <Text className="text-2xl font-semibold text-slate-800">
-          Login to PingRents
-        </Text>
-        {errorText && <Text className="py-3 text-red-600">{errorText}</Text>}
+    <SafeAreaView>
+      <View
+        style={{
+          marginTop: 25,
+          paddingHorizontal: 10,
+          height: "100%",
+          width: "100%",
+          gap: 10,
+        }}
+      >
+        <Text>Login to PingRents</Text>
+        {errorText && (
+          <Text style={{ paddingVertical: 3, color: "#dc2626" }}>
+            {errorText}
+          </Text>
+        )}
         {stage === "email" && (
           <>
-            <View className="py-2">
-              <TextInput
+            <View style={{ paddingVertical: 2 }}>
+              <Input
+                placeholder="enter your email"
                 onChangeText={setEmail}
                 value={email}
-                placeholder="enter your email"
-                className="rounded border border-slate-400 px-4 py-1.5"
                 editable={!emailTriggerMutation.isLoading}
                 inputMode="email"
               />
             </View>
-            <View className="py-1">
+            <View style={{ paddingVertical: 1 }}>
               <Button
                 title="Sign in"
                 onPress={handleEmailSubmit}
@@ -121,31 +131,30 @@ const LoginView = () => {
           <>
             <View>
               <Pressable
-                className="mt-2"
+                style={{ marginTop: 4 }}
                 onPress={() => {
                   setStage("email");
                   setErrorText("");
                 }}
               >
-                <Text className="text-slate-800">Back</Text>
+                <Text style={{ color: "#1e293b" }}>Back</Text>
               </Pressable>
             </View>
-            <View className="py-2">
-              <Text className="py-3 text-slate-800">
+            <View style={{ paddingVertical: 2 }}>
+              <Text style={{ paddingVertical: 3, color: "#1e293b" }}>
                 Enter the access code emailed to you. It only lasts for{" "}
                 {accessCodeExpiry} minutes.
               </Text>
-              <TextInput
+              <Input
                 onChangeText={setAccessCode}
                 value={accessCode}
                 placeholder="enter the access code"
-                className="rounded border border-slate-400 px-4 py-1.5"
                 inputMode="numeric"
                 maxLength={6}
                 editable={!canSearchCompanies}
               />
             </View>
-            <View className="py-1">
+            <View style={{ paddingVertical: 1 }}>
               <Button
                 title="Submit"
                 onPress={handleAccessCodeSubmit}
@@ -158,17 +167,17 @@ const LoginView = () => {
           <>
             <View>
               <Pressable
-                className="mt-2"
+                style={{ marginTop: 4 }}
                 onPress={() => {
                   setStage("email");
                   setErrorText("");
                 }}
               >
-                <Text className="text-slate-800">Back</Text>
+                <Text style={{ color: "#1e293b" }}>Back</Text>
               </Pressable>
             </View>
-            <View className="py-2">
-              <Text className="py-3 text-slate-800">
+            <View style={{ paddingVertical: 2 }}>
+              <Text style={{ paddingVertical: 3, color: "#1e293b" }}>
                 Which company do you want to sign-in to?
               </Text>
               {(companiesQuery.data || []).map((company, idx) => (
@@ -186,9 +195,11 @@ const LoginView = () => {
             onPress={() => {
               navigation.navigate("register");
             }}
-            className="mt-4"
+            style={{ marginTop: 4 }}
           >
-            <Text className="text-center text-slate-800">Register</Text>
+            <Text style={{ textAlign: "center", color: "#1e293b" }}>
+              Register
+            </Text>
           </Pressable>
         )}
       </View>
