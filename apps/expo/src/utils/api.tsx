@@ -17,7 +17,7 @@ export { type RouterInputs, type RouterOutputs } from "@acme/api";
  * Extend this function when going to production by
  * setting the baseUrl to your production API URL.
  */
-const getBaseUrl = () => {
+export const getBaseUrl = () => {
   /**
    * Gets the IP address of your host-machine. If it cannot automatically find it,
    * you'll have to manually set it. NOTE: Port 3000 should work for most but confirm
@@ -40,9 +40,11 @@ const getBaseUrl = () => {
  * A wrapper for your app that provides the TRPC context.
  * Use only in _app.tsx
  */
-export const TRPCProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const TRPCProvider: React.FC<{
+  children: React.ReactNode;
+  sessionId: string | null;
+  accessToken: string | null;
+}> = ({ children }) => {
   const accessToken: string | null = null;
   const sessionId: string | null = null;
 

@@ -73,9 +73,16 @@ export const createTRPCContext = async (opts: CreateExpressContextOptions) => {
     const [_, token] = req.headers.authorization.split(" ");
 
     if (token) {
-      const data = AuthService.verifyJWTToken(token);
-      if (data) {
-        decodedUser = data;
+      try {
+        const data = AuthService.verifyJWTToken(token);
+        if (data) {
+          decodedUser = data;
+        }
+      } catch (error) {
+        console.log(
+          "createTRPCContext.req.headers.authorization error: ",
+          error,
+        );
       }
     }
   }

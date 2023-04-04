@@ -1,10 +1,10 @@
 import { registerRootComponent } from "expo";
-import { ExpoRoot } from "expo-router";
+
+import App from "./src/app/App";
 
 // Must be exported or Fast Refresh won't update the context
-export function App() {
-  const ctx = require.context("./src/app");
-  return <ExpoRoot context={ctx} />;
+export function AppWrapped() {
+  return <App />;
 }
 
-registerRootComponent(App);
+registerRootComponent(AppWrapped);
