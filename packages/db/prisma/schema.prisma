@@ -19,6 +19,7 @@ model Company {
     sessions                  Session[]
     taxes                     Tax[]
     vehicleTypes              VehicleType[]
+    customers                 Customer[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -107,6 +108,19 @@ model Tax {
 model VehicleType {
     id   String @id @default(cuid())
     name String @default("") @db.VarChar(255)
+
+    companyId String
+    company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+}
+
+model Customer {
+    id        String @id @default(cuid())
+    firstName String @default("") @db.VarChar(255)
+    lastName  String @default("") @db.VarChar(255)
+    email     String @default("") @db.VarChar(255)
 
     companyId String
     company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
