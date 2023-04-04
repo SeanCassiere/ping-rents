@@ -20,6 +20,7 @@ model Company {
     taxes                     Tax[]
     vehicleTypes              VehicleType[]
     customers                 Customer[]
+    vehicles                  Vehicle[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -110,7 +111,8 @@ model VehicleType {
     name String @default("") @db.VarChar(255)
 
     companyId String
-    company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+    company   Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+    vehicles  Vehicle[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -129,4 +131,26 @@ model Customer {
     createdAt DateTime @default(now())
 
     @@unique([email, companyId], name: "email_companyId")
+}
+
+model Vehicle {
+    id           String @id @default(cuid())
+    vin          String @db.VarChar(255)
+    licensePlate String @db.VarChar(255)
+    year         String @db.VarChar(255)
+    color        String @db.VarChar(255)
+    make         String @db.VarChar(255)
+    model        String @db.VarChar(255)
+
+    companyId String
+    company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+    vehicleTypeId String
+    vehicleType   VehicleType @relation(fields: [vehicleTypeId], references: [id], onDelete: Cascade)
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+
+    @@unique([vin, companyId], name: "vin_companyId")
+    @@unique([licensePlate, companyId], name: "licensePlate_companyId")
 }
