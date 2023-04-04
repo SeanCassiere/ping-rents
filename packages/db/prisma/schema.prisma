@@ -127,4 +127,6 @@ model Customer {
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
+
+    @@unique([email, companyId], name: "email_companyId")
 }
