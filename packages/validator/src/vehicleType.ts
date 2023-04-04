@@ -5,8 +5,7 @@ export const CreateVehicleTypeSchema = z.object({
 });
 export type InputCreateVehicleType = z.infer<typeof CreateVehicleTypeSchema>;
 
-export const UpdateVehicleTypeSchema = z.object({
+export const UpdateVehicleTypeSchema = CreateVehicleTypeSchema.extend({
   vehicleTypeId: z.string().min(1),
-  name: z.string().min(1),
 });
 export type InputUpdateVehicleType = z.infer<typeof UpdateVehicleTypeSchema>;
