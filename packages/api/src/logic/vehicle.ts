@@ -53,6 +53,12 @@ class VehicleController {
             name: true,
           },
         },
+        currentLocation: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         createdAt: true,
         updatedAt: true,
       },
@@ -65,6 +71,7 @@ class VehicleController {
         data: {
           company: { connect: { id: user.companyId } },
           vehicleType: { connect: { id: payload.typeId } },
+          currentLocation: { connect: { id: payload.currentLocationId } },
           make: payload.make,
           model: payload.model,
           year: payload.year,
@@ -81,6 +88,12 @@ class VehicleController {
           licensePlate: true,
           color: true,
           vehicleType: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          currentLocation: {
             select: {
               id: true,
               name: true,
@@ -123,6 +136,12 @@ class VehicleController {
             name: true,
           },
         },
+        currentLocation: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         createdAt: true,
         updatedAt: true,
       },
@@ -141,6 +160,7 @@ class VehicleController {
       where: { id },
       data: {
         vehicleType: { connect: { id: payload.typeId } },
+        currentLocation: { connect: { id: payload.currentLocationId } },
         make: payload.make,
         model: payload.model,
         year: payload.year,
@@ -157,6 +177,12 @@ class VehicleController {
         licensePlate: true,
         color: true,
         vehicleType: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        currentLocation: {
           select: {
             id: true,
             name: true,

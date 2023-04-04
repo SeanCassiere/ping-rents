@@ -8,6 +8,7 @@ export const CreateVehicleSchema = z.object({
   model: z.string().min(1),
   color: z.string().min(1),
   typeId: z.string().min(1),
+  currentLocationId: z.string().min(1),
 });
 export type InputCreateVehicle = z.infer<typeof CreateVehicleSchema>;
 

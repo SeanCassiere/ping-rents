@@ -69,7 +69,8 @@ model Location {
     id   String @id @default(cuid())
     name String @db.Text
 
-    taxes Tax[]
+    taxes    Tax[]
+    vehicles Vehicle[]
 
     companyId String
     company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
@@ -141,6 +142,9 @@ model Vehicle {
     color        String @db.VarChar(255)
     make         String @db.VarChar(255)
     model        String @db.VarChar(255)
+
+    currentLocationId String   @map("locationId")
+    currentLocation   Location @relation(fields: [currentLocationId], references: [id], onDelete: Cascade)
 
     companyId String
     company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)

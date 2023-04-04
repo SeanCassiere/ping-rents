@@ -30,7 +30,7 @@ export const vehiclesRouter = createTRPCRouter({
 
   getById: protectedProcedure
     .input(z.object({ id: z.string().min(1) }))
-    .mutation(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       return await VehicleLogic.getById(ctx.user, input.id);
     }),
 
