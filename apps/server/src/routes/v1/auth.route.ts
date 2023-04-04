@@ -11,13 +11,25 @@ const router = express.Router();
 router.get("/refresh", async (req, res) => {
   let sessionId: string | null = null;
 
-  if (req.cookies && req.cookies[COOKIE_SESSION_ID_IDENTIFIER]) {
-    const cookieSessionId = req.cookies[COOKIE_SESSION_ID_IDENTIFIER];
+  if (
+    req.cookies &&
+    (req.cookies[COOKIE_SESSION_ID_IDENTIFIER] ||
+      req.cookies[COOKIE_SESSION_ID_IDENTIFIER.toLowerCase()])
+  ) {
+    const cookieSessionId =
+      req.cookies[COOKIE_SESSION_ID_IDENTIFIER] ??
+      req.cookies[COOKIE_SESSION_ID_IDENTIFIER.toLowerCase()];
     if (typeof cookieSessionId === "string") {
       sessionId = cookieSessionId;
     }
-  } else if (req.headers && req.headers[HEADER_SESSION_ID_IDENTIFIER]) {
-    const headerSessionId = req.headers[HEADER_SESSION_ID_IDENTIFIER];
+  }
+  if (
+    req.headers[HEADER_SESSION_ID_IDENTIFIER] ||
+    req.headers[HEADER_SESSION_ID_IDENTIFIER.toLowerCase()]
+  ) {
+    const headerSessionId =
+      req.headers[HEADER_SESSION_ID_IDENTIFIER] ??
+      req.headers[HEADER_SESSION_ID_IDENTIFIER.toLowerCase()];
     if (headerSessionId instanceof Array) {
       sessionId = headerSessionId[0] ?? null;
     } else if (headerSessionId) {
