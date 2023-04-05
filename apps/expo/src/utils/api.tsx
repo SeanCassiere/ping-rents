@@ -27,11 +27,24 @@ export const getBaseUrl = () => {
    * **NOTE**: This is only for development. In production, you'll want to set the
    * baseUrl to your production API URL.
    */
-  const localhost = Constants.manifest?.debuggerHost?.split(":")[0];
-  if (!localhost) {
-    return "https://api-ping-rent.pingstash.com";
+
+  // const localhost = Constants.manifest?.debuggerHost?.split(":")[0];
+  // if (!localhost) {
+  //   return "https://api-ping-rents.pingstash.com";
+  // }
+
+  // return `http://${localhost}:4000`;
+
+  const debuggerHost = Constants.manifest?.debuggerHost?.split(":")[0]; // this is only available in mobile dev mode
+  if (debuggerHost) {
+    return `http://${debuggerHost}:4000`;
   }
-  return `http://${localhost}:4000`;
+
+  if (Constants.expoConfig?.extra?.PUBLIC_API_URL) {
+    return Constants.expoConfig?.extra?.PUBLIC_API_URL as string;
+  }
+
+  return "https://api-ping-rents.pingstash.com";
 };
 
 /**

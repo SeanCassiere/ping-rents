@@ -31,6 +31,7 @@ const defineConfig = (): ExpoConfig => ({
     },
   },
   extra: {
+    PUBLIC_API_URL: process.env.PUBLIC_API_URL ?? null,
     eas: {
       projectId: "your-project-id",
     },

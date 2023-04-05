@@ -11,8 +11,12 @@ const config = getDefaultConfig(projectRoot);
 // Add the additional `cjs` extension to the resolver
 config.resolver.sourceExts.push("cjs");
 
+const monorepoPackages = {
+  // "@acme/validator": path.resolve(workspaceRoot, "packages/validator"),
+};
+
 // 1. Watch all files within the monorepo
-config.watchFolders = [workspaceRoot];
+config.watchFolders = [workspaceRoot, ...Object.values(monorepoPackages)];
 // 2. Let Metro know where to resolve packages and in what order
 config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, "node_modules"),
