@@ -41,6 +41,9 @@ const RegisterView = () => {
   });
 
   const register = api.auth.registerCompanyAndAccount.useMutation({
+    onMutate: () => {
+      Keyboard.dismiss();
+    },
     onSuccess: () => {
       toast.show({
         title: messages.creationSuccessfulTitle,
@@ -60,7 +63,6 @@ const RegisterView = () => {
   });
 
   const onSubmit = (data: InputRegisterNewCompanyAndAccount) => {
-    Keyboard.dismiss();
     register.mutate(data);
   };
 
