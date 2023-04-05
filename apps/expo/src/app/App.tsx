@@ -1,12 +1,14 @@
 import { Button, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { NativeBaseProvider } from "native-base";
 
 import { AuthProvider, useAuthContext } from "../context/auth.context";
 import { TRPCProvider, api } from "../utils/api";
-import LoggedOutStack from "./logged-out.stack";
+import { NAVIGATION_KEYS } from "../utils/navigation";
+import LoginView from "../views/LoginView";
+import RegisterView from "../views/Register";
 
 function App() {
   return (
@@ -14,7 +16,7 @@ function App() {
       <SafeAreaProvider>
         <NativeBaseProvider>
           <NavigationContainer>
-            <BottomChildren />
+            <TrpcChildrenProvider />
           </NavigationContainer>
         </NativeBaseProvider>
       </SafeAreaProvider>
@@ -22,7 +24,7 @@ function App() {
   );
 }
 
-function BottomChildren() {
+function TrpcChildrenProvider() {
   const {
     state: { accessToken, sessionId },
   } = useAuthContext();
@@ -31,15 +33,51 @@ function BottomChildren() {
       {...{ accessToken, sessionId }}
       key={`${accessToken}-${sessionId}`}
     >
-      <StatusBar style="auto" />
       <AuthSelectionView />
     </TRPCProvider>
   );
 }
 
+const Tab = createBottomTabNavigator();
+
 function AuthSelectionView() {
   const { isAuthed } = useAuthContext();
-  return isAuthed ? <LoggedInView /> : <LoggedOutStack />;
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        tabBarHideOnKeyboard: true,
+        tabBarItemStyle: { paddingBottom: 10 },
+        tabBarStyle: { height: 55, display: !isAuthed ? "none" : undefined },
+      }}
+    >
+      {isAuthed ? (
+        <>
+          <Tab.Screen name="Customers" component={LoggedInView} />
+        </>
+      ) : (
+        <>
+          <Tab.Screen
+            name={NAVIGATION_KEYS.LOGIN_TAB.view}
+            component={LoginView}
+            options={{
+              title: NAVIGATION_KEYS.LOGIN_TAB.title,
+              tabBarStyle: { display: "none" },
+              headerShown: false,
+            }}
+          />
+          <Tab.Screen
+            name={NAVIGATION_KEYS.REGISTER_TAB.view}
+            component={RegisterView}
+            options={{
+              title: NAVIGATION_KEYS.REGISTER_TAB.title,
+              tabBarStyle: { display: "none" },
+              headerShown: false,
+            }}
+          />
+        </>
+      )}
+    </Tab.Navigator>
+  );
 }
 
 function LoggedInView() {

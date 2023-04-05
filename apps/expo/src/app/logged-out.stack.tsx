@@ -1,7 +1,7 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import LoginView from "./login.view";
+import LoginView from "../views/LoginView";
 import RegisterView from "./register.view";
 
 const Stack = createNativeStackNavigator();

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Button, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Input } from "native-base";
+import { StatusBar } from "expo-status-bar";
+import { Button, Input } from "native-base";
 
 import { useAuthContext } from "../context/auth.context";
 import { api } from "../utils/api";
+import { NAVIGATION_KEYS } from "../utils/navigation";
 import { useCustomNavigation } from "../utils/useNavigation";
 
 const LoginView = () => {
@@ -92,9 +94,9 @@ const LoginView = () => {
 
   return (
     <SafeAreaView>
+      <StatusBar />
       <View
         style={{
-          marginTop: 25,
           paddingHorizontal: 10,
           height: "100%",
           width: "100%",
@@ -120,10 +122,11 @@ const LoginView = () => {
             </View>
             <View style={{ paddingVertical: 1 }}>
               <Button
-                title="Sign in"
                 onPress={handleEmailSubmit}
                 disabled={emailTriggerMutation.isLoading}
-              />
+              >
+                Sign in
+              </Button>
             </View>
           </>
         )}
@@ -156,10 +159,11 @@ const LoginView = () => {
             </View>
             <View style={{ paddingVertical: 1 }}>
               <Button
-                title="Submit"
                 onPress={handleAccessCodeSubmit}
                 disabled={canSearchCompanies}
-              />
+              >
+                Submit
+              </Button>
             </View>
           </>
         )}
@@ -183,9 +187,8 @@ const LoginView = () => {
               {(companiesQuery.data || []).map((company, idx) => (
                 <Button
                   key={company.id}
-                  title={`${idx + 1}. ${company.name}`}
                   onPress={() => handleSelectCompany(company.id)}
-                />
+                >{`${idx + 1}. ${company.name}`}</Button>
               ))}
             </View>
           </>
@@ -193,7 +196,7 @@ const LoginView = () => {
         {stage === "email" && (
           <Pressable
             onPress={() => {
-              navigation.navigate("register");
+              navigation.navigate(NAVIGATION_KEYS.REGISTER_TAB.view);
             }}
             style={{ marginTop: 4 }}
           >
