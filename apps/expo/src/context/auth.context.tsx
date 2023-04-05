@@ -89,18 +89,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         },
       })
         .then((res) => res.json())
-        .then((res) => {
+        .then(async (res) => {
           const parsed = VerifyRefreshTokenPayloadSchema.parse(res);
           if (parsed && parsed.data) {
             const nowData = parsed.data;
-            saveToSecureStore(KEY_SESSION_ID, nowData.sessionId).then(() => {
-              setState((prev) => ({
-                ...prev,
-                accessToken: nowData.accessToken,
-                sessionId: nowData.sessionId,
-                mode: "logged-in",
-              }));
-            });
+
+            await saveToSecureStore(KEY_SESSION_ID, nowData.sessionId).then(
+              () => {
+                setState((prev) => ({
+                  ...prev,
+                  accessToken: nowData.accessToken,
+                  sessionId: nowData.sessionId,
+                  mode: "logged-in",
+                }));
+              },
+            );
           }
         })
         .catch((err) => {
@@ -120,7 +123,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     (async () => {
       const savedSessionId = await getValueFromSecureStore(KEY_SESSION_ID);
-      if (!savedSessionId) return;
+      if (!savedSessionId) return null;
 
       setState((prev) => ({
         ...prev,

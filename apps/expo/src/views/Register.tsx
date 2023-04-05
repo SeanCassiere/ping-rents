@@ -67,7 +67,7 @@ const RegisterView = () => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={[styles.safeArea]}>
       <StatusBar />
       <View
         style={[
@@ -80,7 +80,7 @@ const RegisterView = () => {
           },
         ]}
       >
-        <View>
+        <View style={[styles.pageTitleContainer]}>
           <Text style={styles.pageTitle}>Sign up</Text>
         </View>
         <View style={{ gap: 30, justifyContent: "space-between" }}>

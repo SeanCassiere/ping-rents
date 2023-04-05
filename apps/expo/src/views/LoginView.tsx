@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Keyboard, Pressable, Text, View } from "react-native";
+import { Keyboard, Platform, Pressable, Text, View } from "react-native";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -26,6 +26,9 @@ const messages = {
   signUp: "No account? Sign Up",
   trySendAgain: "I need to send the PIN again",
   startAgain: "I need to start again",
+  emailSent: "We've sent you an email with a PIN.",
+  pinDuration: (num: number) =>
+    `This PIN will only be valid for ${num} minutes.`,
 };
 
 const Stack = createNativeStackNavigator();
@@ -52,7 +55,7 @@ const LoginStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: "transparent" },
+        headerStyle: { backgroundColor: "#fff" },
         headerShadowVisible: false,
       }}
     >
@@ -133,7 +136,7 @@ const LoginEmailView = (props: { onVerified: FnVerified }) => {
   });
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={[styles.safeArea]}>
       <StatusBar />
       <View
         style={[
@@ -146,7 +149,7 @@ const LoginEmailView = (props: { onVerified: FnVerified }) => {
           },
         ]}
       >
-        <View>
+        <View style={[styles.pageTitleContainer]}>
           <Text style={styles.pageTitle}>Login</Text>
         </View>
         <View style={{ gap: 30, justifyContent: "space-between" }}>
@@ -249,7 +252,7 @@ const LoginAccessCodeView = (props: {
   });
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={[styles.safeArea]}>
       <StatusBar />
       <View
         style={[
@@ -263,6 +266,10 @@ const LoginAccessCodeView = (props: {
       >
         <View>
           <Text style={styles.pageTitle}>Access Code</Text>
+          <View style={{ marginTop: 25, gap: 10 }}>
+            <Text>{messages.emailSent}</Text>
+            <Text>{messages.pinDuration(10)}</Text>
+          </View>
         </View>
         <View style={{ gap: 30, justifyContent: "space-between" }}>
           <View style={{ gap: 15 }}>
@@ -374,7 +381,7 @@ const LoginCompanySelectionView = (props: {
   );
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={[styles.safeArea]}>
       <StatusBar />
       <View
         style={[

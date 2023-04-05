@@ -37,6 +37,9 @@ importers:
       '@acme/validator':
         specifier: '*'
         version: link:../../packages/validator
+      '@expo/vector-icons':
+        specifier: ^13.0.0
+        version: 13.0.0
       '@expo/webpack-config':
         specifier: ^18.0.1
         version: 18.0.3(expo@48.0.9)

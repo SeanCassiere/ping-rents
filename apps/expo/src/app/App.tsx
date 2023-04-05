@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
-import { Button, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import * as Network from "expo-network";
+import {
+  FontAwesome5,
+  Ionicons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { NativeBaseProvider } from "native-base";
 
 import { AuthProvider, useAuthContext } from "../context/auth.context";
-import { TRPCProvider, api } from "../utils/api";
+import { TRPCProvider } from "../utils/api";
 import { NAVIGATION_KEYS } from "../utils/navigation";
 import LoginView from "../views/LoginView";
 import RegisterView from "../views/Register";
+import CustomersStack from "./Customer.stack";
 
 function App() {
   const [isOffline, setIsOffline] = useState(false);
@@ -69,12 +75,97 @@ function AuthSelectionView() {
       screenOptions={{
         tabBarHideOnKeyboard: true,
         tabBarItemStyle: { paddingBottom: 10 },
-        tabBarStyle: { height: 55, display: !isAuthed ? "none" : undefined },
+        tabBarStyle: {
+          height: 70,
+          display: !isAuthed ? "none" : undefined,
+          backgroundColor: "white",
+          paddingTop: 10,
+          paddingBottom: 5,
+          paddingHorizontal: 8,
+        },
       }}
     >
       {isAuthed ? (
         <>
-          <Tab.Screen name="Customers" component={LoggedInView} />
+          <Tab.Screen
+            name={NAVIGATION_KEYS.CUSTOMER_TAB.view}
+            component={CustomersStack}
+            options={{
+              title: NAVIGATION_KEYS.CUSTOMER_TAB.title,
+              headerShown: false,
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="md-people" size={size} color={color} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Vehicles"
+            options={{
+              title: "Vehicles",
+              headerShown: false,
+              tabBarIcon: ({ color, size }) => (
+                <FontAwesome5 name="car" size={size} color={color} />
+              ),
+            }}
+          >
+            {() => (
+              <View>
+                <Text>Vehicles</Text>
+              </View>
+            )}
+          </Tab.Screen>
+          <Tab.Screen
+            name="Reservations"
+            options={{
+              title: "Reservations",
+              headerShown: false,
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="bookshelf"
+                  size={size}
+                  color={color}
+                />
+              ),
+            }}
+          >
+            {() => (
+              <View>
+                <Text>Reservations</Text>
+              </View>
+            )}
+          </Tab.Screen>
+          <Tab.Screen
+            name="Agreements"
+            options={{
+              title: "Agreements",
+              headerShown: false,
+              tabBarIcon: ({ color, size }) => (
+                <FontAwesome5 name="file-signature" size={size} color={color} />
+              ),
+            }}
+          >
+            {() => (
+              <View>
+                <Text>Agreements</Text>
+              </View>
+            )}
+          </Tab.Screen>
+          <Tab.Screen
+            name="Settings"
+            options={{
+              title: "Settings",
+              headerShown: false,
+              tabBarIcon: ({ color, size }) => (
+                <FontAwesome5 name="cogs" size={size} color={color} />
+              ),
+            }}
+          >
+            {() => (
+              <View>
+                <Text>Settings</Text>
+              </View>
+            )}
+          </Tab.Screen>
         </>
       ) : (
         <>
@@ -99,33 +190,6 @@ function AuthSelectionView() {
         </>
       )}
     </Tab.Navigator>
-  );
-}
-
-function LoggedInView() {
-  const { logout, isAuthed, state } = useAuthContext();
-  const session = api.auth.getAuthUser.useQuery(undefined, {});
-  return (
-    <View style={{ paddingTop: 20 }}>
-      <Text>LoggedInView</Text>
-      <Button title="Logout" onPress={logout} />
-      <View style={{ marginHorizontal: 4 }}>
-        <Text>{JSON.stringify(session.data, null, 2)}</Text>
-      </View>
-      <View>
-        <Button title="refresh" onPress={() => session.refetch()} />
-      </View>
-      <View style={{ marginHorizontal: 4 }}>
-        <Text>
-          {JSON.stringify(
-            { mode: state.mode, sessionId: state.sessionId, isAuthed },
-            null,
-            2,
-          )}
-        </Text>
-        <Text>{JSON.stringify(state.accessToken, null, 2)}</Text>
-      </View>
-    </View>
   );
 }
 
