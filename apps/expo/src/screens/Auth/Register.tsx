@@ -5,6 +5,7 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Button, Pressable, Text, useToast } from "native-base";
 import { useForm } from "react-hook-form";
 
@@ -13,11 +14,10 @@ import {
   type InputRegisterNewCompanyAndAccount,
 } from "@acme/validator/src/auth";
 
-import TextInput from "../components/TextInput";
-import { useCustomNavigation } from "../hooks/useNavigation";
-import { api } from "../utils/api";
-import { NAVIGATION_KEYS } from "../utils/navigation";
-import { styles } from "../utils/styles";
+import TextInput from "../../components/TextInput";
+import { type GlobalRoutingType } from "../../navigation/types";
+import { api } from "../../utils/api";
+import { styles } from "../../utils/styles";
 
 const messages = {
   haveAccount: "I already have an account, let's sign in!",
@@ -26,8 +26,14 @@ const messages = {
   creationErrorTitle: "Error",
 };
 
-const RegisterView = () => {
-  const navigation = useCustomNavigation();
+type Props = NativeStackScreenProps<
+  GlobalRoutingType["AuthStackNavigator"],
+  "Register"
+>;
+
+const RegisterScreen = (props: Props) => {
+  const { navigation } = props;
+
   const insets = useSafeAreaInsets();
   const toast = useToast();
 
@@ -51,7 +57,9 @@ const RegisterView = () => {
         description: messages.creationSuccessfulMsg,
       });
       reset();
-      navigation.navigate(NAVIGATION_KEYS.LOGIN_TAB.view);
+      navigation.canGoBack()
+        ? navigation.goBack()
+        : navigation.navigate("LoginEmail");
     },
     onError: (error) => {
       toast.show({
@@ -123,7 +131,7 @@ const RegisterView = () => {
           >
             <Pressable
               onPress={() => {
-                navigation.navigate(NAVIGATION_KEYS.LOGIN_TAB.view);
+                navigation.navigate("LoginEmail");
               }}
               disabled={register.isLoading}
             >
@@ -136,4 +144,4 @@ const RegisterView = () => {
   );
 };
 
-export default RegisterView;
+export default RegisterScreen;

@@ -6,7 +6,10 @@ module.exports = function (api) {
   process.env.EXPO_ROUTER_APP_ROOT = "../../apps/expo/src/app";
 
   return {
-    plugins: [],
+    plugins: [
+      "@babel/plugin-proposal-export-namespace-from",
+      ["react-native-reanimated/plugin", { relativeSourceLocation: true }],
+    ],
     presets: ["babel-preset-expo"],
   };
 };

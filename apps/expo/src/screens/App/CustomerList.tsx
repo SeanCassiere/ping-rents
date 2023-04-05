@@ -5,15 +5,23 @@ import {
 } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { Entypo } from "@expo/vector-icons";
+import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
 import { Button, Text, View } from "native-base";
 
-import { useAuthContext } from "../context/auth.context";
-import { useRefreshOnFocus } from "../hooks/useRefreshOnFocus";
-import { api } from "../utils/api";
-import { styles } from "../utils/styles";
+import { useAuthContext } from "../../context/auth.context";
+import { useRefreshOnFocus } from "../../hooks/useRefreshOnFocus";
+import { type GlobalRoutingType } from "../../navigation/types";
+import { api } from "../../utils/api";
+import { styles } from "../../utils/styles";
 
-const CustomerListView = () => {
+type Props = NativeStackScreenProps<
+  GlobalRoutingType["CustomerStackNavigator"],
+  "CustomerList"
+>;
+
+const CustomerListScreen = (props: Props) => {
+  const { navigation } = props;
   const insets = useSafeAreaInsets();
   const { logout } = useAuthContext();
 
@@ -39,16 +47,32 @@ const CustomerListView = () => {
             {
               flexDirection: "row",
               justifyContent: "space-between",
-              alignItems: "center",
             },
           ]}
         >
-          <Text style={[styles.pageTitle]}>Customers</Text>
-          <View>
-            <Button variant="ghost">
-              <Entypo name="circle-with-plus" size={24} color="black" />
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <Button
+              variant="ghost"
+              rounded="full"
+              size="xs"
+              onPress={() => {
+                (props.navigation as any)?.toggleDrawer(); // eslint-disable-line
+              }}
+              padding={0}
+            >
+              <Entypo name="menu" size={24} color="black" />
             </Button>
+            <Text style={[styles.pageTitle]}>Customers</Text>
           </View>
+          <Button variant="ghost" padding={0}>
+            <Entypo name="circle-with-plus" size={24} color="black" />
+          </Button>
         </View>
         <View style={{ flex: 1 }}>
           <Text>Customers:</Text>
@@ -78,4 +102,4 @@ const CustomerListView = () => {
   );
 };
 
-export default CustomerListView;
+export default CustomerListScreen;
