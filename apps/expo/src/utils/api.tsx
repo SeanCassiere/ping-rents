@@ -1,12 +1,20 @@
 import React from "react";
+import { Platform, type AppStateStatus } from "react-native";
 import Constants from "expo-constants";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  focusManager,
+} from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 import superjson from "superjson";
 
 import { type AppRouter } from "@acme/api";
 import { HEADER_SESSION_ID_IDENTIFIER } from "@acme/validator/src/auth";
+
+import { useAppState } from "../hooks/useAppState";
+import { useOnlineManager } from "../hooks/useOnlineManager";
 
 /**
  * A set of typesafe hooks for consuming your API.
@@ -48,6 +56,16 @@ export const getBaseUrl = () => {
 };
 
 /**
+ * Use this to manage the online-status of your app in tanstack-query.
+ */
+function onAppStateChange(status: AppStateStatus) {
+  // React Query already supports in web browser refetch on window focus by default
+  if (Platform.OS !== "web") {
+    focusManager.setFocused(status === "active");
+  }
+}
+
+/**
  * A wrapper for your app that provides the TRPC context.
  * Use only in _app.tsx
  */
@@ -74,6 +92,9 @@ export const TRPCProvider: React.FC<{
     }),
   );
 
+  useOnlineManager();
+
+  useAppState(onAppStateChange);
   return (
     <api.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

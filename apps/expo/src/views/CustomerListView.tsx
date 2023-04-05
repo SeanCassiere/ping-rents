@@ -5,9 +5,11 @@ import {
 } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { Entypo } from "@expo/vector-icons";
+import { FlashList } from "@shopify/flash-list";
 import { Button, Text, View } from "native-base";
 
 import { useAuthContext } from "../context/auth.context";
+import { useRefreshOnFocus } from "../hooks/useRefreshOnFocus";
 import { api } from "../utils/api";
 import { styles } from "../utils/styles";
 
@@ -16,6 +18,7 @@ const CustomerListView = () => {
   const { logout } = useAuthContext();
 
   const customersQuery = api.customers.getAll.useQuery();
+  useRefreshOnFocus(customersQuery.refetch);
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
@@ -47,11 +50,21 @@ const CustomerListView = () => {
             </Button>
           </View>
         </View>
-        <View>
+        <View style={{ flex: 1 }}>
           <Text>Customers:</Text>
-          <Text>{JSON.stringify(customersQuery.data || [], null, 1)}</Text>
+          <FlashList
+            data={customersQuery.data || []}
+            renderItem={({ item }) => {
+              return (
+                <View>
+                  <Text>{JSON.stringify(item, null, 2)}</Text>
+                </View>
+              );
+            }}
+            estimatedItemSize={200}
+          />
         </View>
-        <View>
+        <View style={{ flexShrink: 0 }}>
           <Button
             onPress={() => {
               logout();

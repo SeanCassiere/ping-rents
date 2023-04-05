@@ -17,10 +17,10 @@ import { FlashList } from "@shopify/flash-list";
 
 import TextInput from "../components/TextInput";
 import { useAuthContext } from "../context/auth.context";
+import { useCustomNavigation } from "../hooks/useNavigation";
 import { api } from "../utils/api";
 import { NAVIGATION_KEYS } from "../utils/navigation";
 import { styles } from "../utils/styles";
-import { useCustomNavigation } from "../utils/useNavigation";
 
 const messages = {
   signUp: "No account? Sign Up",

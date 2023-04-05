@@ -14,10 +14,10 @@ import {
 } from "@acme/validator/src/auth";
 
 import TextInput from "../components/TextInput";
+import { useCustomNavigation } from "../hooks/useNavigation";
 import { api } from "../utils/api";
 import { NAVIGATION_KEYS } from "../utils/navigation";
 import { styles } from "../utils/styles";
-import { useCustomNavigation } from "../utils/useNavigation";
 
 const messages = {
   haveAccount: "I already have an account, let's sign in!",
