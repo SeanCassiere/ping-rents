@@ -81,7 +81,6 @@ export const createTRPCContext = async (opts: CreateExpressContextOptions) => {
 
     if (token) {
       try {
-        console.log(token);
         const data = AuthService.verifyJWTToken(token);
         if (data) {
           decodedUser = data;
@@ -96,7 +95,6 @@ export const createTRPCContext = async (opts: CreateExpressContextOptions) => {
   }
 
   // checking for the sessionId in the cookie or the header using X-SESSION-ID
-  // console.log("cookies", req.cookies);
   if (
     req.cookies &&
     (req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER] ||
@@ -175,7 +173,7 @@ export const publicProcedure = t.procedure;
  */
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.user || !ctx.sessionId) {
-    console.log({ user: ctx.user, sessionId: ctx.sessionId });
+    // console.log({ user: ctx.user, sessionId: ctx.sessionId });
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({
