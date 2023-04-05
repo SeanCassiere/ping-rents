@@ -3,14 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "pnpm with-env next build",
+    "build": "echo 'Next app build is turned off for now'",
     "clean": "git clean -xdf .next .turbo node_modules",
-    "dev:prime": "pnpm with-env next dev",
-    "dev": "echo 'Next app is turned off for now'",
-    "lint": "dotenv -v SKIP_ENV_VALIDATION=1 next lint",
+    "dev": "echo 'Next app dev is turned off for now'",
+    "lint": "echo 'Next app lint is turned off for now'",
     "lint:fix": "pnpm lint --fix",
     "start": "pnpm with-env next start",
-    "type-check": "tsc --noEmit",
+    "type-check": "echo 'Next app type-check is turned off for now'",
+    "build:prime": "pnpm with-env next build",
+    "dev:prime": "pnpm with-env next dev",
+    "lint:prime": "dotenv -v SKIP_ENV_VALIDATION=1 next lint",
+    "type-check:prime": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {

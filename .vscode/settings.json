@@ -10,11 +10,9 @@
     "repo",
     "server",
     "app",
-    "app-web",
     "api",
     "auth",
     "db",
-    "validator",
-    "mailer"
+    "validator"
   ]
 }
