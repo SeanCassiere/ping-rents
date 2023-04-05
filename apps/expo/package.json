@@ -4,7 +4,7 @@
   "main": "index.tsx",
   "scripts": {
     "clean": "git clean -xdf .expo .turbo node_modules",
-    "dev": "pnpm with-env expo start --web",
+    "dev": "pnpm with-env expo start --android",
     "dev:android": "expo start --android",
     "dev:web": "expo start --web",
     "dev:ios": "expo start --ios",
