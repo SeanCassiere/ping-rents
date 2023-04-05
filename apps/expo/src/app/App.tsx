@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { Button, Text, View } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import * as Network from "expo-network";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { NativeBaseProvider } from "native-base";
@@ -11,6 +13,25 @@ import LoginView from "../views/LoginView";
 import RegisterView from "../views/Register";
 
 function App() {
+  const [isOffline, setIsOffline] = useState(false);
+
+  useEffect(() => {
+    const checker = async (fn: (value: boolean) => void) => {
+      const result = await Network.getNetworkStateAsync();
+      if (result.isInternetReachable === false) {
+        fn(true);
+      } else {
+        fn(false);
+      }
+    };
+
+    checker(setIsOffline);
+  }, []);
+
+  if (isOffline) {
+    return <OfflineScreen />;
+  }
+
   return (
     <AuthProvider>
       <SafeAreaProvider>
@@ -42,6 +63,7 @@ const Tab = createBottomTabNavigator();
 
 function AuthSelectionView() {
   const { isAuthed } = useAuthContext();
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -104,6 +126,16 @@ function LoggedInView() {
         <Text>{JSON.stringify(state.accessToken, null, 2)}</Text>
       </View>
     </View>
+  );
+}
+
+function OfflineScreen() {
+  return (
+    <SafeAreaView>
+      <View style={{ paddingTop: 20 }}>
+        <Text>You are offline!</Text>
+      </View>
+    </SafeAreaView>
   );
 }
 
