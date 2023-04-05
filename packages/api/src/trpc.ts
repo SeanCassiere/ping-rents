@@ -81,6 +81,7 @@ export const createTRPCContext = async (opts: CreateExpressContextOptions) => {
 
     if (token) {
       try {
+        console.log(token);
         const data = AuthService.verifyJWTToken(token);
         if (data) {
           decodedUser = data;
@@ -95,6 +96,7 @@ export const createTRPCContext = async (opts: CreateExpressContextOptions) => {
   }
 
   // checking for the sessionId in the cookie or the header using X-SESSION-ID
+  // console.log("cookies", req.cookies);
   if (
     req.cookies &&
     (req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER] ||
@@ -103,11 +105,18 @@ export const createTRPCContext = async (opts: CreateExpressContextOptions) => {
     sessionId =
       req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER] ??
       req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER.toLowerCase()];
-  } else if (
-    req.headers?.[HEADER_SESSION_ID_IDENTIFIER] &&
-    typeof req.headers?.[HEADER_SESSION_ID_IDENTIFIER] === "string"
+  }
+
+  if (
+    req.headers?.[HEADER_SESSION_ID_IDENTIFIER] ||
+    req.headers?.[HEADER_SESSION_ID_IDENTIFIER.toLowerCase()]
   ) {
-    sessionId = req.headers[HEADER_SESSION_ID_IDENTIFIER];
+    const value =
+      req.headers?.[HEADER_SESSION_ID_IDENTIFIER] ??
+      req.headers?.[HEADER_SESSION_ID_IDENTIFIER.toLowerCase()];
+    if (typeof value === "string") {
+      sessionId = value;
+    }
   }
 
   return createInnerTRPCContext({

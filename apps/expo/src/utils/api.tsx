@@ -64,7 +64,7 @@ export const TRPCProvider: React.FC<{
         httpBatchLink({
           url: `${getBaseUrl()}/trpc`,
           headers: () => ({
-            ...(accessToken ? { authorization: `Bearer ${accessToken}` } : {}),
+            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
             ...(sessionId
               ? { [HEADER_SESSION_ID_IDENTIFIER.toLowerCase()]: `${sessionId}` }
               : {}),

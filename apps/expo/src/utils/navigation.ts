@@ -19,4 +19,24 @@ export const NAVIGATION_KEYS = {
     title: "Select company",
     view: "Login_Company_View",
   },
+  CUSTOMER_TAB: {
+    title: "Customers",
+    view: "Customer_Tab",
+  },
+  CUSTOMER_LIST_VIEW: {
+    title: "Customers",
+    view: "Customer_List_View",
+  },
+  CUSTOMER_DETAIL_VIEW: {
+    title: "Customer",
+    view: "Customer_Detail_View",
+  },
+  CUSTOMER_CREATE_VIEW: {
+    title: "Create Customer",
+    view: "Customer_Create_View",
+  },
+  CUSTOMER_EDIT_VIEW: {
+    title: "Edit Customer",
+    view: "Customer_Edit_View",
+  },
 } as const;
