@@ -6,6 +6,7 @@ import { createTRPCReact } from "@trpc/react-query";
 import superjson from "superjson";
 
 import { type AppRouter } from "@acme/api";
+import { HEADER_SESSION_ID_IDENTIFIER } from "@acme/validator/src/auth";
 
 /**
  * A set of typesafe hooks for consuming your API.
@@ -17,7 +18,7 @@ export { type RouterInputs, type RouterOutputs } from "@acme/api";
  * Extend this function when going to production by
  * setting the baseUrl to your production API URL.
  */
-const getBaseUrl = () => {
+export const getBaseUrl = () => {
   /**
    * Gets the IP address of your host-machine. If it cannot automatically find it,
    * you'll have to manually set it. NOTE: Port 3000 should work for most but confirm
@@ -28,10 +29,7 @@ const getBaseUrl = () => {
    */
   const localhost = Constants.manifest?.debuggerHost?.split(":")[0];
   if (!localhost) {
-    // return "https://your-production-url.com";
-    throw new Error(
-      "Failed to get localhost. Please point to your production server.",
-    );
+    return "https://api-ping-rent.pingstash.com";
   }
   return `http://${localhost}:4000`;
 };
@@ -40,12 +38,11 @@ const getBaseUrl = () => {
  * A wrapper for your app that provides the TRPC context.
  * Use only in _app.tsx
  */
-export const TRPCProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const accessToken: string | null = null;
-  const sessionId: string | null = null;
-
+export const TRPCProvider: React.FC<{
+  children: React.ReactNode;
+  sessionId: string | null;
+  accessToken: string | null;
+}> = ({ children, sessionId, accessToken }) => {
   const [queryClient] = React.useState(() => new QueryClient());
   const [trpcClient] = React.useState(() =>
     api.createClient({
@@ -53,10 +50,12 @@ export const TRPCProvider: React.FC<{ children: React.ReactNode }> = ({
       links: [
         httpBatchLink({
           url: `${getBaseUrl()}/trpc`,
-          headers: {
-            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-            ...(sessionId ? { "X-SESSION-ID": `${sessionId}` } : {}),
-          },
+          headers: () => ({
+            ...(accessToken ? { authorization: `Bearer ${accessToken}` } : {}),
+            ...(sessionId
+              ? { [HEADER_SESSION_ID_IDENTIFIER.toLowerCase()]: `${sessionId}` }
+              : {}),
+          }),
         }),
       ],
     }),

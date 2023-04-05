@@ -1,17 +1,17 @@
 import type { ExpoConfig } from "@expo/config";
 
 const defineConfig = (): ExpoConfig => ({
-  name: "expo",
-  slug: "expo",
+  name: "PingRent",
+  slug: "pingrents",
   scheme: "expo",
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./assets/icon.png",
+  icon: "./assets/ping-rents-logo.png",
   userInterfaceStyle: "light",
   splash: {
-    image: "./assets/icon.png",
+    image: "./assets/ping-rents-logo.png",
     resizeMode: "contain",
-    backgroundColor: "#1F104A",
+    backgroundColor: "#e2e8f0",
   },
   updates: {
     fallbackToCacheTimeout: 0,
@@ -20,11 +20,14 @@ const defineConfig = (): ExpoConfig => ({
   ios: {
     supportsTablet: true,
     bundleIdentifier: "your.bundle.identifier",
+    config: {
+      usesNonExemptEncryption: false,
+    },
   },
   android: {
     adaptiveIcon: {
-      foregroundImage: "./assets/icon.png",
-      backgroundColor: "#1F104A",
+      foregroundImage: "./assets/ping-rents-logo.png",
+      backgroundColor: "#e2e8f0",
     },
   },
   extra: {

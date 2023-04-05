@@ -67,22 +67,42 @@ export const createTRPCContext = async (opts: CreateExpressContextOptions) => {
   let decodedUser: AuthUser | null = null;
   let sessionId: string | null = null;
   if (
-    req.headers?.authorization &&
-    req.headers?.authorization.toLowerCase().startsWith("bearer ")
+    (req.headers?.authorization &&
+      req.headers?.authorization.toLowerCase().startsWith("bearer ")) ||
+    (req.headers?.Authorization &&
+      typeof req.headers?.Authorization === "string" &&
+      req.headers?.Authorization.toLowerCase().startsWith("bearer "))
   ) {
-    const [_, token] = req.headers.authorization.split(" ");
+    const [_, token] =
+      req.headers?.authorization?.split(" ") ??
+      (typeof req.headers?.Authorization === "string"
+        ? req.headers?.Authorization.split(" ")
+        : []);
 
     if (token) {
-      const data = AuthService.verifyJWTToken(token);
-      if (data) {
-        decodedUser = data;
+      try {
+        const data = AuthService.verifyJWTToken(token);
+        if (data) {
+          decodedUser = data;
+        }
+      } catch (error) {
+        console.log(
+          "createTRPCContext.req.headers.authorization error: ",
+          error,
+        );
       }
     }
   }
 
   // checking for the sessionId in the cookie or the header using X-SESSION-ID
-  if (req.cookies && req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER]) {
-    sessionId = req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER];
+  if (
+    req.cookies &&
+    (req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER] ||
+      req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER.toLowerCase()])
+  ) {
+    sessionId =
+      req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER] ??
+      req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER.toLowerCase()];
   } else if (
     req.headers?.[HEADER_SESSION_ID_IDENTIFIER] &&
     typeof req.headers?.[HEADER_SESSION_ID_IDENTIFIER] === "string"
@@ -146,6 +166,7 @@ export const publicProcedure = t.procedure;
  */
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.user || !ctx.sessionId) {
+    console.log({ user: ctx.user, sessionId: ctx.sessionId });
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({

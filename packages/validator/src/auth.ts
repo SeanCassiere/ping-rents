@@ -20,3 +20,14 @@ export const LoginWithCompanyAndUserSchema = z.object({
 export type InputLoginWithCompanyAndUser = z.infer<
   typeof LoginWithCompanyAndUserSchema
 >;
+
+export const VerifyRefreshTokenPayloadSchema = z.object({
+  data: z
+    .object({
+      sessionId: z.string(),
+      accessToken: z.string(),
+      accessTokenExpiresAt: z.string(),
+      sessionExpiresAt: z.string(),
+    })
+    .nullable(),
+});
