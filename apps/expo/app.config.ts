@@ -1,7 +1,7 @@
 import type { ExpoConfig } from "@expo/config";
 
 const defineConfig = (): ExpoConfig => ({
-  name: "PingRent",
+  name: "PingRents",
   slug: "pingrents",
   scheme: "expo",
   version: "1.0.0",
