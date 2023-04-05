@@ -9,6 +9,7 @@ import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
 import { Button, Text, View } from "native-base";
 
+import MainHeader from "../../components/MainHeader";
 import { useAuthContext } from "../../context/auth.context";
 import { useRefreshOnFocus } from "../../hooks/useRefreshOnFocus";
 import { type GlobalRoutingType } from "../../navigation/types";
@@ -41,41 +42,20 @@ const CustomerListScreen = (props: Props) => {
           },
         ]}
       >
-        <View
-          style={[
-            styles.pageTitleContainer,
-            {
-              flexDirection: "row",
-              justifyContent: "space-between",
+        <MainHeader
+          title="Customers"
+          leftButton={{
+            onPress: () => {
+              (props.navigation as any)?.toggleDrawer(); // eslint-disable-line
             },
-          ]}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 10,
-            }}
-          >
-            <Button
-              variant="ghost"
-              rounded="full"
-              size="xs"
-              onPress={() => {
-                (props.navigation as any)?.toggleDrawer(); // eslint-disable-line
-              }}
-              padding={0}
-            >
-              <Entypo name="menu" size={24} color="black" />
-            </Button>
-            <Text style={[styles.pageTitle]}>Customers</Text>
-          </View>
-          <Button variant="ghost" padding={0}>
-            <Entypo name="circle-with-plus" size={24} color="black" />
-          </Button>
-        </View>
+            content: <Entypo name="menu" size={24} color="black" />,
+          }}
+          rightButton={{
+            onPress: () => {},
+            content: <Entypo name="circle-with-plus" size={24} color="black" />,
+          }}
+        />
         <View style={{ flex: 1 }}>
-          <Text>Customers:</Text>
           <FlashList
             data={customersQuery.data || []}
             renderItem={({ item }) => {
@@ -86,6 +66,8 @@ const CustomerListScreen = (props: Props) => {
               );
             }}
             estimatedItemSize={200}
+            onRefresh={customersQuery.refetch}
+            refreshing={customersQuery.isLoading}
           />
         </View>
         <View style={{ flexShrink: 0 }}>

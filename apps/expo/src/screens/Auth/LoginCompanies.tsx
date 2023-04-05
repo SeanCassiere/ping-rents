@@ -8,6 +8,7 @@ import { Button, useToast } from "native-base";
 import "@acme/validator/src/auth";
 import { FlashList } from "@shopify/flash-list";
 
+import MainHeader from "../../components/MainHeader";
 import { useAuthContext } from "../../context/auth.context";
 import { useCustomNavigation } from "../../hooks/useNavigation";
 import { type GlobalRoutingType } from "../../navigation/types";
@@ -100,11 +101,13 @@ const LoginCompaniesScreen = (props: Props) => {
         ]}
       >
         <View>
-          <Text style={styles.pageTitle}>
-            {props.route.params.companyId === ""
-              ? "Select a company"
-              : "Success!"}
-          </Text>
+          <MainHeader
+            title={
+              props.route.params.companyId === ""
+                ? "Select a company"
+                : "Success!"
+            }
+          />
           {props.route.params.companyId !== "" && (
             <Text style={[styles.errorText, { color: "black" }]}>
               Press confirm to login.

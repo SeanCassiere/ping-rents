@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { z } from "@acme/validator";
 
 import "@acme/validator/src/auth";
+import MainHeader from "../../components/MainHeader";
 import TextInput from "../../components/TextInput";
 import { type GlobalRoutingType } from "../../navigation/types";
 import { api } from "../../utils/api";
@@ -74,9 +75,7 @@ const LoginEmailScreen = (props: Props) => {
           },
         ]}
       >
-        <View style={[styles.pageTitleContainer]}>
-          <Text style={styles.pageTitle}>Login</Text>
-        </View>
+        <MainHeader title="Login" />
         <View style={{ gap: 30, justifyContent: "space-between" }}>
           <View style={{ gap: 15 }}>
             <TextInput

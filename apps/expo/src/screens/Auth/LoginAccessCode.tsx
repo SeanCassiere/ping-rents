@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { z } from "@acme/validator";
 
 import "@acme/validator/src/auth";
+import MainHeader from "../../components/MainHeader";
 import TextInput from "../../components/TextInput";
 import { type GlobalRoutingType } from "../../navigation/types";
 import { api } from "../../utils/api";
@@ -35,7 +36,6 @@ type Props = NativeStackScreenProps<
 const LoginAccessCodeScreen = (props: Props) => {
   const { navigation } = props;
   const toast = useToast();
-  console.log("routes", props.route.params);
 
   const [accessCode, setAccessCode] = useState("");
 
@@ -102,8 +102,8 @@ const LoginAccessCodeScreen = (props: Props) => {
         ]}
       >
         <View>
-          <Text style={styles.pageTitle}>Access Code</Text>
-          <View style={{ marginTop: 25, gap: 10 }}>
+          <MainHeader title="Access Code" />
+          <View style={{ marginTop: 5 }}>
             <Text>{messages.emailSent}</Text>
             <Text>{messages.pinDuration(10)}</Text>
           </View>
