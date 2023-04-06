@@ -52,14 +52,18 @@ const accessCodeExpiryMinutes = 10;
 
 const JWT_SECRET = process.env.JWT_SECRET ?? "secret";
 
-const JwtSchema = z.object({ userId: z.string(), companyId: z.string() });
+const JwtSchema = z.object({
+  userId: z.string(),
+  companyId: z.string(),
+  grantId: z.string(),
+});
 
 export class AuthService {
   constructor() {}
 
-  static generateJWTToken(userId: string, companyId: string) {
+  static generateJWTToken(userId: string, companyId: string, grantId: string) {
     const date = new Date();
-    const token = jwt.sign({ userId, companyId }, JWT_SECRET, {
+    const token = jwt.sign({ userId, companyId, grantId }, JWT_SECRET, {
       expiresIn: "1h",
       subject: userId,
     });
@@ -221,9 +225,22 @@ export class AuthService {
       throw new Error("Invalid or expired access code.");
     }
 
+    let grantId = "";
+    try {
+      const connection = await prisma.companyAccountConnection.findFirstOrThrow(
+        {
+          where: { accountId: attempt.accountId, companyId: payload.companyId },
+        },
+      );
+      grantId = connection.id;
+    } catch (error) {
+      throw new Error("You are not connected to this company.");
+    }
+
     const generatedJwt = this.generateJWTToken(
       attempt.accountId,
       payload.companyId,
+      grantId,
     );
 
     const session = await prisma.session
@@ -264,9 +281,23 @@ export class AuthService {
       throw new Error("Session expired");
     }
 
+    let grantId = "";
+
+    try {
+      const connection = await prisma.companyAccountConnection.findFirstOrThrow(
+        {
+          where: { accountId: session.accountId, companyId: session.companyId },
+        },
+      );
+      grantId = connection.id;
+    } catch (error) {
+      throw new Error("You are not connected to this company.");
+    }
+
     const generatedJwt = this.generateJWTToken(
       session.accountId,
       session.companyId,
+      grantId,
     );
     const updatedSession = await prisma.session.update({
       where: { id: sessionId },
