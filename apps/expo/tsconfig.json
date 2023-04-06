@@ -5,5 +5,5 @@
     "types": ["webpack-env"]
   },
   "include": ["expo-plugins", "src", "app.config.ts", "index.tsx"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "web-build"]
 }
