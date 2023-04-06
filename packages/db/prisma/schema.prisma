@@ -198,7 +198,7 @@ model Rate {
     calculationType RateCalculationType
 
     parentId String?
-    parent   Rate?   @relation("RateParent", fields: [parentId], references: [id], onDelete: Cascade)
+    parent   Rate?   @relation("RateParent", fields: [parentId], references: [id], onDelete: SetNull)
     rates    Rate[]  @relation("RateParent")
 
     locationId    String
