@@ -39,14 +39,7 @@ class VehicleController {
       orderBy: {
         createdAt: "desc",
       },
-      select: {
-        id: true,
-        make: true,
-        model: true,
-        year: true,
-        vin: true,
-        licensePlate: true,
-        color: true,
+      include: {
         vehicleType: {
           select: {
             id: true,
@@ -59,8 +52,6 @@ class VehicleController {
             name: true,
           },
         },
-        createdAt: true,
-        updatedAt: true,
       },
     });
   }
@@ -79,14 +70,7 @@ class VehicleController {
           licensePlate: payload.licensePlate,
           color: payload.color,
         },
-        select: {
-          id: true,
-          make: true,
-          model: true,
-          year: true,
-          vin: true,
-          licensePlate: true,
-          color: true,
+        include: {
           vehicleType: {
             select: {
               id: true,
@@ -99,8 +83,6 @@ class VehicleController {
               name: true,
             },
           },
-          createdAt: true,
-          updatedAt: true,
         },
       })
       .catch((err) => {
@@ -122,14 +104,7 @@ class VehicleController {
   public async getById(user: AuthMetaUser, id: string) {
     const vehicle = await prisma.vehicle.findFirst({
       where: { id, companyId: user.companyId },
-      select: {
-        id: true,
-        make: true,
-        model: true,
-        year: true,
-        vin: true,
-        licensePlate: true,
-        color: true,
+      include: {
         vehicleType: {
           select: {
             id: true,
@@ -142,8 +117,6 @@ class VehicleController {
             name: true,
           },
         },
-        createdAt: true,
-        updatedAt: true,
       },
     });
 
@@ -159,23 +132,16 @@ class VehicleController {
     const vehicle = await prisma.vehicle.update({
       where: { id },
       data: {
-        vehicleType: { connect: { id: payload.typeId } },
-        currentLocation: { connect: { id: payload.currentLocationId } },
-        make: payload.make,
-        model: payload.model,
-        year: payload.year,
-        vin: payload.vin,
-        licensePlate: payload.licensePlate,
-        color: payload.color,
+        vehicleType: { connect: { id: input.typeId } },
+        currentLocation: { connect: { id: input.currentLocationId } },
+        make: input.make,
+        model: input.model,
+        year: input.year,
+        vin: input.vin,
+        licensePlate: input.licensePlate,
+        color: input.color,
       },
-      select: {
-        id: true,
-        make: true,
-        model: true,
-        year: true,
-        vin: true,
-        licensePlate: true,
-        color: true,
+      include: {
         vehicleType: {
           select: {
             id: true,
@@ -188,8 +154,6 @@ class VehicleController {
             name: true,
           },
         },
-        createdAt: true,
-        updatedAt: true,
       },
     });
     return vehicle;

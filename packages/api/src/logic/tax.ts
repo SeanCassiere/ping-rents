@@ -10,14 +10,12 @@ import type { AuthMetaUser } from "../trpc";
 
 class TaxController {
   public async getAll(user: AuthMetaUser, payload: InputGetTaxes) {
-    const query = await prisma.tax.findMany({
+    return await prisma.tax.findMany({
       where: {
         companyId: user.companyId,
         ...(payload.locationId ? { locationId: payload.locationId } : {}),
       },
     });
-
-    return query.map(({ companyId, ...tax }) => tax);
   }
 
   public async create(user: AuthMetaUser, payload: InputCreateNewTax) {
@@ -33,7 +31,8 @@ class TaxController {
         { message: "Tax already exists", path: ["name"], code: "custom" },
       ]);
     }
-    const { companyId, ...created } = await prisma.tax.create({
+
+    return await prisma.tax.create({
       data: {
         company: { connect: { id: user.companyId } },
         name: payload.name,
@@ -42,20 +41,17 @@ class TaxController {
         location: { connect: { id: payload.locationId } },
       },
     });
-
-    return created;
   }
 
-  public async updateById(_: AuthMetaUser, payload: InputUpdateTax) {
-    const { companyId, ...updated } = await prisma.tax.update({
-      where: { id: payload.taxId },
+  public async updateById(user: AuthMetaUser, payload: InputUpdateTax) {
+    return await prisma.tax.update({
+      where: { companyId_id: { companyId: user.companyId, id: payload.id } },
       data: {
         name: payload.name,
         value: payload.value,
         calculationType: payload.calculationType,
       },
     });
-    return updated;
   }
 }
 

@@ -25,7 +25,12 @@ class VehicleTypeController {
 
   public async updateById(user: AuthMetaUser, payload: InputUpdateVehicleType) {
     const updated = await prisma.vehicleType.update({
-      where: { id: payload.vehicleTypeId },
+      where: {
+        companyId_id: {
+          companyId: user.companyId,
+          id: payload.vehicleTypeId,
+        },
+      },
       data: {
         name: payload.name,
       },
