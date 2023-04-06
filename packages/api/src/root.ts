@@ -1,6 +1,7 @@
 import { authRouter } from "./router/auth";
 import { customersRouter } from "./router/customer";
 import { locationsRouter } from "./router/location";
+import { ratesRouter } from "./router/rates";
 import { taxesRouter } from "./router/taxes";
 import { vehicleTypesRouter } from "./router/vehicleTypes";
 import { vehiclesRouter } from "./router/vehicles";
@@ -10,6 +11,7 @@ export const appRouter = createTRPCRouter({
   auth: authRouter,
   customers: customersRouter,
   locations: locationsRouter,
+  rates: ratesRouter,
   taxes: taxesRouter,
   vehicles: vehiclesRouter,
   vehicleTypes: vehicleTypesRouter,
