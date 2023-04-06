@@ -1,6 +1,9 @@
 import { AuthService } from "@acme/auth";
 import { prisma } from "@acme/db";
-import { type InputAddUserToCompany } from "@acme/validator/src/company";
+import {
+  type InputAddUserToCompany,
+  type InputUpdateCompanyInformation,
+} from "@acme/validator/src/company";
 
 import { type AuthMetaUser } from "../trpc";
 
@@ -54,6 +57,16 @@ class CompanyController {
       where: {
         id: grantId,
       },
+    });
+  }
+
+  async updateCompanyInformation(
+    user: AuthMetaUser,
+    payload: InputUpdateCompanyInformation,
+  ) {
+    return await prisma.company.update({
+      where: { id: user.companyId },
+      data: { name: payload.name },
     });
   }
 }
