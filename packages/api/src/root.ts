@@ -1,20 +1,22 @@
 import { authRouter } from "./router/auth";
+import { companyRouter } from "./router/company";
 import { customersRouter } from "./router/customer";
 import { locationsRouter } from "./router/location";
-import { ratesRouter } from "./router/rates";
-import { taxesRouter } from "./router/taxes";
-import { vehicleTypesRouter } from "./router/vehicleTypes";
-import { vehiclesRouter } from "./router/vehicles";
+import { ratesRouter } from "./router/rate";
+import { taxesRouter } from "./router/tax";
+import { vehiclesRouter } from "./router/vehicle";
+import { vehicleTypesRouter } from "./router/vehicleType";
 import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({
   auth: authRouter,
-  customers: customersRouter,
-  locations: locationsRouter,
-  rates: ratesRouter,
-  taxes: taxesRouter,
-  vehicles: vehiclesRouter,
-  vehicleTypes: vehicleTypesRouter,
+  company: companyRouter,
+  customer: customersRouter,
+  location: locationsRouter,
+  rate: ratesRouter,
+  tax: taxesRouter,
+  vehicle: vehiclesRouter,
+  vehicleType: vehicleTypesRouter,
 });
 
 // export type definition of API

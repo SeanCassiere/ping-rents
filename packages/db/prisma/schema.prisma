@@ -29,7 +29,6 @@ model Company {
 
 model Account {
     id    String @id @default(cuid())
-    name  String @db.VarChar(255)
     email String @db.VarChar(255)
 
     companyAccountConnections CompanyAccountConnection[]
@@ -54,9 +53,16 @@ model AccountLoginAttempt {
     createdAt DateTime @default(now())
 }
 
+enum CompanyAccountConnectionRole {
+    admin
+    employee
+}
+
 model CompanyAccountConnection {
-    id      String  @id @default(cuid())
-    isOwner Boolean @default(false)
+    id      String                       @id @default(cuid())
+    name    String                       @db.VarChar(255)
+    isOwner Boolean                      @default(false)
+    role    CompanyAccountConnectionRole @default(employee)
 
     accountId String
     account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
@@ -64,6 +70,8 @@ model CompanyAccountConnection {
     company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
+
+    @@unique([accountId, companyId], name: "accountId_companyId")
 }
 
 model Location {
