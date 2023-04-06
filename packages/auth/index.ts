@@ -311,4 +311,13 @@ export class AuthService {
       sessionExpiresAt: updatedSession.expiresAt,
     };
   }
+
+  static async emailHasExistingAccount(email: string) {
+    const account = await prisma.account.findFirst({
+      where: {
+        email: email.toLowerCase(),
+      },
+    });
+    return account ?? false;
+  }
 }
