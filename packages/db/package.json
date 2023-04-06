@@ -9,7 +9,10 @@
     "db:generate": "pnpm with-env prisma generate",
     "db:push": "pnpm with-env prisma db push --skip-generate",
     "db:push-force": "pnpm with-env prisma db push --accept-data-loss",
-    "dev": "pnpm with-env prisma studio --port 5556",
+    "watch": "pnpm with-env prisma studio --port 5556",
+    "dev": "pnpm watch",
+    "dev:android": "pnpm watch",
+    "dev:web": "pnpm watch",
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {

@@ -14,13 +14,21 @@
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
+    "dev:android": {
+      "persistent": true,
+      "cache": false
+    },
+    "dev:web": {
+      "persistent": true,
+      "cache": false
+    },
     "dev": {
       "persistent": true,
       "cache": false
     },
     "build": {
       "dependsOn": ["^build", "^db:generate"],
-      "outputs": [".next/**", ".expo/**"]
+      "outputs": [".next/**", ".expo/**", "./dist/**", "./web-build/**"]
     },
     "lint": {},
     "lint:fix": {},
