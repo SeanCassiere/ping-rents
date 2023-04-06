@@ -15,8 +15,12 @@ export const authRouter = createTRPCRouter({
   getSession: publicProcedure.query(({ ctx }) => {
     return ctx.user;
   }),
-  getAuthUser: protectedProcedure.query(({ ctx }) => {
-    return ctx.user; // replace with an auth api call
+  getAuthUser: protectedProcedure.query(async ({ ctx }) => {
+    const user = await AuthService.getUserMetadata(ctx.user.grantId);
+    if (!user) {
+      throw new TRPCError({ code: "UNAUTHORIZED", message: "No user" });
+    }
+    return user;
   }),
   refreshAccessToken: publicProcedure.mutation(async ({ ctx }) => {
     let sessionId: string | null = null;
