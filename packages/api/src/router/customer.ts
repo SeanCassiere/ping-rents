@@ -1,4 +1,3 @@
-import "@acme/validator/src/vehicleType";
 import {
   CreateCustomerSchema,
   UpdateCustomerSchema,

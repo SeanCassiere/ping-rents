@@ -84,6 +84,14 @@ export class AuthService {
     }
   }
 
+  static async createAccount(email: string) {
+    return await prisma.account.create({
+      data: {
+        email: email.toLowerCase(),
+      },
+    });
+  }
+
   static async registerNewCompanyAndAccount(
     input: InputRegisterNewCompanyAndAccount,
   ) {
@@ -102,20 +110,17 @@ export class AuthService {
     });
 
     if (!findUser) {
-      const newUser = await prisma.account.create({
-        data: {
-          name: input.accountName,
-          email: input.accountEmail.toLowerCase(),
-        },
-      });
+      const newUser = await AuthService.createAccount(input.accountEmail);
       userId = newUser.id;
     } else {
       userId = findUser.id;
     }
 
-    await prisma.companyAccountConnection.create({
+    const connection = await prisma.companyAccountConnection.create({
       data: {
+        name: input.accountName,
         isOwner: true,
+        role: "admin",
         account: {
           connect: {
             id: userId,
@@ -129,7 +134,7 @@ export class AuthService {
       },
     });
 
-    return { companyId: company.id, userId };
+    return { companyId: company.id, userId, grantId: connection.id };
   }
 
   static async initEmailLoginWithAccessCode(email: string) {
@@ -319,5 +324,24 @@ export class AuthService {
       },
     });
     return account ?? false;
+  }
+
+  /**
+   * Get metadata for a user. Ex: name, email, etc.
+   * @param grantId grant/connection id linking the user to the company
+   */
+  static async getUserMetadata(grantId: string) {
+    return await prisma.companyAccountConnection.findFirst({
+      where: {
+        id: grantId,
+      },
+      include: {
+        account: {
+          select: {
+            email: true,
+          },
+        },
+      },
+    });
   }
 }
