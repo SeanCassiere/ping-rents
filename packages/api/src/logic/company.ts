@@ -69,6 +69,24 @@ class CompanyController {
       data: { name: payload.name },
     });
   }
+
+  async getAllGrantsForCompany(user: AuthMetaUser) {
+    return await prisma.companyAccountConnection.findMany({
+      where: {
+        companyId: user.companyId,
+      },
+      include: {
+        account: {
+          select: {
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+  }
 }
 
 export const CompanyLogic = new CompanyController();

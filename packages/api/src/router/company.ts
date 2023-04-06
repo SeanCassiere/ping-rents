@@ -24,6 +24,9 @@ export const companyRouter = createTRPCRouter({
 
       return await CompanyLogic.updateCompanyInformation(ctx.user, input);
     }),
+  getEmployees: protectedProcedure.query(async ({ ctx }) => {
+    return await CompanyLogic.getAllGrantsForCompany(ctx.user);
+  }),
   addEmployee: protectedProcedure
     .input(AddUserToCompanySchema)
     .mutation(async ({ ctx, input }) => {
