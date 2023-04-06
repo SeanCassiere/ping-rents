@@ -28,11 +28,11 @@
     },
     "build:web": {
       "dependsOn": ["^build", "^db:generate"],
-      "outputs": [".next/**", ".expo/**", "./dist/**", "./web-build/**"]
+      "outputs": [".next/**", ".expo/**", "dist/**", "web-build/**"]
     },
     "build": {
       "dependsOn": ["^build", "^db:generate"],
-      "outputs": [".next/**", ".expo/**", "./dist/**", "./web-build/**"]
+      "outputs": [".next/**", ".expo/**", "dist/**", "web-build/**"]
     },
     "lint": {},
     "lint:fix": {},
