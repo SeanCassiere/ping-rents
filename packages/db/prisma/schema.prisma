@@ -21,6 +21,7 @@ model Company {
     vehicleTypes              VehicleType[]
     customers                 Customer[]
     vehicles                  Vehicle[]
+    rates                     Rate[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -71,6 +72,7 @@ model Location {
 
     taxes    Tax[]
     vehicles Vehicle[]
+    rates    Rate[]
 
     companyId String
     company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
@@ -114,6 +116,7 @@ model VehicleType {
     companyId String
     company   Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
     vehicles  Vehicle[]
+    rates     Rate[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -157,4 +160,39 @@ model Vehicle {
 
     @@unique([vin, companyId], name: "vin_companyId")
     @@unique([licensePlate, companyId], name: "licensePlate_companyId")
+}
+
+enum RateCalculationType {
+    retail
+    perDay
+}
+
+enum RateAccessType {
+    config
+    rental
+}
+
+model Rate {
+    id        String @id @default(cuid())
+    name      String @db.VarChar(255)
+    dailyRate Float  @default(0.00) @db.Float
+
+    accessType      RateAccessType
+    calculationType RateCalculationType
+
+    parentId String?
+    parent   Rate?   @relation("RateParent", fields: [parentId], references: [id], onDelete: Cascade)
+    rates    Rate[]  @relation("RateParent")
+
+    locationId    String
+    location      Location    @relation(fields: [locationId], references: [id], onDelete: Cascade)
+    vehicleTypeId String
+    vehicleType   VehicleType @relation(fields: [vehicleTypeId], references: [id], onDelete: Cascade)
+    companyId     String
+    company       Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([companyId, id], name: "companyId_id")
 }
