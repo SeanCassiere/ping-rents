@@ -76,6 +76,11 @@ model Location {
 
     companyId String
     company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+
+    @@unique([companyId, id], name: "companyId_id")
 }
 
 model Session {
@@ -107,6 +112,8 @@ model Tax {
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
+
+    @@unique([companyId, id], name: "companyId_id")
 }
 
 model VehicleType {
@@ -120,6 +127,8 @@ model VehicleType {
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
+
+    @@unique([companyId, id], name: "companyId_id")
 }
 
 model Customer {
