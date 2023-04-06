@@ -13,7 +13,11 @@ export const styles = StyleSheet.create({
   pageTitleContainer: {
     paddingTop: Platform.OS === "web" ? 18 : 0,
   },
-  pageContainer: { paddingHorizontal: 18, height: "100%", width: "100%" },
+  pageContainer: {
+    paddingHorizontal: 18,
+    height: "100%",
+    width: "100%",
+  },
   textCenter: { textAlign: "center" },
   textUnderline: { textDecorationLine: "underline" },
   errorText: { color: "red", fontSize: 14, marginVertical: 5 },

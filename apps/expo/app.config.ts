@@ -6,12 +6,12 @@ const defineConfig = (): ExpoConfig => ({
   scheme: "expo",
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./assets/ping-rents-logo.png",
+  icon: "./assets/images/icon.png",
   userInterfaceStyle: "light",
   splash: {
-    image: "./assets/ping-rents-logo.png",
+    image: "./assets/images/splash.png",
     resizeMode: "contain",
-    backgroundColor: "#e2e8f0",
+    backgroundColor: "#FFFFFF",
   },
   updates: {
     fallbackToCacheTimeout: 0,
@@ -19,15 +19,15 @@ const defineConfig = (): ExpoConfig => ({
   assetBundlePatterns: ["**/*"],
   ios: {
     supportsTablet: true,
-    bundleIdentifier: "your.bundle.identifier",
+    bundleIdentifier: "com.pingstash.pingrents",
     config: {
       usesNonExemptEncryption: false,
     },
   },
   android: {
     adaptiveIcon: {
-      foregroundImage: "./assets/ping-rents-logo.png",
-      backgroundColor: "#e2e8f0",
+      foregroundImage: "./assets/images/adaptive-icon.png",
+      backgroundColor: "#FFFFFF",
     },
   },
   extra: {
