@@ -7,6 +7,7 @@
   "packageManager": "pnpm@8.0.0",
   "scripts": {
     "build": "turbo build",
+    "build:web": "turbo build:web",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
     "db:generate": "turbo db:generate",
@@ -28,7 +29,7 @@
     "eslint": "^8.36.0",
     "prettier": "^2.8.7",
     "prettier-plugin-tailwindcss": "^0.2.5",
-    "turbo": "^1.8.6",
+    "turbo": "^1.8.8",
     "typescript": "^5.0.2"
   }
 }

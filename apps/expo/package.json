@@ -8,7 +8,7 @@
     "dev:android": "pnpm with-env expo start --android",
     "dev:web": "pnpm with-env expo start --web",
     "dev:ios": "pnpm with-env expo start --ios",
-    "build": "pnpm with-env expo export:web",
+    "build:web": "pnpm with-env expo export:web",
     "lint": "eslint .",
     "lint:fix": "pnpm lint --fix",
     "FIXME(no-work):type-check": "tsc --noEmit",
