@@ -55,7 +55,9 @@
     "SKIP_ENV_VALIDATION",
     "VERCEL",
     "VERCEL_URL",
-    "PUBLIC_API_URL",
-    "JWT_SECRET"
+    "JWT_SECRET",
+    "PORT",
+    "SERVER_HOST",
+    "PUBLIC_API_URL"
   ]
 }

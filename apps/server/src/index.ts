@@ -1,4 +1,5 @@
 import { makeExpressServer } from "./server";
+import { ENV_VARS } from "./vars";
 
 async function main() {
   const app = await makeExpressServer();
@@ -9,11 +10,16 @@ async function main() {
     });
   });
 
-  app.listen(4000, () => {
-    console.log("Server started on http://localhost:4000");
+  app.listen(Number(ENV_VARS.PORT), ENV_VARS.SERVER_HOST, () => {
+    console.log(
+      "🚀 Server available at:",
+      ENV_VARS.IS_PRODUCTION
+        ? `${ENV_VARS.SERVER_HOST}`
+        : `http://localhost:${ENV_VARS.PORT}`,
+    );
   });
 }
 
 void main().catch((err) => {
-  console.error("Server crashed with error: ", err);
+  console.error("💥 Server crashed with an error: ", err);
 });
