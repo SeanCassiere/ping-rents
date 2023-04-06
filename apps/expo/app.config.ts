@@ -3,6 +3,7 @@ import type { ExpoConfig } from "@expo/config";
 const defineConfig = (): ExpoConfig => ({
   name: "PingRents",
   slug: "pingrents",
+  owner: "seancassiere",
   scheme: "expo",
   version: "1.0.0",
   orientation: "portrait",
@@ -29,11 +30,12 @@ const defineConfig = (): ExpoConfig => ({
       foregroundImage: "./assets/images/adaptive-icon.png",
       backgroundColor: "#FFFFFF",
     },
+    package: "com.pingstash.pingrents",
   },
   extra: {
     PUBLIC_API_URL: process.env.PUBLIC_API_URL ?? null,
     eas: {
-      projectId: "your-project-id",
+      projectId: "d4d476ca-f6fa-4c8c-b203-dc6f66eaf124",
     },
   },
   plugins: ["./expo-plugins/with-modify-gradle.js"],
