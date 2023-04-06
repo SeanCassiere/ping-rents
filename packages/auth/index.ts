@@ -344,4 +344,15 @@ export class AuthService {
       },
     });
   }
+
+  static async userIsAdmin(grantId: string) {
+    const user = await AuthService.getUserMetadata(grantId);
+    if (!user) {
+      return false;
+    }
+    if (user.role !== "admin" && user.isOwner === false) {
+      return false;
+    }
+    return true;
+  }
 }
