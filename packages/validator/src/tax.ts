@@ -10,12 +10,9 @@ export const CreateNewTaxSchema = z.object({
 });
 export type InputCreateNewTax = z.infer<typeof CreateNewTaxSchema>;
 
-export const UpdateTaxSchema = z.object({
-  taxId: z.string().min(1),
-  name: z.string().min(1),
-  value: z.number().min(0).default(0),
-  calculationType,
-});
+export const UpdateTaxSchema = CreateNewTaxSchema.extend({
+  id: z.string().min(1),
+}).omit({ locationId: true });
 export type InputUpdateTax = z.infer<typeof UpdateTaxSchema>;
 
 export const GetTaxesSchema = z.object({
