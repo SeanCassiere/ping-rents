@@ -14,16 +14,20 @@ function App() {
   const [isOffline, setIsOffline] = useState(false);
 
   useEffect(() => {
-    const checker = async (fn: (value: boolean) => void) => {
-      const result = await Network.getNetworkStateAsync();
-      if (result.isInternetReachable === false) {
-        fn(true);
-      } else {
-        fn(false);
+    async function checkNetwork() {
+      try {
+        const result = await Network.getNetworkStateAsync();
+        if (result.isInternetReachable === false) {
+          setIsOffline(true);
+        } else {
+          setIsOffline(false);
+        }
+      } catch (error) {
+        setIsOffline(true);
       }
-    };
+    }
 
-    checker(setIsOffline);
+    checkNetwork();
   }, []);
 
   if (isOffline) {
@@ -48,6 +52,7 @@ function TrpcChildrenProvider() {
     state: { accessToken, sessionId },
     isAuthed,
   } = useAuthContext();
+
   return (
     <TRPCProvider
       {...{ accessToken, sessionId }}

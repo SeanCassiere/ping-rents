@@ -34,6 +34,7 @@ type AuthContextState = {
   state: AuthState;
   logout: () => Promise<void>;
   login: (info: { accessToken: string; sessionId: string }) => Promise<void>;
+  isInitialLoad: boolean;
 };
 
 const AuthContext = createContext<AuthContextState | undefined>(undefined);
@@ -42,6 +43,7 @@ const AuthContext = createContext<AuthContextState | undefined>(undefined);
 const KEY_SESSION_ID = "session-id" as const;
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [state, setState] = useState<AuthState>({
     accessToken: null,
     sessionId: null,
@@ -71,12 +73,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const sessionId = useMemo(() => state.sessionId, [state.sessionId]);
   const authMode = useMemo(() => state.mode, [state.mode]);
+  const firstLoad = useMemo(() => isInitialLoad, [isInitialLoad]);
 
   const bag: AuthContextState = {
     isAuthed: state.mode === "logged-in",
     state,
     logout: handleLogout,
     login: handleLogin,
+    isInitialLoad: firstLoad,
   };
 
   useEffect(() => {
@@ -116,14 +120,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               mode: "logged-out",
             }));
           });
+        })
+        .finally(() => {
+          setIsInitialLoad(false);
         });
     }
   }, [authMode, sessionId]);
 
   useEffect(() => {
+    setIsInitialLoad(true);
     (async () => {
       const savedSessionId = await getValueFromSecureStore(KEY_SESSION_ID);
-      if (!savedSessionId) return null;
+      if (!savedSessionId) {
+        setIsInitialLoad(false);
+        return;
+      }
 
       setState((prev) => ({
         ...prev,
@@ -131,6 +142,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         sessionId: savedSessionId,
         mode: "session-only-hold",
       }));
+      setIsInitialLoad(true);
     })();
   }, []);
 
