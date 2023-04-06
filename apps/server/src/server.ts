@@ -7,6 +7,7 @@ import { renderTrpcPanel } from "trpc-panel";
 import { appRouter, createTRPCContext } from "@acme/api";
 
 import v1Router from "./routes/v1";
+import { ENV_VARS } from "./vars";
 
 export async function makeExpressServer() {
   const app = express();
@@ -37,7 +38,9 @@ export async function makeExpressServer() {
   app.use("/trpc-panel", (_, res) => {
     res.send(
       renderTrpcPanel(appRouter, {
-        url: "http://localhost:4000/trpc",
+        url: ENV_VARS.IS_PRODUCTION
+          ? `${ENV_VARS.SERVER_HOST}/trpc`
+          : `http://localhost:${ENV_VARS.PORT}/trpc`,
         transformer: "superjson",
       }),
     );

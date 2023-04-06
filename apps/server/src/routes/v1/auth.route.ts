@@ -42,13 +42,16 @@ router.get("/refresh", async (req, res) => {
     return;
   }
 
-  const result = await AuthService.refreshAccessTokenWithSessionId(sessionId);
+  try {
+    const result = await AuthService.refreshAccessTokenWithSessionId(sessionId);
+    res.cookie(COOKIE_SESSION_ID_IDENTIFIER, result.sessionId, {
+      httpOnly: true,
+    });
 
-  res.cookie(COOKIE_SESSION_ID_IDENTIFIER, result.sessionId, {
-    httpOnly: true,
-  });
-
-  res.json({ success: true, data: result });
+    res.json({ success: true, data: result });
+  } catch (error) {
+    res.json({ success: false, data: null });
+  }
 });
 
 export default router;
