@@ -1,5 +1,12 @@
 import React from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface MainHeaderProps {
   title: string;
@@ -11,31 +18,37 @@ interface MainHeaderProps {
     onPress: () => void;
     content: React.ReactNode;
   };
+  noTopPadding?: boolean;
 }
 
 const MainHeader = (props: MainHeaderProps) => {
-  const { title, leftButton, rightButton } = props;
+  const { title, leftButton, rightButton, noTopPadding = false } = props;
   return (
     <View>
-      <View style={[headerStyles.container]}>
+      <View
+        style={[
+          headerStyles.titleContainer,
+          noTopPadding ? { paddingTop: 0 } : {},
+        ]}
+      >
         <View style={[headerStyles.leftContainer]}>
           {leftButton && (
-            <Pressable
+            <TouchableOpacity
               onPress={leftButton.onPress}
               style={[headerStyles.btn, headerStyles.leftBtn]}
             >
               {leftButton.content}
-            </Pressable>
+            </TouchableOpacity>
           )}
           <Text style={[headerStyles.titleText]}>{title}</Text>
         </View>
         {rightButton && (
-          <Pressable
+          <TouchableOpacity
             onPress={rightButton.onPress}
             style={[headerStyles.btn, headerStyles.rightBtn]}
           >
             {rightButton.content}
-          </Pressable>
+          </TouchableOpacity>
         )}
       </View>
     </View>
@@ -45,8 +58,8 @@ const MainHeader = (props: MainHeaderProps) => {
 export default MainHeader;
 
 const headerStyles = StyleSheet.create({
-  container: {
-    paddingTop: Platform.OS === "web" ? 18 : 0,
+  titleContainer: {
+    paddingTop: Platform.OS === "web" ? 18 : 15,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

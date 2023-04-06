@@ -1,9 +1,6 @@
 import React from "react";
 import { Keyboard, Pressable, Text, View } from "react-native";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -32,7 +29,6 @@ type Props = NativeStackScreenProps<
 
 const LoginEmailScreen = (props: Props) => {
   const { navigation } = props;
-  const insets = useSafeAreaInsets();
   const toast = useToast();
 
   const { control, handleSubmit, reset } = useForm({
@@ -68,7 +64,6 @@ const LoginEmailScreen = (props: Props) => {
         style={[
           styles.pageContainer,
           {
-            paddingTop: insets.top,
             paddingBottom: 20,
             gap: 10,
             justifyContent: "space-between",
@@ -83,6 +78,7 @@ const LoginEmailScreen = (props: Props) => {
               name="email"
               label="Email"
               placeholder="enter your email"
+              isDisabled={trigger.isLoading}
             />
             <View>
               <Button

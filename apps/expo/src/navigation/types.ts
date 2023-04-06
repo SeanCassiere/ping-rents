@@ -12,6 +12,9 @@ export type GlobalRoutingType = {
   AppDrawer: {
     Home: undefined;
     Customers: undefined;
+    Vehicles: undefined;
+    Reservations: undefined;
+    Agreements: undefined;
     Settings: undefined;
   };
   CustomerStackNavigator: {

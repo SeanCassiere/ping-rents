@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { Entypo } from "@expo/vector-icons";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -23,8 +20,6 @@ type Props = NativeStackScreenProps<
 
 const CustomerListScreen = (props: Props) => {
   const { navigation } = props;
-  const insets = useSafeAreaInsets();
-  const { logout } = useAuthContext();
 
   const customersQuery = api.customers.getAll.useQuery();
   useRefreshOnFocus(customersQuery.refetch);
@@ -36,7 +31,6 @@ const CustomerListScreen = (props: Props) => {
         style={[
           styles.pageContainer,
           {
-            paddingTop: insets.top,
             paddingBottom: 20,
             gap: 10,
           },
@@ -69,15 +63,6 @@ const CustomerListScreen = (props: Props) => {
             onRefresh={customersQuery.refetch}
             refreshing={customersQuery.isLoading}
           />
-        </View>
-        <View style={{ flexShrink: 0 }}>
-          <Button
-            onPress={() => {
-              logout();
-            }}
-          >
-            Logout
-          </Button>
         </View>
       </View>
     </SafeAreaView>

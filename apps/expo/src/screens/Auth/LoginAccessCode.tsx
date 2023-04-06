@@ -18,7 +18,7 @@ import { styles } from "../../utils/styles";
 
 const messages = {
   trySendAgain: "I need to send the PIN again",
-  emailSent: "We've sent you an email with a PIN.",
+  emailSent: "We've sent you an email with a PIN to proceed.",
   pinDuration: (num: number) =>
     `This PIN will only be valid for ${num} minutes.`,
 };
@@ -102,7 +102,7 @@ const LoginAccessCodeScreen = (props: Props) => {
         ]}
       >
         <View>
-          <MainHeader title="Access Code" />
+          <MainHeader title="Access Code" noTopPadding />
           <View style={{ marginTop: 5 }}>
             <Text>{messages.emailSent}</Text>
             <Text>{messages.pinDuration(10)}</Text>

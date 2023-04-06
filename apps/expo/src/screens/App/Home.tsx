@@ -20,12 +20,7 @@ const HomeScreen = (props: Props) => {
   return (
     <SafeAreaView style={[styles.safeArea]}>
       <StatusBar />
-      <View
-        style={[
-          styles.pageContainer,
-          { paddingTop: insets.top, paddingBottom: 20 },
-        ]}
-      >
+      <View style={[styles.pageContainer, { paddingBottom: 20 }]}>
         <MainHeader
           title="Home"
           leftButton={{
