@@ -52,7 +52,7 @@ export const authRouter = createTRPCRouter({
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: (error as any)?.message ?? "Something went wrong", // eslint-disable-line
+          message: (error as any)?.message ?? "Something went wrong",
         });
       }
     }),
@@ -67,7 +67,7 @@ export const authRouter = createTRPCRouter({
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: (error as any)?.message ?? "Something went wrong", // eslint-disable-line
+          message: (error as any)?.message ?? "Something went wrong",
         });
       }
     }),
@@ -82,7 +82,7 @@ export const authRouter = createTRPCRouter({
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: (error as any)?.message ?? "Something went wrong", // eslint-disable-line
+          message: (error as any)?.message ?? "Something went wrong",
         });
       }
     }),
@@ -99,7 +99,7 @@ export const authRouter = createTRPCRouter({
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: (error as any)?.message ?? "Something went wrong", // eslint-disable-line
+          message: (error as any)?.message ?? "Something went wrong",
         });
       }
     }),
