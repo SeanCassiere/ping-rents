@@ -21,7 +21,7 @@ type Props = NativeStackScreenProps<
 const CustomerListScreen = (props: Props) => {
   const { navigation } = props;
 
-  const customersQuery = api.customers.getAll.useQuery();
+  const customersQuery = api.customer.getAll.useQuery();
   useRefreshOnFocus(customersQuery.refetch);
 
   return (
