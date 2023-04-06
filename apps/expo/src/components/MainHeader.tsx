@@ -1,18 +1,15 @@
 import React from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
-import { Button, type IButtonProps } from "native-base";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 interface MainHeaderProps {
   title: string;
   leftButton?: {
     onPress: () => void;
     content: React.ReactNode;
-    buttonProps?: IButtonProps;
   };
   rightButton?: {
     onPress: () => void;
     content: React.ReactNode;
-    buttonProps?: IButtonProps;
   };
 }
 
@@ -23,26 +20,22 @@ const MainHeader = (props: MainHeaderProps) => {
       <View style={[headerStyles.container]}>
         <View style={[headerStyles.leftContainer]}>
           {leftButton && (
-            <Button
-              variant="ghost"
-              padding={0}
-              {...leftButton.buttonProps}
+            <Pressable
               onPress={leftButton.onPress}
+              style={[headerStyles.btn, headerStyles.leftBtn]}
             >
               {leftButton.content}
-            </Button>
+            </Pressable>
           )}
           <Text style={[headerStyles.titleText]}>{title}</Text>
         </View>
         {rightButton && (
-          <Button
-            variant="ghost"
-            padding={0}
-            {...rightButton.buttonProps}
+          <Pressable
             onPress={rightButton.onPress}
+            style={[headerStyles.btn, headerStyles.rightBtn]}
           >
             {rightButton.content}
-          </Button>
+          </Pressable>
         )}
       </View>
     </View>
@@ -67,5 +60,14 @@ const headerStyles = StyleSheet.create({
   titleText: {
     fontSize: 30,
     fontWeight: "bold",
+  },
+  leftBtn: {
+    paddingRight: 2,
+  },
+  rightBtn: {
+    paddingLeft: 2,
+  },
+  btn: {
+    paddingVertical: 4,
   },
 });
