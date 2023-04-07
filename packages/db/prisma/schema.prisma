@@ -284,9 +284,6 @@ model Rental {
     rateId String
     rate   Rate   @relation(fields: [rateId], references: [id], onDelete: Cascade)
 
-    calculationId String?            @unique
-    calculation   RentalCalculation? @relation(fields: [calculationId], references: [id], onDelete: SetNull)
-
     companyId String
     company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
@@ -296,20 +293,4 @@ model Rental {
     updatedAt DateTime @updatedAt
 
     @@unique([companyId, id], name: "companyId_id")
-}
-
-model RentalCalculation {
-    id                  String @id @default(cuid())
-    baseRate            Float  @default(0.00) @db.Float
-    promotionOnBase     Float  @default(0.00) @db.Float
-    promotionOnSubtotal Float  @default(0.00) @db.Float
-    subtotal            Float  @default(0.00) @db.Float
-    totalTax            Float  @default(0.00) @db.Float
-    grandTotal          Float  @default(0.00) @db.Float
-    amountPaid          Float  @default(0.00) @db.Float
-
-    rental Rental?
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
 }
