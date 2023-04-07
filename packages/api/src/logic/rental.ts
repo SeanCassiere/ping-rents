@@ -1,10 +1,12 @@
 import { prisma, type EnumRentalStatus } from "@acme/db";
 import {
+  type InputCheckInRental,
   type InputCreateRental,
   type InputUpdateRental,
 } from "@acme/validator/src/rental";
 
 import { type AuthMetaUser } from "../trpc";
+import { CalculationLogic } from "./calculation";
 import { RateLogic } from "./rate";
 import { TaxLogic } from "./tax";
 import { VehicleLogic } from "./vehicle";
@@ -190,7 +192,6 @@ class RentalController {
             id: true,
             name: true,
             dailyRate: true,
-            accessType: true,
             calculationType: true,
             parentId: true,
           },
@@ -228,7 +229,7 @@ class RentalController {
         );
       }
 
-      return await tx.rental.update({
+      await tx.rental.update({
         where: { companyId_id: { companyId: user.companyId, id: payload.id } },
         data: {
           type,
@@ -244,7 +245,33 @@ class RentalController {
           vehicle: { connect: { id: payload.vehicleId } },
         },
       });
+
+      return this.getById(user, type, { id: payload.id });
     });
+  }
+
+  async checkInAgreement(user: AuthMetaUser, payload: InputCheckInRental) {
+    await prisma.$transaction(async (tx) => {
+      const rental = await tx.rental.findFirst({
+        where: { id: payload.id, companyId: user.companyId },
+      });
+
+      if (!rental || rental.type !== "agreement") {
+        throw new Error("Rental not found.");
+      }
+
+      const calculation = await CalculationLogic.getCalculationForRental();
+
+      const status: EnumRentalStatus =
+        calculation.balanceDue !== 0 ? "pending_payment" : "closed";
+
+      await tx.rental.update({
+        where: { id: payload.id },
+        data: { status, returnDate: payload.returnDate },
+      });
+    });
+
+    return this.getById(user, "agreement", { id: payload.id });
   }
 }
 

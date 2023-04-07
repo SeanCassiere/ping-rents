@@ -85,3 +85,37 @@ export const UpdateRentalSchema = z
   });
 
 export type InputUpdateRental = z.infer<typeof UpdateRentalSchema>;
+
+export const CheckInRentalSchema = z
+  .object({
+    id: z.string().min(1),
+
+    checkoutDate: z.date(),
+    checkinDate: z.date(),
+    returnDate: z.date(),
+  })
+  .superRefine((payload, ctx) => {
+    if (
+      isBefore(payload.checkinDate, payload.checkoutDate) ||
+      isEqual(payload.checkinDate, payload.checkoutDate)
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Must be after checkout date",
+        path: ["checkinDate"],
+      });
+    }
+
+    if (
+      isBefore(payload.returnDate, payload.checkoutDate) ||
+      isEqual(payload.returnDate, payload.checkoutDate)
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Must be after checkout date",
+        path: ["returnDate"],
+      });
+    }
+  });
+
+export type InputCheckInRental = z.infer<typeof CheckInRentalSchema>;

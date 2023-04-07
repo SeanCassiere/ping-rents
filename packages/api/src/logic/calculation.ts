@@ -1,3 +1,8 @@
+import {
+  type EnumRateCalculationType,
+  type EnumTaxCalculationType,
+} from "@acme/db";
+
 type CalculationOutput = {
   baseRate: number;
   promotionOnBase: number;
@@ -6,12 +11,25 @@ type CalculationOutput = {
   totalTax: number;
   grandTotal: number;
   amountPaid: number;
-  amountDue: number;
-  balance: number;
+  balanceDue: number;
+};
+
+type CalculationInput = {
+  checkoutDate: Date;
+  checkinDate: Date;
+  rate: {
+    calculationType: EnumRateCalculationType;
+    dailyRate: number;
+  };
+  taxes: {
+    calculationType: EnumTaxCalculationType;
+    value: number;
+    name: string;
+  }[];
 };
 
 class CalculationController {
-  private calculate(): CalculationOutput {
+  private calculate(_: CalculationInput): CalculationOutput {
     return {
       baseRate: 0,
       promotionOnBase: 0,
@@ -20,8 +38,7 @@ class CalculationController {
       totalTax: 0,
       grandTotal: 0,
       amountPaid: 0,
-      amountDue: 0,
-      balance: 0,
+      balanceDue: 0,
     };
   }
 
@@ -34,8 +51,7 @@ class CalculationController {
       totalTax: 0,
       grandTotal: 0,
       amountPaid: 0,
-      amountDue: 0,
-      balance: 0,
+      balanceDue: 0,
     };
   }
 
@@ -48,8 +64,7 @@ class CalculationController {
       totalTax: 0,
       grandTotal: 0,
       amountPaid: 0,
-      amountDue: 0,
-      balance: 0,
+      balanceDue: 0,
     };
   }
 
@@ -62,8 +77,7 @@ class CalculationController {
       totalTax: 0,
       grandTotal: 0,
       amountPaid: 0,
-      amountDue: 0,
-      balance: 0,
+      balanceDue: 0,
     };
   }
 }
