@@ -316,6 +316,9 @@ importers:
       '@acme/auth':
         specifier: '*'
         version: link:../auth
+      '@acme/date-fns':
+        specifier: '*'
+        version: link:../date-fns
       '@acme/db':
         specifier: '*'
         version: link:../db
