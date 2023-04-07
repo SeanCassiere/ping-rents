@@ -1,5 +1,8 @@
 import { prisma, type EnumRentalStatus } from "@acme/db";
-import { type InputCreateRental } from "@acme/validator/src/rental";
+import {
+  type InputCreateRental,
+  type InputUpdateRental,
+} from "@acme/validator/src/rental";
 
 import { type AuthMetaUser } from "../trpc";
 import { RateLogic } from "./rate";
@@ -193,6 +196,54 @@ class RentalController {
           },
         },
       },
+    });
+  }
+
+  async updateById(
+    user: AuthMetaUser,
+    type: RentalType,
+    payload: InputUpdateRental,
+  ) {
+    return await prisma.$transaction(async (tx) => {
+      const rental = await tx.rental.findFirst({
+        where: { companyId: user.companyId, id: payload.id },
+        include: {
+          rate: { select: { vehicleTypeId: true } },
+        },
+      });
+      if (!rental) {
+        throw new Error(`Rental not found for id: ${payload.id}`);
+      }
+
+      const vehicle = await tx.vehicle.findFirst({
+        where: { companyId: user.companyId, id: payload.vehicleId },
+      });
+      if (!vehicle) {
+        throw new Error(`Vehicle not found for id: ${payload.vehicleId}`);
+      }
+
+      if (rental.rate.vehicleTypeId !== vehicle.vehicleTypeId) {
+        throw new Error(
+          "Rate vehicle-type and Vehicle vehicle-type do not match.",
+        );
+      }
+
+      return await tx.rental.update({
+        where: { companyId_id: { companyId: user.companyId, id: payload.id } },
+        data: {
+          type,
+          returnDate: payload.returnDate,
+          checkoutDate: payload.checkoutDate,
+          checkinDate: payload.checkinDate,
+          rate: {
+            update: {
+              dailyRate: payload.rate.dailyRate,
+            },
+          },
+          customer: { connect: { id: payload.customerId } },
+          vehicle: { connect: { id: payload.vehicleId } },
+        },
+      });
     });
   }
 }

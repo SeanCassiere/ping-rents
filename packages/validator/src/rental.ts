@@ -46,3 +46,42 @@ export const CreateRentalSchema = z
     }
   });
 export type InputCreateRental = z.infer<typeof CreateRentalSchema>;
+
+export const UpdateRentalSchema = z
+  .object({
+    id: z.string().min(1),
+
+    checkoutDate: z.date(),
+    checkinDate: z.date(),
+    returnDate: z.date(),
+
+    rate: RateSchema,
+
+    vehicleId: z.string().min(1),
+    customerId: z.string().min(1),
+  })
+  .superRefine((payload, ctx) => {
+    if (
+      isBefore(payload.checkinDate, payload.checkoutDate) ||
+      isEqual(payload.checkinDate, payload.checkoutDate)
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Must be after checkout date",
+        path: ["checkinDate"],
+      });
+    }
+
+    if (
+      isBefore(payload.returnDate, payload.checkoutDate) ||
+      isEqual(payload.returnDate, payload.checkoutDate)
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Must be after checkout date",
+        path: ["returnDate"],
+      });
+    }
+  });
+
+export type InputUpdateRental = z.infer<typeof UpdateRentalSchema>;

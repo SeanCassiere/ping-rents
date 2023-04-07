@@ -1,5 +1,8 @@
 import { z } from "@acme/validator";
-import { CreateRentalSchema } from "@acme/validator/src/rental";
+import {
+  CreateRentalSchema,
+  UpdateRentalSchema,
+} from "@acme/validator/src/rental";
 
 import { RentalLogic } from "../logic/rental";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
@@ -21,5 +24,10 @@ export const agreementsRouter = createTRPCRouter({
         { type: "agreement", status: "open" },
         input,
       );
+    }),
+  updateById: protectedProcedure
+    .input(UpdateRentalSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await RentalLogic.updateById(ctx.user, "agreement", input);
     }),
 });
