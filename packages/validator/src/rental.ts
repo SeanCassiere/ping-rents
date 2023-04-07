@@ -125,6 +125,7 @@ export const RentalCalculationSchema = z
   .object({
     checkoutDate: z.date(),
     checkinDate: z.date(),
+    returnDate: z.date(),
 
     rate: RateSchema.extend({ calculationType: RateCalculationTypeEnum }),
 
@@ -137,6 +138,7 @@ export const RentalCalculationSchema = z
     ),
 
     amountPaid: z.number(),
+    isCheckIn: z.boolean(),
   })
   .superRefine((payload, ctx) => {
     if (
@@ -147,6 +149,17 @@ export const RentalCalculationSchema = z
         code: "custom",
         message: "Must be after checkout date",
         path: ["checkinDate"],
+      });
+    }
+
+    if (
+      isBefore(payload.returnDate, payload.checkoutDate) ||
+      isEqual(payload.returnDate, payload.checkoutDate)
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Must be after checkout date",
+        path: ["returnDate"],
       });
     }
   });

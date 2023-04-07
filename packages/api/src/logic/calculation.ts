@@ -26,8 +26,14 @@ class CalculationController {
       const hourlyRate = input.rate.dailyRate / 24;
 
       const hours =
-        differenceInHours(input.checkinDate, input.checkoutDate) / 24;
-      const days = differenceInDays(input.checkinDate, input.checkoutDate);
+        differenceInHours(
+          input.checkinDate,
+          input.isCheckIn ? input.returnDate : input.checkoutDate,
+        ) / 24;
+      const days = differenceInDays(
+        input.checkinDate,
+        input.isCheckIn ? input.returnDate : input.checkoutDate,
+      );
 
       const totalHoursCost = hours * hourlyRate;
       const totalDaysCost = days * input.rate.dailyRate;
@@ -72,7 +78,6 @@ class CalculationController {
 
   getCalculationForRental(
     rental: Awaited<ReturnType<(typeof RentalLogic)["getById"]>>,
-    { useReturnDate = false }: { useReturnDate?: boolean },
   ) {
     return this.calculate({
       rate: {
@@ -87,7 +92,10 @@ class CalculationController {
         value: tax.value,
       })),
       checkoutDate: rental.checkoutDate,
-      checkinDate: useReturnDate ? rental.returnDate : rental.checkinDate,
+      checkinDate: rental.checkinDate,
+      returnDate: rental.returnDate,
+      isCheckIn:
+        rental.status === "closed" || rental.status === "pending_payment",
     });
   }
 
@@ -97,10 +105,7 @@ class CalculationController {
     payload: { id: string },
   ): Promise<CalculationOutput> {
     const rental = await RentalLogic.getById(user, type, { id: payload.id });
-    return this.getCalculationForRental(rental, {
-      useReturnDate:
-        rental.status === "closed" || rental.status === "pending_payment",
-    });
+    return this.getCalculationForRental(rental);
   }
 
   async getLiveCalculation(

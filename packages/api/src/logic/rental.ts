@@ -258,10 +258,11 @@ class RentalController {
         throw new Error("Rental not found.");
       }
 
-      const calculation = CalculationLogic.getCalculationForRental(
-        { ...rental, returnDate: payload.returnDate },
-        { useReturnDate: true },
-      );
+      const calculation = CalculationLogic.getCalculationForRental({
+        ...rental,
+        returnDate: payload.returnDate,
+        status: "closed", // simulating a closed status for the calculation to use the return date
+      });
 
       const status: EnumRentalStatus =
         calculation.balanceDue !== 0 ? "pending_payment" : "closed";
