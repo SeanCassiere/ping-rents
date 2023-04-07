@@ -73,50 +73,74 @@ class RentalController {
       }
     }
 
-    return await prisma.rental.create({
-      data: {
-        type,
-        status,
-        checkoutDate: payload.checkoutDate,
-        checkinDate: payload.checkinDate,
-        returnDate: payload.returnDate,
+    return await prisma.$transaction(async (tx) => {
+      // set reservation status to checkout for agreement checkouts
+      if (type === "agreement" && payload.reservationId) {
+        const reservation = await tx.rental.findFirst({
+          where: { id: payload.reservationId },
+        });
 
-        company: { connect: { id: user.companyId } },
+        if (!reservation) {
+          throw new Error("Reservation not found.");
+        }
 
-        ...(type === "agreement" && payload.reservationId
-          ? { reservation: { connect: { id: payload.reservationId } } }
-          : {}),
+        if (reservation?.status === "checkout") {
+          throw new Error("Reservation already checked out.");
+        }
 
-        checkoutLocation: { connect: { id: payload.checkoutLocationId } },
-        checkinLocation: { connect: { id: payload.checkinLocationId } },
-        returnLocation: { connect: { id: payload.returnLocationId } },
-        vehicleType: { connect: { id: vehicle.vehicleTypeId } },
-        vehicle: { connect: { id: payload.vehicleId } },
-        customer: { connect: { id: payload.customerId } },
-        rate: {
-          create: {
-            name: rate.name,
-            dailyRate: payload.rate.dailyRate,
-            calculationType: rate.calculationType,
-            accessType: "rental",
-            location: { connect: { id: payload.checkoutLocationId } },
-            vehicleType: { connect: { id: rate.vehicleTypeId } },
-            company: { connect: { id: user.companyId } },
-            parent: { connect: { id: rate.id } },
+        await tx.rental.update({
+          where: { id: reservation.id },
+          data: { status: "checkout" },
+        });
+      }
+
+      const rental = await tx.rental.create({
+        data: {
+          type,
+          status,
+          checkoutDate: payload.checkoutDate,
+          checkinDate: payload.checkinDate,
+          returnDate: payload.returnDate,
+
+          company: { connect: { id: user.companyId } },
+
+          ...(type === "agreement" && payload.reservationId
+            ? { reservation: { connect: { id: payload.reservationId } } }
+            : {}),
+
+          checkoutLocation: { connect: { id: payload.checkoutLocationId } },
+          checkinLocation: { connect: { id: payload.checkinLocationId } },
+          returnLocation: { connect: { id: payload.returnLocationId } },
+          vehicleType: { connect: { id: vehicle.vehicleTypeId } },
+          vehicle: { connect: { id: payload.vehicleId } },
+          customer: { connect: { id: payload.customerId } },
+          rate: {
+            create: {
+              name: rate.name,
+              dailyRate: payload.rate.dailyRate,
+              calculationType: rate.calculationType,
+              accessType: "rental",
+              location: { connect: { id: payload.checkoutLocationId } },
+              vehicleType: { connect: { id: rate.vehicleTypeId } },
+              company: { connect: { id: user.companyId } },
+              parent: { connect: { id: rate.id } },
+            },
+          },
+          rentalTaxes: {
+            create: taxesList.map((tax) => ({
+              name: tax.name,
+              value: tax.value,
+              calculationType: tax.calculationType,
+              location: { connect: { id: tax.locationId } },
+              company: { connect: { id: user.companyId } },
+              parent: { connect: { id: tax.id } },
+              accessType: "rental",
+            })),
           },
         },
-        rentalTaxes: {
-          create: taxesList.map((tax) => ({
-            name: tax.name,
-            value: tax.value,
-            calculationType: tax.calculationType,
-            location: { connect: { id: tax.locationId } },
-            company: { connect: { id: user.companyId } },
-            parent: { connect: { id: tax.id } },
-            accessType: "rental",
-          })),
-        },
-      },
+      });
+
+      return rental;
     });
   }
 
