@@ -252,15 +252,16 @@ class RentalController {
 
   async checkInAgreement(user: AuthMetaUser, payload: InputCheckInRental) {
     await prisma.$transaction(async (tx) => {
-      const rental = await tx.rental.findFirst({
-        where: { id: payload.id, companyId: user.companyId },
-      });
+      const rental = await this.getById(user, "agreement", { id: payload.id });
 
       if (!rental || rental.type !== "agreement") {
         throw new Error("Rental not found.");
       }
 
-      const calculation = await CalculationLogic.getCalculationForRental();
+      const calculation = CalculationLogic.getCalculationForRental(
+        { ...rental, returnDate: payload.returnDate },
+        { useReturnDate: true },
+      );
 
       const status: EnumRentalStatus =
         calculation.balanceDue !== 0 ? "pending_payment" : "closed";
