@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@acme/auth": "*",
+    "@acme/date-fns": "*",
     "@acme/db": "*",
     "@acme/validator": "*",
     "@trpc/client": "^10.18.0",
