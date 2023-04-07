@@ -1,12 +1,14 @@
 import { z } from "./zod-project";
 
-const calculationType = z.enum(["percentage"]).default("percentage");
+export const TaxCalculationTypeEnum = z
+  .enum(["percentage"])
+  .default("percentage");
 
 export const CreateNewTaxSchema = z.object({
   name: z.string().min(1),
   value: z.number().min(0).default(0),
   locationId: z.string().min(1),
-  calculationType,
+  calculationType: TaxCalculationTypeEnum,
 });
 export type InputCreateNewTax = z.infer<typeof CreateNewTaxSchema>;
 

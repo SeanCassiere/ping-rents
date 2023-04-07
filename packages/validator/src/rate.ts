@@ -4,9 +4,11 @@ export const RateSchema = z.object({
   dailyRate: z.number().min(0),
 });
 
+export const RateCalculationTypeEnum = z.enum(["retail"]);
+
 export const CreateRateNewSchema = RateSchema.extend({
   name: z.string().min(1),
-  calculationType: z.enum(["retail"]),
+  calculationType: RateCalculationTypeEnum,
   locationId: z.string().min(1),
   vehicleTypeId: z.string().min(1),
 });
