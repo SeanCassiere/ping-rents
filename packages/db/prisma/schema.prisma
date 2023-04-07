@@ -22,6 +22,7 @@ model Company {
     customers                 Customer[]
     vehicles                  Vehicle[]
     rates                     Rate[]
+    rentals                   Rental[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -53,16 +54,16 @@ model AccountLoginAttempt {
     createdAt DateTime @default(now())
 }
 
-enum CompanyAccountConnectionRole {
+enum EnumAccountRole {
     admin
     employee
 }
 
 model CompanyAccountConnection {
-    id      String                       @id @default(cuid())
-    name    String                       @db.VarChar(255)
-    isOwner Boolean                      @default(false)
-    role    CompanyAccountConnectionRole @default(employee)
+    id      String          @id @default(cuid())
+    name    String          @db.VarChar(255)
+    isOwner Boolean         @default(false)
+    role    EnumAccountRole @default(employee)
 
     accountId String
     account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
@@ -84,6 +85,10 @@ model Location {
 
     companyId String
     company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+    checkoutLocations Rental[] @relation("RentalCheckoutLocation")
+    checkinLocations  Rental[] @relation("RentalCheckinLocation")
+    returnLocations   Rental[] @relation("RentalReturnLocation")
 
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
@@ -132,6 +137,7 @@ model VehicleType {
     company   Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
     vehicles  Vehicle[]
     rates     Rate[]
+    rentals   Rental[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -146,7 +152,8 @@ model Customer {
     email     String @default("") @db.VarChar(255)
 
     companyId String
-    company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+    company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+    rentals   Rental[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -172,6 +179,8 @@ model Vehicle {
     vehicleTypeId String
     vehicleType   VehicleType @relation(fields: [vehicleTypeId], references: [id], onDelete: Cascade)
 
+    rentals Rental[]
+
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
 
@@ -179,12 +188,12 @@ model Vehicle {
     @@unique([licensePlate, companyId], name: "licensePlate_companyId")
 }
 
-enum RateCalculationType {
+enum EnumRateCalculationType {
     retail
-    perDay
+    per_day
 }
 
-enum RateAccessType {
+enum EnumRateAccessType {
     config
     rental
 }
@@ -194,12 +203,14 @@ model Rate {
     name      String @db.VarChar(255)
     dailyRate Float  @default(0.00) @db.Float
 
-    accessType      RateAccessType
-    calculationType RateCalculationType
+    accessType      EnumRateAccessType
+    calculationType EnumRateCalculationType
 
     parentId String?
     parent   Rate?   @relation("RateParent", fields: [parentId], references: [id], onDelete: SetNull)
     rates    Rate[]  @relation("RateParent")
+
+    rentals Rental[]
 
     locationId    String
     location      Location    @relation(fields: [locationId], references: [id], onDelete: Cascade)
@@ -212,4 +223,53 @@ model Rate {
     updatedAt DateTime @updatedAt
 
     @@unique([companyId, id], name: "companyId_id")
+}
+
+enum EnumRentalType {
+    reservation
+    agreement
+}
+
+enum EnumRentalStatus {
+    open
+    checkout
+    on_rent
+    pending_payment
+    closed
+}
+
+model Rental {
+    id           String           @id @default(cuid())
+    type         EnumRentalType
+    status       EnumRentalStatus
+    checkoutDate DateTime
+    checkinDate  DateTime
+    returnDate   DateTime
+
+    checkoutLocationId String
+    checkoutLocation   Location @relation("RentalCheckoutLocation", fields: [checkoutLocationId], references: [id], onDelete: Cascade)
+
+    checkinLocationId String
+    checkinLocation   Location @relation("RentalCheckinLocation", fields: [checkinLocationId], references: [id], onDelete: Cascade)
+
+    returnLocationId String
+    returnLocation   Location @relation("RentalReturnLocation", fields: [returnLocationId], references: [id], onDelete: Cascade)
+
+    customerId String
+    customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+    vehicleTypeId String
+    vehicleType   VehicleType @relation(fields: [vehicleTypeId], references: [id], onDelete: Cascade)
+
+    vehicleId String
+    vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+    rateId String
+    rate   Rate   @relation(fields: [rateId], references: [id], onDelete: Cascade)
+
+    companyId String
+    company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
