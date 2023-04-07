@@ -39,7 +39,14 @@ class TaxController {
         value: payload.value,
         calculationType: payload.calculationType,
         location: { connect: { id: payload.locationId } },
+        accessType: "config",
       },
+    });
+  }
+
+  public async getById(user: AuthMetaUser, payload: { id: string }) {
+    return await prisma.tax.findFirst({
+      where: { companyId: user.companyId, id: payload.id },
     });
   }
 

@@ -1,3 +1,4 @@
+import { z } from "@acme/validator";
 import {
   CreateNewTaxSchema,
   GetTaxesSchema,
@@ -12,6 +13,11 @@ export const taxesRouter = createTRPCRouter({
     .input(GetTaxesSchema)
     .query(async ({ ctx, input }) => {
       return await TaxLogic.getAll(ctx.user, input);
+    }),
+  getById: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await TaxLogic.getById(ctx.user, input);
     }),
   create: protectedProcedure
     .input(CreateNewTaxSchema)
