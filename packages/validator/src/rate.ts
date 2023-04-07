@@ -1,8 +1,11 @@
 import { z } from "./zod-project";
 
-export const CreateRateNewSchema = z.object({
-  name: z.string().min(1),
+export const RateSchema = z.object({
   dailyRate: z.number().min(0),
+});
+
+export const CreateRateNewSchema = RateSchema.extend({
+  name: z.string().min(1),
   calculationType: z.enum(["retail"]),
   locationId: z.string().min(1),
   vehicleTypeId: z.string().min(1),
