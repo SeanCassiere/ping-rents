@@ -273,6 +273,19 @@ class RentalController {
 
     return this.getById(user, "agreement", { id: payload.id });
   }
+
+  /**
+   * This is a temporary method to close an agreement.
+   * This should happen automatically once a payment is made.
+   * Payments are not going to be covered for Assignment 2.
+   */
+  async closeAgreement(user: AuthMetaUser, payload: { id: string }) {
+    await prisma.rental.update({
+      where: { companyId_id: { companyId: user.companyId, id: payload.id } },
+      data: { status: "closed" },
+    });
+    return true;
+  }
 }
 
 export const RentalLogic = new RentalController();
