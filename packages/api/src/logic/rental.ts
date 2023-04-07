@@ -106,13 +106,15 @@ class RentalController {
           },
         },
         rentalTaxes: {
-          createMany: {
-            data: taxesList.map((tax) => ({
-              name: tax.name,
-              calculationType: tax.calculationType,
-              value: tax.value,
-            })),
-          },
+          create: taxesList.map((tax) => ({
+            name: tax.name,
+            value: tax.value,
+            calculationType: tax.calculationType,
+            location: { connect: { id: tax.locationId } },
+            company: { connect: { id: user.companyId } },
+            parent: { connect: { id: tax.id } },
+            accessType: "rental",
+          })),
         },
       },
     });
@@ -148,7 +150,13 @@ class RentalController {
           select: { id: true, name: true },
         },
         rentalTaxes: {
-          select: { name: true, value: true, calculationType: true },
+          select: {
+            id: true,
+            name: true,
+            value: true,
+            calculationType: true,
+            parentId: true,
+          },
         },
         rate: {
           select: {

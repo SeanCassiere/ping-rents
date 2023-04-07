@@ -39,6 +39,7 @@ class TaxController {
         value: payload.value,
         calculationType: payload.calculationType,
         location: { connect: { id: payload.locationId } },
+        accessType: "config",
       },
     });
   }
