@@ -41,9 +41,16 @@ class RentalController {
         returnLocation: {
           select: { id: true, name: true },
         },
+        reservation: {
+          select: { id: true },
+        },
+        agreement: {
+          select: { id: true },
+        },
       },
     });
   }
+
   async createRental(
     user: AuthMetaUser,
     { type, status }: { type: RentalType; status: EnumRentalStatus },
@@ -69,12 +76,16 @@ class RentalController {
     return await prisma.rental.create({
       data: {
         type,
-        status: "open",
+        status,
         checkoutDate: payload.checkoutDate,
         checkinDate: payload.checkinDate,
         returnDate: payload.returnDate,
 
         company: { connect: { id: user.companyId } },
+
+        ...(type === "agreement" && payload.reservationId
+          ? { reservation: { connect: { id: payload.reservationId } } }
+          : {}),
 
         checkoutLocation: { connect: { id: payload.checkoutLocationId } },
         checkinLocation: { connect: { id: payload.checkinLocationId } },

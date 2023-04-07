@@ -5,6 +5,8 @@ import { z } from "./zod-project";
 
 export const CreateRentalSchema = z
   .object({
+    reservationId: z.string().nullable(),
+
     checkoutLocationId: z.string().min(1),
     checkoutDate: z.date(),
 

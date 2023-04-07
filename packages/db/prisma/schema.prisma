@@ -246,6 +246,10 @@ model Rental {
     checkinDate  DateTime
     returnDate   DateTime
 
+    reservationId String? @unique @map("parentId")
+    reservation   Rental? @relation("RentalParent", fields: [reservationId], references: [id], onDelete: SetNull)
+    agreement     Rental? @relation("RentalParent")
+
     checkoutLocationId String
     checkoutLocation   Location @relation("RentalCheckoutLocation", fields: [checkoutLocationId], references: [id], onDelete: Cascade)
 
