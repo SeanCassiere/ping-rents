@@ -295,12 +295,14 @@ model RentalTax {
 }
 
 model RentalCalculation {
-    id         String @id @default(cuid())
-    baseRate   Float  @default(0.00) @db.Float
-    promotion  Float  @default(0.00) @db.Float
-    totalTax   Float  @default(0.00) @db.Float
-    total      Float  @default(0.00) @db.Float
-    amountPaid Float  @default(0.00) @db.Float
+    id                  String @id @default(cuid())
+    baseRate            Float  @default(0.00) @db.Float
+    promotionOnBase     Float  @default(0.00) @db.Float
+    promotionOnSubtotal Float  @default(0.00) @db.Float
+    subtotal            Float  @default(0.00) @db.Float
+    totalTax            Float  @default(0.00) @db.Float
+    grandTotal          Float  @default(0.00) @db.Float
+    amountPaid          Float  @default(0.00) @db.Float
 
     rental Rental?
 
