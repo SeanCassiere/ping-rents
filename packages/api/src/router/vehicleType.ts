@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import "@acme/validator/src/vehicleType";
+import { z } from "@acme/validator";
 import {
   CreateVehicleTypeSchema,
   UpdateVehicleTypeSchema,
@@ -13,6 +14,11 @@ export const vehicleTypesRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
     return VehicleTypeLogic.getAll(ctx.user);
   }),
+  getById: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await VehicleTypeLogic.getById(ctx.user, input);
+    }),
   create: protectedProcedure
     .input(CreateVehicleTypeSchema)
     .mutation(async ({ ctx, input }) => {

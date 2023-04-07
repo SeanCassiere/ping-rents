@@ -101,7 +101,7 @@ class VehicleController {
     return vehicle;
   }
 
-  public async getById(user: AuthMetaUser, id: string) {
+  public async getById(user: AuthMetaUser, { id }: { id: string }) {
     const vehicle = await prisma.vehicle.findFirst({
       where: { id, companyId: user.companyId },
       include: {

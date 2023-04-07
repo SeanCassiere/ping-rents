@@ -43,6 +43,12 @@ class TaxController {
     });
   }
 
+  public async getById(user: AuthMetaUser, payload: { id: string }) {
+    return await prisma.tax.findFirst({
+      where: { companyId: user.companyId, id: payload.id },
+    });
+  }
+
   public async updateById(user: AuthMetaUser, payload: InputUpdateTax) {
     return await prisma.tax.update({
       where: { companyId_id: { companyId: user.companyId, id: payload.id } },

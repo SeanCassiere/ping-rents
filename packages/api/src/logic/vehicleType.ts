@@ -13,6 +13,15 @@ class VehicleTypeController {
     });
   }
 
+  public async getById(user: AuthMetaUser, payload: { id: string }) {
+    const vehicleType = await prisma.vehicleType.findUnique({
+      where: { companyId_id: { id: payload.id, companyId: user.companyId } },
+    });
+    if (!vehicleType) {
+      throw new Error("VehicleType not found");
+    }
+    return vehicleType;
+  }
   public async create(user: AuthMetaUser, payload: InputCreateVehicleType) {
     const vehicleType = await prisma.vehicleType.create({
       data: {
