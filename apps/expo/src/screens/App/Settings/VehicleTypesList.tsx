@@ -68,10 +68,10 @@ const VehicleTypesListScreen = (props: Props) => {
           >
             <FlashList
               data={vehicleTypes.data || []}
-              renderItem={({ item: vehicleType }) => {
+              renderItem={({ item: vehicleType, index }) => {
                 return (
                   <PressableSettingsOption
-                    text={vehicleType.name}
+                    text={`${index + 1}. ${vehicleType.name}`}
                     onPress={() => {
                       props.navigation.push("VehicleTypeEditScreen", {
                         vehicleTypeId: vehicleType.id,

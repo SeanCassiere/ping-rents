@@ -83,8 +83,8 @@ const TaxesListScreen = (props: Props) => {
           >
             <FlashList
               data={taxesQuery.data || []}
-              renderItem={({ item: tax }) => {
-                let text = tax.name;
+              renderItem={({ item: tax, index }) => {
+                let text = `${index + 1}. ${tax.name}`;
 
                 if (tax.calculationType === "percentage") {
                   text += ` - (${Number(tax.value).toFixed(2)}%)`;
