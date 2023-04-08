@@ -75,6 +75,21 @@ class CompanyController {
     });
   }
 
+  async getGrantForAccount(_: AuthMetaUser, grantId: string) {
+    return await prisma.companyAccountConnection.findUnique({
+      where: {
+        id: grantId,
+      },
+      include: {
+        account: {
+          select: {
+            email: true,
+          },
+        },
+      },
+    });
+  }
+
   async updateCompanyInformation(
     user: AuthMetaUser,
     payload: InputUpdateCompanyInformation,
