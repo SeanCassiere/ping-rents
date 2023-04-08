@@ -31,7 +31,7 @@ export const vehicleTypesRouter = createTRPCRouter({
         });
       }
     }),
-  updateById: protectedProcedure
+  update: protectedProcedure
     .input(UpdateVehicleTypeSchema)
     .mutation(async ({ ctx, input }) => {
       try {
