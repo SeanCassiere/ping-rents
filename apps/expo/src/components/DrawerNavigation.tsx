@@ -16,6 +16,8 @@ import {
   type DrawerContentComponentProps,
 } from "@react-navigation/drawer";
 
+import { useIsomorphicConfirm } from "../hooks/useIsomorphicConfirm";
+
 const LOGO_BG = "#F8F9FA";
 
 const DrawerNavigation = (
@@ -23,6 +25,7 @@ const DrawerNavigation = (
 ) => {
   const { onLogout, ...drawerProps } = props;
   const insets = useSafeAreaInsets();
+  const confirm = useIsomorphicConfirm();
 
   return (
     <View style={[drawerStyles.container]}>
@@ -49,31 +52,10 @@ const DrawerNavigation = (
       </DrawerContentScrollView>
       <View style={[drawerStyles.bottomFold, { padding: 20 }]}>
         <TouchableOpacity
-          onPress={
-            Platform.OS === "web"
-              ? () => {
-                  if (
-                    window.confirm(
-                      "Sign out? Are you sure you want to sign out?",
-                    )
-                  ) {
-                    onLogout();
-                  }
-                }
-              : () => {
-                  Alert.alert(
-                    "Sign out",
-                    "Are you sure you want to sign out?",
-                    [
-                      { text: "Cancel", onPress: () => {}, style: "cancel" },
-                      {
-                        text: "Sign out",
-                        onPress: onLogout,
-                        style: "destructive",
-                      },
-                    ],
-                  );
-                }
+          onPress={() =>
+            confirm("Sign out?", "Are you sure you want to sign out?", {
+              onConfirm: onLogout,
+            })
           }
         >
           <View style={[drawerStyles.bottomFoldBtn]}>
