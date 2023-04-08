@@ -14,7 +14,7 @@ export const vehicleTypesRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
     return VehicleTypeLogic.getAll(ctx.user);
   }),
-  getById: protectedProcedure
+  getVehicleType: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       return await VehicleTypeLogic.getById(ctx.user, input);

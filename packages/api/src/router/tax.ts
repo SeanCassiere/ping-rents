@@ -14,7 +14,7 @@ export const taxesRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await TaxLogic.getAll(ctx.user, input);
     }),
-  getById: protectedProcedure
+  getTax: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       return await TaxLogic.getById(ctx.user, input);
@@ -24,7 +24,7 @@ export const taxesRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return await TaxLogic.create(ctx.user, input);
     }),
-  updateById: protectedProcedure
+  update: protectedProcedure
     .input(UpdateTaxSchema)
     .mutation(async ({ ctx, input }) => {
       return await TaxLogic.updateById(ctx.user, input);

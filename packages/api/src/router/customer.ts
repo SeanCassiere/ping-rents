@@ -15,7 +15,7 @@ export const customersRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return await CustomerLogic.create(ctx.user, input);
     }),
-  updateById: protectedProcedure
+  update: protectedProcedure
     .input(UpdateCustomerSchema)
     .mutation(async ({ ctx, input }) => {
       return await CustomerLogic.updateById(ctx.user, input);

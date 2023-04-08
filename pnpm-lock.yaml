@@ -118,6 +118,9 @@ importers:
       react-native-gesture-handler:
         specifier: ~2.9.0
         version: 2.9.0(react-native@0.71.4)(react@18.2.0)
+      react-native-numeric-input:
+        specifier: ^1.9.1
+        version: 1.9.1(react-native@0.71.4)
       react-native-reanimated:
         specifier: ~2.14.4
         version: 2.14.4(@babel/core@7.21.3)(react-native@0.71.4)(react@18.2.0)
@@ -11458,6 +11461,25 @@ packages:
 
   /react-native-gradle-plugin@0.71.17:
     resolution: {integrity: sha512-OXXYgpISEqERwjSlaCiaQY6cTY5CH6j73gdkWpK0hedxtiWMWgH+i5TOi4hIGYitm9kQBeyDu+wim9fA8ROFJA==}
+    dev: false
+
+  /react-native-numeric-input@1.9.1(react-native@0.71.4):
+    resolution: {integrity: sha512-uJiMjundXHiBcBLHgSqbfSjLdBM+4OBgLJLSsYG5/+XST5XWufsU8eZaEsn1miOkhjj2B7WgshjNX2Qm+4n3kw==}
+    peerDependencies:
+      react-native-vector-icons: ^9.*
+    dependencies:
+      prop-types: 15.8.1
+      react-native-pixel-perfect: 1.0.2(react-native@0.71.4)
+    transitivePeerDependencies:
+      - react-native
+    dev: false
+
+  /react-native-pixel-perfect@1.0.2(react-native@0.71.4):
+    resolution: {integrity: sha512-0IvYCNkxuQbQC9q4tI+C3i6o38nbx916p7gBRBWuPxDhKBCuTkVV3VukcfW6vtjRlwQm6kwQcF9OtI+yUBt+YA==}
+    peerDependencies:
+      react-native: '*'
+    dependencies:
+      react-native: 0.71.4(@babel/core@7.21.3)(@babel/preset-env@7.20.2)(react@18.2.0)
     dev: false
 
   /react-native-reanimated@2.14.4(@babel/core@7.21.3)(react-native@0.71.4)(react@18.2.0):

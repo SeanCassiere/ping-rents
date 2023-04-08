@@ -30,7 +30,7 @@ const RootSettingsScreen = (props: Props) => {
       <StatusBar />
       <View style={[styles.pageContainer, { paddingBottom: 20 }]}>
         <MainHeader
-          title="Settings"
+          title="Configuration"
           leftButton={{
             onPress: () => {
               (props.navigation as any)?.toggleDrawer(); // eslint-disable-line
