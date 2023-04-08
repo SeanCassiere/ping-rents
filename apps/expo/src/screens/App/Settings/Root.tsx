@@ -19,6 +19,7 @@ const settingsOptions: {
   text: string;
   to: keyof GlobalRoutingType["SettingsStackNavigator"];
 }[] = [
+  { text: "Employees", to: "EmployeesListScreen" },
   { text: "Vehicle types", to: "VehicleTypesListScreen" },
   { text: "Rental rates", to: "RentalRatesListScreen" },
   { text: "Taxes", to: "TaxesListScreen" },
@@ -67,13 +68,14 @@ export default RootSettingsScreen;
 export const PressableSettingsOption = (props: {
   onPress: () => void;
   text: string;
+  smallTextBelow?: string;
 }) => {
   return (
     <TouchableOpacity
       onPress={props.onPress}
       style={{
         width: "100%",
-        maxHeight: 60,
+        maxHeight: 80,
         paddingHorizontal: 12,
         overflow: "hidden",
       }}
@@ -92,13 +94,23 @@ export const PressableSettingsOption = (props: {
             borderBottomWidth: 1,
             paddingTop: 12,
             paddingBottom: 18,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
           }}
         >
-          <Text style={{ fontSize: 18 }}>{props.text}</Text>
-          <AntDesign name="right" size={18} color="black" />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: 18 }}>{props.text}</Text>
+            <AntDesign name="right" size={18} color="black" />
+          </View>
+          {props.smallTextBelow && (
+            <View>
+              <Text>{props.smallTextBelow}</Text>
+            </View>
+          )}
         </View>
       </View>
     </TouchableOpacity>

@@ -1,7 +1,7 @@
 import { z } from "./zod-project";
 
 export const AddUserToCompanySchema = z.object({
-  name: z.string(),
+  name: z.string().min(1),
   email: z.string().email(),
 });
 export type InputAddUserToCompany = z.infer<typeof AddUserToCompanySchema>;

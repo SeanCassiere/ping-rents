@@ -35,5 +35,6 @@ export type GlobalRoutingType = {
     VehicleTypeEditScreen: { vehicleTypeId: string };
     //
     EmployeesListScreen: undefined;
+    EmployeeEditScreen: { employeeId: string };
   };
 };
