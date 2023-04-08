@@ -1,5 +1,6 @@
 import { z } from "@acme/validator";
 import {
+  CheckInRentalSchema,
   CreateRentalSchema,
   RentalCalculationSchema,
   UpdateRentalSchema,
@@ -45,6 +46,16 @@ export const rentalsRouter = createTRPCRouter({
     .input(UpdateRentalSchema)
     .mutation(async ({ ctx, input }) => {
       return await RentalLogic.updateById(ctx.user, "agreement", input);
+    }),
+  checkinAgreement: protectedProcedure
+    .input(CheckInRentalSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await RentalLogic.checkInAgreement(ctx.user, input);
+    }),
+  closeAgreement: protectedProcedure
+    .input(z.object({ id: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      return await RentalLogic.closeAgreement(ctx.user, input);
     }),
   getReservations: protectedProcedure.query(async ({ ctx }) => {
     return await RentalLogic.getAll(ctx.user, "reservation");
