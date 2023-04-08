@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type ReactNode } from "react";
 import {
   Platform,
   StyleSheet,
@@ -18,6 +18,7 @@ interface MainHeaderProps {
     content: React.ReactNode;
   };
   noTopPadding?: boolean;
+  contentBelow?: ReactNode;
 }
 
 const MainHeader = (props: MainHeaderProps) => {
@@ -50,6 +51,7 @@ const MainHeader = (props: MainHeaderProps) => {
           </TouchableOpacity>
         )}
       </View>
+      {props.contentBelow && <>{props.contentBelow}</>}
     </View>
   );
 };

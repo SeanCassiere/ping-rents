@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -103,23 +109,28 @@ const LoginAccessCodeScreen = (props: Props) => {
           },
         ]}
       >
-        <View>
-          <MainHeader
-            title="Access Code"
-            leftButton={{
-              onPress: () =>
-                props.navigation.canGoBack()
-                  ? props.navigation.goBack()
-                  : props.navigation.navigate("LoginEmail"),
-              content: <AntDesign name="left" size={24} color="black" />,
-            }}
-          />
-          <View style={{ marginTop: 15 }}>
-            <Text>{messages.emailSent}</Text>
-            <Text>{messages.pinDuration(10)}</Text>
-          </View>
-        </View>
-        <View style={{ gap: 30, justifyContent: "space-between" }}>
+        <MainHeader
+          title="Access Code"
+          leftButton={{
+            onPress: () =>
+              props.navigation.canGoBack()
+                ? props.navigation.goBack()
+                : props.navigation.navigate("LoginEmail"),
+            content: <AntDesign name="left" size={24} color="black" />,
+          }}
+          contentBelow={
+            <View style={{ marginTop: 15 }}>
+              <Text>{messages.emailSent}</Text>
+              <Text>{messages.pinDuration(10)}</Text>
+            </View>
+          }
+        />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          enabled={Platform.OS !== "web"}
+          style={{ gap: 30, justifyContent: "space-between" }}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 60}
+        >
           <View style={{ gap: 15 }}>
             <TextInput
               control={control}
@@ -157,7 +168,7 @@ const LoginAccessCodeScreen = (props: Props) => {
               </Text>
             </Pressable>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </View>
     </SafeAreaView>
   );

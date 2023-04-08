@@ -1,5 +1,12 @@
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import {
@@ -52,7 +59,7 @@ const DrawerNavigation = (
           <DrawerItemList {...drawerProps} />
         </View>
       </DrawerContentScrollView>
-      <View style={[drawerStyles.bottomFold, { padding: 20 }]}>
+      <View style={[drawerStyles.bottomFold]}>
         <TouchableOpacity
           onPress={() =>
             confirm("Sign out?", "Are you sure you want to sign out?", {
@@ -80,6 +87,7 @@ const drawerStyles = StyleSheet.create({
   bottomFold: {
     borderTopWidth: 1,
     borderTopColor: "#F1F1F1",
+    padding: Platform.OS === "ios" ? 30 : 20,
   },
   bottomFoldBtn: {
     flexDirection: "row",
