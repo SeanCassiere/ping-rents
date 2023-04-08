@@ -1,6 +1,7 @@
 import { z } from "@acme/validator";
 import {
   CreateVehicleSchema,
+  GetAllVehiclesSchema,
   UpdateVehicleSchema,
 } from "@acme/validator/src/vehicle";
 
@@ -18,9 +19,11 @@ export const vehiclesRouter = createTRPCRouter({
       return await VehicleLogic.getModels(ctx.user, input.make);
     }),
 
-  getAll: protectedProcedure.query(async ({ ctx }) => {
-    return await VehicleLogic.getAll(ctx.user);
-  }),
+  getAll: protectedProcedure
+    .input(GetAllVehiclesSchema)
+    .query(async ({ ctx, input }) => {
+      return await VehicleLogic.getAll(ctx.user, input);
+    }),
 
   getVehicle: protectedProcedure
     .input(z.object({ id: z.string().min(1) }))
