@@ -113,7 +113,7 @@ class CompanyController {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
     });
   }
