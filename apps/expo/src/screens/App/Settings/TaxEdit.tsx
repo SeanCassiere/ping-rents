@@ -36,7 +36,11 @@ const TaxEditScreen = (props: Props) => {
 
   const [isLoaded, setIsLoaded] = useState(isEdit ? false : true);
 
-  const { control: newControl, handleSubmit: newHandleSubmit } = useForm({
+  const {
+    control: newControl,
+    handleSubmit: newHandleSubmit,
+    register: newRegisterFn,
+  } = useForm({
     resolver: zodResolver(CreateNewTaxSchema),
     defaultValues: {
       name: "",
@@ -50,6 +54,7 @@ const TaxEditScreen = (props: Props) => {
     setValue: setEditValue,
     control: editControl,
     handleSubmit: editHandleSubmit,
+    register: editRegisterFn,
   } = useForm({
     resolver: zodResolver(UpdateTaxSchema),
     defaultValues: {
@@ -111,6 +116,7 @@ const TaxEditScreen = (props: Props) => {
   });
 
   const control = isEdit ? editControl : newControl;
+  const register = isEdit ? editRegisterFn : newRegisterFn;
 
   const onSubmit = isEdit
     ? editHandleSubmit(async (data) => {
@@ -176,6 +182,7 @@ const TaxEditScreen = (props: Props) => {
               />
               <NumberInput
                 control={control}
+                register={register}
                 name="value"
                 label="Percentage %"
                 decimal
