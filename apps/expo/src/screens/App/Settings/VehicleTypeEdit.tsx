@@ -64,7 +64,7 @@ const VehicleTypesEditScreen = (props: Props) => {
     },
   });
 
-  const vehicleTypeQuery = api.vehicleType.getById.useQuery(
+  const vehicleTypeQuery = api.vehicleType.getVehicleType.useQuery(
     { id: props.route.params.vehicleTypeId },
     {
       enabled: isEdit,
