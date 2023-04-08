@@ -12,9 +12,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import DrawerNavigation from "../components/DrawerNavigation";
 import { useAuthContext } from "../context/auth.context";
-import CustomerListScreen from "../screens/App/CustomerList";
+import CustomerListScreen from "../screens/App/Customers/Root";
 import HomeScreen from "../screens/App/Home";
 import RootSettingsScreen from "../screens/App/Settings/Root";
+import VehicleTypesEditScreen from "../screens/App/Settings/VehicleTypeEdit";
 import VehicleTypesListScreen from "../screens/App/Settings/VehicleTypesList";
 import LoginAccessCodeScreen from "../screens/Auth/LoginAccessCode";
 import LoginCompaniesScreen from "../screens/Auth/LoginCompanies";
@@ -198,12 +199,12 @@ const AppDrawerRoutes = () => {
 };
 
 const CustomerStack =
-  createNativeStackNavigator<GlobalRoutingType["CustomerStackNavigator"]>();
+  createNativeStackNavigator<GlobalRoutingType["CustomersStackNavigator"]>();
 const CustomerStackRoutes = () => {
   return (
     <CustomerStack.Navigator>
       <CustomerStack.Screen
-        name="CustomerList"
+        name="RootCustomersList"
         component={CustomerListScreen}
         options={{ headerShown: false }}
       />
@@ -226,6 +227,11 @@ const SettingsStackRoutes = () => {
       <SettingsStack.Screen
         name="VehicleTypesListScreen"
         component={VehicleTypesListScreen}
+        options={{ headerShown: false }}
+      />
+      <SettingsStack.Screen
+        name="VehicleTypeEditScreen"
+        component={VehicleTypesEditScreen}
         options={{ headerShown: false }}
       />
     </SettingsStack.Navigator>

@@ -17,8 +17,11 @@ export type GlobalRoutingType = {
     Agreements: undefined;
     Settings: undefined;
   };
-  CustomerStackNavigator: {
-    CustomerList: undefined;
+  CustomersStackNavigator: {
+    RootCustomersList: undefined;
+  };
+  VehiclesStackNavigator: {
+    RootVehiclesList: undefined;
   };
   SettingsStackNavigator: {
     RootSettingsScreen: undefined;
@@ -28,6 +31,7 @@ export type GlobalRoutingType = {
     TaxesListScreen: undefined;
     //
     VehicleTypesListScreen: undefined;
+    VehicleTypeEditScreen: { vehicleTypeId: string };
     //
     EmployeesListScreen: undefined;
   };

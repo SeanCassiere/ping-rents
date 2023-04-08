@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
+import { FlashList } from "@shopify/flash-list";
 
 import MainHeader from "../../../components/MainHeader";
 import { type GlobalRoutingType } from "../../../navigation/types";
@@ -13,6 +14,15 @@ type Props = NativeStackScreenProps<
   GlobalRoutingType["SettingsStackNavigator"],
   "RootSettingsScreen"
 >;
+
+const settingsOptions: {
+  text: string;
+  to: keyof GlobalRoutingType["SettingsStackNavigator"];
+}[] = [
+  { text: "Vehicle types", to: "VehicleTypesListScreen" },
+  { text: "Rental rates", to: "RentalRatesListScreen" },
+  { text: "Taxes", to: "TaxesListScreen" },
+];
 
 const RootSettingsScreen = (props: Props) => {
   return (
@@ -28,24 +38,23 @@ const RootSettingsScreen = (props: Props) => {
             content: <Entypo name="menu" size={24} color="black" />,
           }}
         />
-        <View style={{ gap: 15, paddingTop: 40 }}>
-          <PressableSettingsOption
-            onPress={() => {
-              props.navigation.push("VehicleTypesListScreen");
+        <View
+          style={{ gap: 15, paddingTop: 40, width: "100%", height: "100%" }}
+        >
+          <FlashList
+            data={settingsOptions}
+            renderItem={({ item }) => {
+              return (
+                <PressableSettingsOption
+                  text={item.text}
+                  onPress={() => {
+                    props.navigation.push(item.to);
+                  }}
+                />
+              );
             }}
-            text="Vehicle types"
-          />
-          <PressableSettingsOption
-            onPress={() => {
-              props.navigation.push("VehicleTypesListScreen");
-            }}
-            text="Rental rates"
-          />
-          <PressableSettingsOption
-            onPress={() => {
-              props.navigation.push("VehicleTypesListScreen");
-            }}
-            text="Taxes"
+            estimatedItemSize={60}
+            scrollEnabled
           />
         </View>
       </View>
@@ -55,7 +64,7 @@ const RootSettingsScreen = (props: Props) => {
 
 export default RootSettingsScreen;
 
-const PressableSettingsOption = (props: {
+export const PressableSettingsOption = (props: {
   onPress: () => void;
   text: string;
 }) => {
@@ -73,6 +82,7 @@ const PressableSettingsOption = (props: {
         style={{
           width: "100%",
           paddingHorizontal: 5,
+          paddingTop: 5,
           borderRadius: 5,
         }}
       >
@@ -80,7 +90,8 @@ const PressableSettingsOption = (props: {
           style={{
             borderBottomColor: "#ccc",
             borderBottomWidth: 1,
-            paddingVertical: 12,
+            paddingTop: 12,
+            paddingBottom: 18,
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
