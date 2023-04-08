@@ -1,6 +1,7 @@
 import { Prisma, prisma } from "@acme/db";
 import type {
   InputCreateVehicle,
+  InputGetAllVehicles,
   InputUpdateVehicle,
 } from "@acme/validator/src/vehicle";
 
@@ -31,10 +32,11 @@ class VehicleController {
     return filtered;
   }
 
-  public async getAll(user: AuthMetaUser) {
+  public async getAll(user: AuthMetaUser, payload: InputGetAllVehicles) {
     return prisma.vehicle.findMany({
       where: {
         companyId: user.companyId,
+        ...(payload.status ? { status: payload.status } : {}),
       },
       orderBy: {
         createdAt: "desc",
@@ -69,6 +71,8 @@ class VehicleController {
           vin: payload.vin,
           licensePlate: payload.licensePlate,
           color: payload.color,
+          currentOdometer: payload.currentOdometer,
+          status: "available",
         },
         include: {
           vehicleType: {
@@ -140,6 +144,7 @@ class VehicleController {
         vin: input.vin,
         licensePlate: input.licensePlate,
         color: input.color,
+        currentOdometer: input.currentOdometer,
       },
       include: {
         vehicleType: {

@@ -22,6 +22,8 @@ export const CreateRentalSchema = z
 
     vehicleId: z.string().min(1),
     customerId: z.string().min(1),
+
+    odometerOut: z.number().min(0),
   })
   .superRefine((payload, ctx) => {
     if (
@@ -60,6 +62,8 @@ export const UpdateRentalSchema = z
 
     vehicleId: z.string().min(1),
     customerId: z.string().min(1),
+
+    odometerOut: z.number().min(0),
   })
   .superRefine((payload, ctx) => {
     if (
@@ -94,6 +98,9 @@ export const CheckInRentalSchema = z
     checkoutDate: z.date(),
     checkinDate: z.date(),
     returnDate: z.date(),
+
+    odometerOut: z.number().min(0),
+    odometerIn: z.number().min(0),
   })
   .superRefine((payload, ctx) => {
     if (
@@ -115,6 +122,14 @@ export const CheckInRentalSchema = z
         code: "custom",
         message: "Must be after checkout date",
         path: ["returnDate"],
+      });
+    }
+
+    if (payload.odometerIn < payload.odometerOut) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Must be greater than odometer out",
+        path: ["odometerIn"],
       });
     }
   });

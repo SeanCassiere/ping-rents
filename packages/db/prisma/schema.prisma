@@ -174,14 +174,21 @@ model Customer {
     @@unique([email, companyId], name: "email_companyId")
 }
 
+enum EnumVehicleStatus {
+    available
+    on_rental
+}
+
 model Vehicle {
-    id           String @id @default(cuid())
-    vin          String @db.VarChar(255)
-    licensePlate String @db.VarChar(255)
-    year         String @db.VarChar(255)
-    color        String @db.VarChar(255)
-    make         String @db.VarChar(255)
-    model        String @db.VarChar(255)
+    id              String            @id @default(cuid())
+    vin             String            @db.VarChar(255)
+    licensePlate    String            @db.VarChar(255)
+    year            String            @db.VarChar(255)
+    color           String            @db.VarChar(255)
+    make            String            @db.VarChar(255)
+    model           String            @db.VarChar(255)
+    status          EnumVehicleStatus @default(available)
+    currentOdometer Int               @default(0)
 
     currentLocationId String   @map("locationId")
     currentLocation   Location @relation(fields: [currentLocationId], references: [id], onDelete: Cascade)
@@ -258,6 +265,9 @@ model Rental {
     checkoutDate DateTime
     checkinDate  DateTime
     returnDate   DateTime
+
+    odometerOut Int @default(0)
+    odometerIn  Int @default(0)
 
     reservationId String? @unique @map("parentId")
     reservation   Rental? @relation("RentalParent", fields: [reservationId], references: [id], onDelete: SetNull)

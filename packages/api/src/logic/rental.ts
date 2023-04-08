@@ -99,6 +99,11 @@ class RentalController {
         });
       }
 
+      await tx.vehicle.update({
+        where: { id: payload.vehicleId },
+        data: { status: "on_rental", currentOdometer: payload.odometerOut },
+      });
+
       const rental = await tx.rental.create({
         data: {
           type,
@@ -106,6 +111,8 @@ class RentalController {
           checkoutDate: payload.checkoutDate,
           checkinDate: payload.checkinDate,
           returnDate: payload.returnDate,
+
+          odometerOut: payload.odometerOut,
 
           company: { connect: { id: user.companyId } },
 
@@ -229,6 +236,18 @@ class RentalController {
         );
       }
 
+      // update the vehicle details if the vehicle has changed
+      if (rental.vehicleId !== payload.vehicleId) {
+        await tx.vehicle.update({
+          where: { id: rental.vehicleId },
+          data: { status: "available", currentOdometer: rental.odometerOut },
+        });
+      }
+      await tx.vehicle.update({
+        where: { id: payload.vehicleId },
+        data: { status: "on_rental", currentOdometer: payload.odometerOut },
+      });
+
       await tx.rental.update({
         where: { companyId_id: { companyId: user.companyId, id: payload.id } },
         data: {
@@ -236,6 +255,7 @@ class RentalController {
           returnDate: payload.returnDate,
           checkoutDate: payload.checkoutDate,
           checkinDate: payload.checkinDate,
+          odometerOut: payload.odometerOut,
           rate: {
             update: {
               dailyRate: payload.rate.dailyRate,
@@ -267,9 +287,18 @@ class RentalController {
       const status: EnumRentalStatus =
         calculation.balanceDue !== 0 ? "pending_payment" : "closed";
 
+      await tx.vehicle.update({
+        where: { id: rental.vehicleId },
+        data: { status: "available", currentOdometer: payload.odometerIn },
+      });
+
       await tx.rental.update({
         where: { id: payload.id },
-        data: { status, returnDate: payload.returnDate },
+        data: {
+          status,
+          returnDate: payload.returnDate,
+          odometerIn: payload.odometerIn,
+        },
       });
     });
 
@@ -282,11 +311,14 @@ class RentalController {
    * Payments are not going to be covered for Assignment 2.
    */
   async closeAgreement(user: AuthMetaUser, payload: { id: string }) {
-    await prisma.rental.update({
-      where: { companyId_id: { companyId: user.companyId, id: payload.id } },
-      data: { status: "closed" },
+    return await prisma.$transaction(async (tx) => {
+      await tx.rental.update({
+        where: { companyId_id: { companyId: user.companyId, id: payload.id } },
+        data: { status: "closed" },
+      });
+
+      return true;
     });
-    return true;
   }
 }
 
