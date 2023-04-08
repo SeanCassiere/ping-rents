@@ -3,6 +3,7 @@ import { prisma } from "@acme/db";
 import {
   type InputAddUserToCompany,
   type InputUpdateCompanyInformation,
+  type InputUpdateUserForCompany,
 } from "@acme/validator/src/company";
 
 import { type AuthMetaUser } from "../trpc";
@@ -60,6 +61,35 @@ class CompanyController {
     });
   }
 
+  async updateGrantForAccount(
+    _: AuthMetaUser,
+    payload: InputUpdateUserForCompany,
+  ) {
+    return await prisma.companyAccountConnection.update({
+      where: {
+        id: payload.id,
+      },
+      data: {
+        name: payload.name,
+      },
+    });
+  }
+
+  async getGrantForAccount(_: AuthMetaUser, grantId: string) {
+    return await prisma.companyAccountConnection.findUnique({
+      where: {
+        id: grantId,
+      },
+      include: {
+        account: {
+          select: {
+            email: true,
+          },
+        },
+      },
+    });
+  }
+
   async updateCompanyInformation(
     user: AuthMetaUser,
     payload: InputUpdateCompanyInformation,
@@ -83,7 +113,7 @@ class CompanyController {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
     });
   }

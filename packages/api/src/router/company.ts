@@ -5,6 +5,7 @@ import { z } from "@acme/validator";
 import {
   AddUserToCompanySchema,
   UpdateCompanyInformationSchema,
+  UpdateUserInCompanySchema,
 } from "@acme/validator/src/company";
 
 import { CompanyLogic } from "../logic/company";
@@ -39,6 +40,24 @@ export const companyRouter = createTRPCRouter({
       }
 
       return await CompanyLogic.createGrantForAccount(ctx.user, input);
+    }),
+  getEmployee: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await CompanyLogic.getGrantForAccount(ctx.user, input.id);
+    }),
+  updateEmployee: protectedProcedure
+    .input(UpdateUserInCompanySchema)
+    .mutation(async ({ ctx, input }) => {
+      const userIsAdmin = await AuthService.userIsAdmin(ctx.user.grantId);
+      if (!userIsAdmin) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You do not have permission to remove employees",
+        });
+      }
+
+      return await CompanyLogic.updateGrantForAccount(ctx.user, input);
     }),
   removeEmployee: protectedProcedure
     .input(z.object({ accountId: z.string() }))

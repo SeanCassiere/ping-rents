@@ -26,6 +26,8 @@ export type GlobalRoutingType = {
   SettingsStackNavigator: {
     RootSettingsScreen: undefined;
     //
+    CompanyEditScreen: undefined;
+    //
     RentalRatesListScreen: undefined;
     //
     TaxesListScreen: undefined;
@@ -35,5 +37,6 @@ export type GlobalRoutingType = {
     VehicleTypeEditScreen: { vehicleTypeId: string };
     //
     EmployeesListScreen: undefined;
+    EmployeeEditScreen: { employeeId: string };
   };
 };

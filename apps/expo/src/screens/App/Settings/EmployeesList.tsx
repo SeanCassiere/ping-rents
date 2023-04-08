@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -15,33 +15,19 @@ import { PressableSettingsOption } from "./Root";
 
 type Props = NativeStackScreenProps<
   GlobalRoutingType["SettingsStackNavigator"],
-  "TaxesListScreen"
+  "EmployeesListScreen"
 >;
 
-const TaxesListScreen = (props: Props) => {
-  const [locationId, setLocationId] = useState("");
-
-  const locationsQuery = api.location.getAll.useQuery(undefined, {
-    onSuccess: (data) => {
-      if (data.length > 0 && data[0]) {
-        setLocationId(data[0].id);
-      }
-    },
-  });
-  useRefreshOnFocus(locationsQuery.refetch);
-
-  const taxesQuery = api.tax.getAll.useQuery(
-    { locationId },
-    { enabled: locationId !== "" },
-  );
-  useRefreshOnFocus(taxesQuery.refetch);
+const EmployeesListScreen = (props: Props) => {
+  const employeesQuery = api.company.getEmployees.useQuery();
+  useRefreshOnFocus(employeesQuery.refetch);
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
       <StatusBar />
       <View style={[styles.pageContainer, { paddingBottom: 20 }]}>
         <MainHeader
-          title="Taxes"
+          title="Employees"
           leftButton={{
             onPress: () => {
               props.navigation.canGoBack()
@@ -52,9 +38,8 @@ const TaxesListScreen = (props: Props) => {
           }}
           rightButton={{
             onPress: () => {
-              props.navigation.push("TaxEditScreen", {
-                taxId: "",
-                locationId,
+              props.navigation.push("EmployeeEditScreen", {
+                employeeId: "",
               });
             },
             content: <AntDesign name="plus" size={24} color="black" />,
@@ -63,14 +48,14 @@ const TaxesListScreen = (props: Props) => {
         <View
           style={{ gap: 15, paddingTop: 40, width: "100%", height: "100%" }}
         >
-          {taxesQuery.isInitialLoading && (
+          {employeesQuery.isInitialLoading && (
             <View style={{ maxHeight: 30, width: "100%" }}>
               <Text>Loading...</Text>
             </View>
           )}
-          {taxesQuery.status === "error" && (
+          {employeesQuery.status === "error" && (
             <View style={{ maxHeight: 30, width: "100%" }}>
-              <Text>{taxesQuery.error.message}</Text>
+              <Text>{employeesQuery.error.message}</Text>
             </View>
           )}
 
@@ -82,31 +67,26 @@ const TaxesListScreen = (props: Props) => {
             }}
           >
             <FlashList
-              data={taxesQuery.data || []}
-              renderItem={({ item: tax, index }) => {
-                let text = `${index + 1}. ${tax.name}`;
-
-                if (tax.calculationType === "percentage") {
-                  text += ` - (${Number(tax.value).toFixed(2)}%)`;
-                }
-
+              data={employeesQuery.data || []}
+              renderItem={({ item: employee, index }) => {
                 return (
                   <PressableSettingsOption
-                    text={text}
+                    text={`${index + 1}. ${employee.name}`}
                     onPress={() => {
-                      props.navigation.push("TaxEditScreen", {
-                        taxId: tax.id,
-                        locationId,
+                      props.navigation.push("EmployeeEditScreen", {
+                        employeeId: employee.id,
                       });
                     }}
+                    smallTextBelow={employee.account.email}
                   />
                 );
               }}
               estimatedItemSize={60}
               refreshing={
-                taxesQuery.isInitialLoading === false && taxesQuery.isLoading
+                employeesQuery.isInitialLoading === false &&
+                employeesQuery.isLoading
               }
-              onRefresh={taxesQuery.refetch}
+              onRefresh={employeesQuery.refetch}
               scrollEnabled
             />
           </View>
@@ -116,4 +96,4 @@ const TaxesListScreen = (props: Props) => {
   );
 };
 
-export default TaxesListScreen;
+export default EmployeesListScreen;

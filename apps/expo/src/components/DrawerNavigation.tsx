@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Alert,
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import {
@@ -17,6 +9,8 @@ import {
 } from "@react-navigation/drawer";
 
 import { useIsomorphicConfirm } from "../hooks/useIsomorphicConfirm";
+import { useRefreshOnFocus } from "../hooks/useRefreshOnFocus";
+import { api } from "../utils/api";
 
 const LOGO_BG = "#F8F9FA";
 
@@ -26,6 +20,9 @@ const DrawerNavigation = (
   const { onLogout, ...drawerProps } = props;
   const insets = useSafeAreaInsets();
   const confirm = useIsomorphicConfirm();
+
+  const authUser = api.auth.getAuthUser.useQuery();
+  useRefreshOnFocus(authUser.refetch);
 
   return (
     <View style={[drawerStyles.container]}>
@@ -42,7 +39,12 @@ const DrawerNavigation = (
             />
             <View style={{ alignItems: "flex-start" }}>
               <Text style={[drawerStyles.logoText]}>PingRents</Text>
-              <Text style={{ paddingTop: 5, fontSize: 16 }}>Hi! User</Text>
+              <Text style={{ paddingTop: 5, fontSize: 16 }}>
+                Hi!{" "}
+                <Text style={{ fontWeight: "500", color: "#636262" }}>
+                  {authUser.data?.name}
+                </Text>
+              </Text>
             </View>
           </View>
         </View>
