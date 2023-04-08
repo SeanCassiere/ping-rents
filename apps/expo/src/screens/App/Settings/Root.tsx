@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -14,18 +14,22 @@ type Props = NativeStackScreenProps<
   GlobalRoutingType["SettingsStackNavigator"],
   "RootSettingsScreen"
 >;
-
-const settingsOptions: {
+type SettingOption = {
   text: string;
   to: keyof GlobalRoutingType["SettingsStackNavigator"];
-}[] = [
-  { text: "Employees", to: "EmployeesListScreen" },
-  { text: "Vehicle types", to: "VehicleTypesListScreen" },
-  { text: "Rental rates", to: "RentalRatesListScreen" },
-  { text: "Taxes", to: "TaxesListScreen" },
-];
+};
 
 const RootSettingsScreen = (props: Props) => {
+  const settingsOptions: SettingOption[] = useMemo(() => {
+    return [
+      { text: "Company", to: "CompanyEditScreen" },
+      { text: "Employees", to: "EmployeesListScreen" },
+      { text: "Vehicle types", to: "VehicleTypesListScreen" },
+      { text: "Rental rates", to: "RentalRatesListScreen" },
+      { text: "Taxes", to: "TaxesListScreen" },
+    ];
+  }, []);
+
   return (
     <SafeAreaView style={[styles.safeArea]}>
       <StatusBar />

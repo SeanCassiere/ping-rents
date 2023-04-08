@@ -26,6 +26,8 @@ export type GlobalRoutingType = {
   SettingsStackNavigator: {
     RootSettingsScreen: undefined;
     //
+    CompanyEditScreen: undefined;
+    //
     RentalRatesListScreen: undefined;
     //
     TaxesListScreen: undefined;
