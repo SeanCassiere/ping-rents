@@ -3,6 +3,7 @@ import { prisma } from "@acme/db";
 import {
   type InputAddUserToCompany,
   type InputUpdateCompanyInformation,
+  type InputUpdateUserForCompany,
 } from "@acme/validator/src/company";
 
 import { type AuthMetaUser } from "../trpc";
@@ -56,6 +57,20 @@ class CompanyController {
     return await prisma.companyAccountConnection.delete({
       where: {
         id: grantId,
+      },
+    });
+  }
+
+  async updateGrantForAccount(
+    _: AuthMetaUser,
+    payload: InputUpdateUserForCompany,
+  ) {
+    return await prisma.companyAccountConnection.update({
+      where: {
+        id: payload.id,
+      },
+      data: {
+        name: payload.name,
       },
     });
   }
