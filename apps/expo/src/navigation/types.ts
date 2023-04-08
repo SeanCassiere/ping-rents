@@ -20,4 +20,15 @@ export type GlobalRoutingType = {
   CustomerStackNavigator: {
     CustomerList: undefined;
   };
+  SettingsStackNavigator: {
+    RootSettingsScreen: undefined;
+    //
+    RentalRatesListScreen: undefined;
+    //
+    TaxesListScreen: undefined;
+    //
+    VehicleTypesListScreen: undefined;
+    //
+    EmployeesListScreen: undefined;
+  };
 };

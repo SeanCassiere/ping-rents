@@ -1,9 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { Entypo } from "@expo/vector-icons";
 import { type DrawerScreenProps } from "@react-navigation/drawer";
@@ -16,7 +13,6 @@ import { styles } from "../../utils/styles";
 type Props = DrawerScreenProps<GlobalRoutingType["AppDrawer"], "Home">;
 
 const HomeScreen = (props: Props) => {
-  const insets = useSafeAreaInsets();
   return (
     <SafeAreaView style={[styles.safeArea]}>
       <StatusBar />
