@@ -82,18 +82,22 @@ export const AuthStackRoutes = () => {
       <AuthStack.Screen
         name="LoginAccessCode"
         component={LoginAccessCodeScreen}
-        options={{ title: "" }}
+        options={{ headerShown: false }}
         initialParams={{ email: "" }}
       />
 
       <AuthStack.Screen
         name="LoginCompanies"
         component={LoginCompaniesScreen}
-        options={{ title: "" }}
+        options={{ headerShown: false }}
         initialParams={{ email: "", accessCode: "", companyId: "" }}
       />
 
-      <AuthStack.Screen name="Register" component={RegisterScreen} />
+      <AuthStack.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={{ headerShown: false }}
+      />
     </AuthStack.Navigator>
   );
 };
