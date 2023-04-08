@@ -10,6 +10,8 @@ import { useForm } from "react-hook-form";
 import { z } from "@acme/validator";
 
 import "@acme/validator/src/auth";
+import { AntDesign } from "@expo/vector-icons";
+
 import MainHeader from "../../components/MainHeader";
 import TextInput from "../../components/TextInput";
 import { type GlobalRoutingType } from "../../navigation/types";
@@ -102,8 +104,17 @@ const LoginAccessCodeScreen = (props: Props) => {
         ]}
       >
         <View>
-          <MainHeader title="Access Code" noTopPadding />
-          <View style={{ marginTop: 5 }}>
+          <MainHeader
+            title="Access Code"
+            leftButton={{
+              onPress: () =>
+                props.navigation.canGoBack()
+                  ? props.navigation.goBack()
+                  : props.navigation.navigate("LoginEmail"),
+              content: <AntDesign name="left" size={24} color="black" />,
+            }}
+          />
+          <View style={{ marginTop: 15 }}>
             <Text>{messages.emailSent}</Text>
             <Text>{messages.pinDuration(10)}</Text>
           </View>

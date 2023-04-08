@@ -10,14 +10,18 @@ async function main() {
     });
   });
 
-  app.listen(Number(ENV_VARS.PORT), ENV_VARS.SERVER_HOST, () => {
-    console.log(
-      "🚀 Server available at:",
-      ENV_VARS.IS_PRODUCTION
-        ? `${ENV_VARS.SERVER_HOST}`
-        : `http://localhost:${ENV_VARS.PORT}`,
-    );
-  });
+  if (ENV_VARS.IS_PRODUCTION) {
+    app.listen(Number(ENV_VARS.PORT), ENV_VARS.SERVER_HOST, () => {
+      console.log("🚀 Server available at:", `${ENV_VARS.SERVER_HOST}`);
+    });
+  } else {
+    app.listen(Number(ENV_VARS.PORT), () => {
+      console.log(
+        "🚀 Server available at:",
+        `http://localhost:${ENV_VARS.PORT}`,
+      );
+    });
+  }
 }
 
 void main().catch((err) => {

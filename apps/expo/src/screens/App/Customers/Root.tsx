@@ -1,21 +1,20 @@
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { Entypo } from "@expo/vector-icons";
+import { AntDesign, Entypo } from "@expo/vector-icons";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
-import { Button, Text, View } from "native-base";
+import { Text, View } from "native-base";
 
-import MainHeader from "../../components/MainHeader";
-import { useAuthContext } from "../../context/auth.context";
-import { useRefreshOnFocus } from "../../hooks/useRefreshOnFocus";
-import { type GlobalRoutingType } from "../../navigation/types";
-import { api } from "../../utils/api";
-import { styles } from "../../utils/styles";
+import MainHeader from "../../../components/MainHeader";
+import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
+import { type GlobalRoutingType } from "../../../navigation/types";
+import { api } from "../../../utils/api";
+import { styles } from "../../../utils/styles";
 
 type Props = NativeStackScreenProps<
-  GlobalRoutingType["CustomerStackNavigator"],
-  "CustomerList"
+  GlobalRoutingType["CustomersStackNavigator"],
+  "RootCustomersList"
 >;
 
 const CustomerListScreen = (props: Props) => {
@@ -46,7 +45,7 @@ const CustomerListScreen = (props: Props) => {
           }}
           rightButton={{
             onPress: () => {},
-            content: <Entypo name="circle-with-plus" size={24} color="black" />,
+            content: <AntDesign name="plus" size={24} color="black" />,
           }}
         />
         <View style={{ flex: 1 }}>

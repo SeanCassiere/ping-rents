@@ -14,6 +14,7 @@ class TaxController {
       where: {
         companyId: user.companyId,
         ...(payload.locationId ? { locationId: payload.locationId } : {}),
+        accessType: "config",
       },
     });
   }

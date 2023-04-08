@@ -6,6 +6,7 @@ import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Button, useToast } from "native-base";
 
 import "@acme/validator/src/auth";
+import { AntDesign } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 
 import MainHeader from "../../components/MainHeader";
@@ -107,7 +108,21 @@ const LoginCompaniesScreen = (props: Props) => {
                 ? "Select a company"
                 : "Success!"
             }
+            leftButton={{
+              onPress: () =>
+                props.navigation.canGoBack()
+                  ? props.navigation.goBack()
+                  : props.navigation.navigate("LoginEmail"),
+              content: <AntDesign name="left" size={24} color="black" />,
+            }}
           />
+          {/* <MainHeader
+            title={
+              props.route.params.companyId === ""
+                ? "Select a company"
+                : "Success!"
+            }
+          /> */}
           {props.route.params.companyId !== "" && (
             <Text style={[styles.errorText, { color: "black" }]}>
               Press confirm to login.

@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Platform,
-  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -71,7 +70,7 @@ const headerStyles = StyleSheet.create({
     gap: 10,
   },
   titleText: {
-    fontSize: 30,
+    fontSize: 26,
     fontWeight: "bold",
   },
   leftBtn: {

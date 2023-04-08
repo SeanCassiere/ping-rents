@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
+import { AntDesign } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Button, Pressable, Text, useToast } from "native-base";
@@ -14,6 +15,7 @@ import {
   type InputRegisterNewCompanyAndAccount,
 } from "@acme/validator/src/auth";
 
+import MainHeader from "../../components/MainHeader";
 import TextInput from "../../components/TextInput";
 import { type GlobalRoutingType } from "../../navigation/types";
 import { api } from "../../utils/api";
@@ -81,16 +83,22 @@ const RegisterScreen = (props: Props) => {
         style={[
           styles.pageContainer,
           {
-            paddingTop: insets.top,
             paddingBottom: 20,
             gap: 10,
             justifyContent: "space-between",
           },
         ]}
       >
-        <View style={[styles.pageTitleContainer]}>
-          <Text style={styles.pageTitle}>Sign up</Text>
-        </View>
+        <MainHeader
+          title="Sign up"
+          leftButton={{
+            onPress: () =>
+              props.navigation.canGoBack()
+                ? props.navigation.goBack()
+                : props.navigation.navigate("LoginEmail"),
+            content: <AntDesign name="left" size={24} color="black" />,
+          }}
+        />
         <View style={{ gap: 30, justifyContent: "space-between" }}>
           <View style={{ gap: 15 }}>
             <TextInput

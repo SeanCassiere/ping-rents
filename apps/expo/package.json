@@ -21,6 +21,7 @@
     "@expo/webpack-config": "^18.0.1",
     "@hookform/resolvers": "^3.0.0",
     "@react-native-community/netinfo": "9.3.7",
+    "@react-native-masked-view/masked-view": "0.2.8",
     "@react-navigation/drawer": "^6.6.2",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",

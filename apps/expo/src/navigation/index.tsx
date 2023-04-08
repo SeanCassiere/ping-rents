@@ -12,8 +12,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import DrawerNavigation from "../components/DrawerNavigation";
 import { useAuthContext } from "../context/auth.context";
-import CustomerListScreen from "../screens/App/CustomerList";
+import CustomerListScreen from "../screens/App/Customers/Root";
 import HomeScreen from "../screens/App/Home";
+import RootSettingsScreen from "../screens/App/Settings/Root";
+import VehicleTypesEditScreen from "../screens/App/Settings/VehicleTypeEdit";
+import VehicleTypesListScreen from "../screens/App/Settings/VehicleTypesList";
 import LoginAccessCodeScreen from "../screens/Auth/LoginAccessCode";
 import LoginCompaniesScreen from "../screens/Auth/LoginCompanies";
 import LoginEmailScreen from "../screens/Auth/LoginEmail";
@@ -67,6 +70,7 @@ export const AuthStackRoutes = () => {
       screenOptions={{
         headerStyle: { backgroundColor: "white" },
         headerShadowVisible: false,
+        animation: "slide_from_right",
       }}
     >
       <AuthStack.Screen
@@ -78,18 +82,22 @@ export const AuthStackRoutes = () => {
       <AuthStack.Screen
         name="LoginAccessCode"
         component={LoginAccessCodeScreen}
-        options={{ title: "" }}
+        options={{ headerShown: false }}
         initialParams={{ email: "" }}
       />
 
       <AuthStack.Screen
         name="LoginCompanies"
         component={LoginCompaniesScreen}
-        options={{ title: "" }}
+        options={{ headerShown: false }}
         initialParams={{ email: "", accessCode: "", companyId: "" }}
       />
 
-      <AuthStack.Screen name="Register" component={RegisterScreen} />
+      <AuthStack.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={{ headerShown: false }}
+      />
     </AuthStack.Navigator>
   );
 };
@@ -181,7 +189,7 @@ const AppDrawerRoutes = () => {
 
       <AppDrawer.Screen
         name="Settings"
-        component={CustomerStackRoutes}
+        component={SettingsStackRoutes}
         options={{
           headerShown: false,
           title: "Configuration",
@@ -195,15 +203,41 @@ const AppDrawerRoutes = () => {
 };
 
 const CustomerStack =
-  createNativeStackNavigator<GlobalRoutingType["CustomerStackNavigator"]>();
+  createNativeStackNavigator<GlobalRoutingType["CustomersStackNavigator"]>();
 const CustomerStackRoutes = () => {
   return (
     <CustomerStack.Navigator>
       <CustomerStack.Screen
-        name="CustomerList"
+        name="RootCustomersList"
         component={CustomerListScreen}
         options={{ headerShown: false }}
       />
     </CustomerStack.Navigator>
+  );
+};
+
+const SettingsStack =
+  createNativeStackNavigator<GlobalRoutingType["SettingsStackNavigator"]>();
+const SettingsStackRoutes = () => {
+  return (
+    <SettingsStack.Navigator
+      screenOptions={{ animation: "slide_from_right", presentation: "card" }}
+    >
+      <SettingsStack.Screen
+        name="RootSettingsScreen"
+        component={RootSettingsScreen}
+        options={{ headerShown: false }}
+      />
+      <SettingsStack.Screen
+        name="VehicleTypesListScreen"
+        component={VehicleTypesListScreen}
+        options={{ headerShown: false }}
+      />
+      <SettingsStack.Screen
+        name="VehicleTypeEditScreen"
+        component={VehicleTypesEditScreen}
+        options={{ headerShown: false }}
+      />
+    </SettingsStack.Navigator>
   );
 };
