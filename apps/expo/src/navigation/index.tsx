@@ -15,6 +15,8 @@ import { useAuthContext } from "../context/auth.context";
 import CustomerListScreen from "../screens/App/Customers/Root";
 import HomeScreen from "../screens/App/Home";
 import RootSettingsScreen from "../screens/App/Settings/Root";
+import TaxEditScreen from "../screens/App/Settings/TaxEdit";
+import TaxesListScreen from "../screens/App/Settings/TaxesList";
 import VehicleTypesEditScreen from "../screens/App/Settings/VehicleTypeEdit";
 import VehicleTypesListScreen from "../screens/App/Settings/VehicleTypesList";
 import LoginAccessCodeScreen from "../screens/Auth/LoginAccessCode";
@@ -236,6 +238,16 @@ const SettingsStackRoutes = () => {
       <SettingsStack.Screen
         name="VehicleTypeEditScreen"
         component={VehicleTypesEditScreen}
+        options={{ headerShown: false }}
+      />
+      <SettingsStack.Screen
+        name="TaxesListScreen"
+        component={TaxesListScreen}
+        options={{ headerShown: false }}
+      />
+      <SettingsStack.Screen
+        name="TaxEditScreen"
+        component={TaxEditScreen}
         options={{ headerShown: false }}
       />
     </SettingsStack.Navigator>
