@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View } from "react-native";
+import { KeyboardAvoidingView, Platform, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign } from "@expo/vector-icons";
@@ -69,9 +69,6 @@ const VehicleTypesEditScreen = (props: Props) => {
   useRefreshOnFocus(vehicleTypeQuery.refetch);
 
   const createMutation = api.vehicleType.create.useMutation({
-    onError: (err) => {
-      console.log(err);
-    },
     onSuccess: (data) => {
       toast.show({
         title: "Created!",
@@ -130,7 +127,11 @@ const VehicleTypesEditScreen = (props: Props) => {
             content: <AntDesign name="left" size={24} color="black" />,
           }}
         />
-        <View style={{ gap: 15, paddingTop: 40 }}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          enabled={Platform.OS !== "web"}
+          style={{ gap: 15, paddingTop: 40 }}
+        >
           {vehicleTypeQuery.isInitialLoading && (
             <View style={{ maxHeight: 30, width: "100%" }}>
               <Text>Loading...</Text>
@@ -155,7 +156,7 @@ const VehicleTypesEditScreen = (props: Props) => {
               </Button>
             </>
           )}
-        </View>
+        </KeyboardAvoidingView>
       </View>
     </SafeAreaView>
   );

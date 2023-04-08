@@ -1,5 +1,11 @@
 import React from "react";
-import { Keyboard, StatusBar, View } from "react-native";
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  StatusBar,
+  View,
+} from "react-native";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -99,7 +105,11 @@ const RegisterScreen = (props: Props) => {
             content: <AntDesign name="left" size={24} color="black" />,
           }}
         />
-        <View style={{ gap: 30, justifyContent: "space-between" }}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          enabled={Platform.OS === "ios"}
+          style={{ gap: 30, justifyContent: "space-between" }}
+        >
           <View style={{ gap: 15 }}>
             <TextInput
               control={control}
@@ -146,7 +156,7 @@ const RegisterScreen = (props: Props) => {
               <Text style={[styles.textUnderline]}>{messages.haveAccount}</Text>
             </Pressable>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </View>
     </SafeAreaView>
   );

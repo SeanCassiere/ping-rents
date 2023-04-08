@@ -1,5 +1,12 @@
 import React from "react";
-import { Keyboard, Pressable, Text, View } from "react-native";
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -71,7 +78,11 @@ const LoginEmailScreen = (props: Props) => {
         ]}
       >
         <MainHeader title="Login" />
-        <View style={{ gap: 30, justifyContent: "space-between" }}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          enabled={Platform.OS !== "web"}
+          style={{ gap: 30, justifyContent: "space-between" }}
+        >
           <View style={{ gap: 15 }}>
             <TextInput
               control={control}
@@ -107,7 +118,7 @@ const LoginEmailScreen = (props: Props) => {
               <Text style={[styles.textUnderline]}>{messages.signUp}</Text>
             </Pressable>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </View>
     </SafeAreaView>
   );

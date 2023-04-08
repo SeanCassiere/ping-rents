@@ -4,6 +4,15 @@ export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "white",
+    ...(Platform.OS === "web"
+      ? {
+          marginHorizontal: "auto",
+          marginVertical: "auto",
+          width: 393,
+          height: 851,
+          maxHeight: 851,
+        }
+      : {}),
   },
   pageTitle: {
     fontSize: 36,
