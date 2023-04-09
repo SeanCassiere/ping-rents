@@ -22,7 +22,7 @@ type SettingOption = {
 };
 
 const RootSettingsScreen = (props: Props) => {
-  const isPrivileged = useIsPrivilegedUser();
+  const [isPrivileged] = useIsPrivilegedUser();
   const settingsOptions: SettingOption[] = useMemo(() => {
     const options: SettingOption[] = [];
 
