@@ -20,6 +20,13 @@ class RateController {
         accessType: payload.accessType,
       },
       orderBy: { createdAt: "asc" },
+      include: {
+        vehicleType: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
   }
 
