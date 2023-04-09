@@ -90,7 +90,7 @@ const RentalRatesListScreen = (props: Props) => {
                     onPress={() => {
                       props.navigation.push("RentalRateEditScreen", {
                         rentalRateId: rateItem.id,
-                        locationId,
+                        locationId: rateItem.locationId,
                       });
                     }}
                     bottomContent={
