@@ -17,6 +17,8 @@ import HomeScreen from "../screens/App/Home";
 import CompanyEditScreen from "../screens/App/Settings/CompanyEdit";
 import EmployeeEditScreen from "../screens/App/Settings/EmployeeEdit";
 import EmployeesListScreen from "../screens/App/Settings/EmployeesList";
+import RentalRateEditScreen from "../screens/App/Settings/RentalRateEdit";
+import RentalRatesListScreen from "../screens/App/Settings/RentalRatesList";
 import RootSettingsScreen from "../screens/App/Settings/Root";
 import TaxEditScreen from "../screens/App/Settings/TaxEdit";
 import TaxesListScreen from "../screens/App/Settings/TaxesList";
@@ -266,6 +268,16 @@ const SettingsStackRoutes = () => {
       <SettingsStack.Screen
         name="EmployeeEditScreen"
         component={EmployeeEditScreen}
+        options={{ headerShown: false }}
+      />
+      <SettingsStack.Screen
+        name="RentalRatesListScreen"
+        component={RentalRatesListScreen}
+        options={{ headerShown: false }}
+      />
+      <SettingsStack.Screen
+        name="RentalRateEditScreen"
+        component={RentalRateEditScreen}
         options={{ headerShown: false }}
       />
     </SettingsStack.Navigator>

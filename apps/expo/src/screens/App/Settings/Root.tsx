@@ -84,14 +84,13 @@ export default RootSettingsScreen;
 export const PressableSettingsOption = (props: {
   onPress: () => void;
   text: string;
-  smallTextBelow?: string;
+  bottomContent?: React.ReactNode;
 }) => {
   return (
     <TouchableOpacity
       onPress={props.onPress}
       style={{
         width: "100%",
-        maxHeight: 80,
         paddingHorizontal: 12,
         overflow: "hidden",
       }}
@@ -122,11 +121,7 @@ export const PressableSettingsOption = (props: {
             <Text style={{ fontSize: 18 }}>{props.text}</Text>
             <AntDesign name="right" size={18} color="black" />
           </View>
-          {props.smallTextBelow && (
-            <View>
-              <Text>{props.smallTextBelow}</Text>
-            </View>
-          )}
+          {props.bottomContent && <>{props.bottomContent}</>}
         </View>
       </View>
     </TouchableOpacity>

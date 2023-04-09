@@ -20,6 +20,13 @@ class RateController {
         accessType: payload.accessType,
       },
       orderBy: { createdAt: "asc" },
+      include: {
+        vehicleType: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
   }
 
@@ -38,6 +45,19 @@ class RateController {
     user: AuthMetaUser,
     payload: InputCreateNewRate & { accessType: AccessType },
   ) {
+    if (payload.accessType === "config") {
+      const existingRate = await prisma.rate.findMany({
+        where: {
+          name: payload.name,
+          companyId: user.companyId,
+          vehicleTypeId: payload.vehicleTypeId,
+        },
+      });
+      if (existingRate.length) {
+        throw new Error("Rate already exists for this vehicle type.");
+      }
+    }
+
     return await prisma.rate.create({
       data: {
         name: payload.name,
