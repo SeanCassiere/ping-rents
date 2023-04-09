@@ -3,6 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign, Entypo } from "@expo/vector-icons";
+import { DrawerActions } from "@react-navigation/native";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
 
@@ -49,7 +50,7 @@ const RootSettingsScreen = (props: Props) => {
           title="Configuration"
           leftButton={{
             onPress: () => {
-              (props.navigation as any)?.toggleDrawer(); // eslint-disable-line
+              props.navigation.dispatch(DrawerActions.toggleDrawer());
             },
             content: <Entypo name="menu" size={24} color="black" />,
           }}
