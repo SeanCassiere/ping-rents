@@ -14,6 +14,7 @@ import DrawerNavigation from "../components/DrawerNavigation";
 import { useAuthContext } from "../context/auth.context";
 import CustomerListScreen from "../screens/App/Customers/Root";
 import HomeScreen from "../screens/App/Home";
+import CompanyEditScreen from "../screens/App/Settings/CompanyEdit";
 import EmployeeEditScreen from "../screens/App/Settings/EmployeeEdit";
 import EmployeesListScreen from "../screens/App/Settings/EmployeesList";
 import RootSettingsScreen from "../screens/App/Settings/Root";
@@ -230,6 +231,11 @@ const SettingsStackRoutes = () => {
       <SettingsStack.Screen
         name="RootSettingsScreen"
         component={RootSettingsScreen}
+        options={{ headerShown: false }}
+      />
+      <SettingsStack.Screen
+        name="CompanyEditScreen"
+        component={CompanyEditScreen}
         options={{ headerShown: false }}
       />
       <SettingsStack.Screen
