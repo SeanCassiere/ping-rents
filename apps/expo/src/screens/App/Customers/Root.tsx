@@ -2,6 +2,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign, Entypo } from "@expo/vector-icons";
+import { DrawerActions } from "@react-navigation/native";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
 import { Text, View } from "native-base";
@@ -39,7 +40,7 @@ const CustomerListScreen = (props: Props) => {
           title="Customers"
           leftButton={{
             onPress: () => {
-              (props.navigation as any)?.toggleDrawer(); // eslint-disable-line
+              props.navigation.dispatch(DrawerActions.toggleDrawer());
             },
             content: <Entypo name="menu" size={24} color="black" />,
           }}

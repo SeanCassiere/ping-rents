@@ -12,6 +12,9 @@ import { CompanyLogic } from "../logic/company";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const companyRouter = createTRPCRouter({
+  getCompany: protectedProcedure.query(async ({ ctx }) => {
+    return await CompanyLogic.getCompanyInformation(ctx.user);
+  }),
   update: protectedProcedure
     .input(UpdateCompanyInformationSchema)
     .mutation(async ({ ctx, input }) => {
