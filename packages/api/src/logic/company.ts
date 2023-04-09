@@ -90,6 +90,14 @@ class CompanyController {
     });
   }
 
+  async getCompanyInformation(user: AuthMetaUser) {
+    return await prisma.company.findUnique({
+      where: {
+        id: user.companyId,
+      },
+    });
+  }
+
   async updateCompanyInformation(
     user: AuthMetaUser,
     payload: InputUpdateCompanyInformation,
