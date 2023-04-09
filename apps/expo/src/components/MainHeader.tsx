@@ -12,10 +12,12 @@ interface MainHeaderProps {
   leftButton?: {
     onPress: () => void;
     content: React.ReactNode;
+    disabled?: boolean;
   };
   rightButton?: {
     onPress: () => void;
     content: React.ReactNode;
+    disabled?: boolean;
   };
   noTopPadding?: boolean;
   contentBelow?: ReactNode;
@@ -36,6 +38,7 @@ const MainHeader = (props: MainHeaderProps) => {
             <TouchableOpacity
               onPress={leftButton.onPress}
               style={[headerStyles.btn, headerStyles.leftBtn]}
+              disabled={leftButton.disabled}
             >
               {leftButton.content}
             </TouchableOpacity>
@@ -46,6 +49,7 @@ const MainHeader = (props: MainHeaderProps) => {
           <TouchableOpacity
             onPress={rightButton.onPress}
             style={[headerStyles.btn, headerStyles.rightBtn]}
+            disabled={rightButton.disabled}
           >
             {rightButton.content}
           </TouchableOpacity>
