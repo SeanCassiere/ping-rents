@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -15,19 +15,33 @@ import { PressableSettingsOption } from "./Root";
 
 type Props = NativeStackScreenProps<
   GlobalRoutingType["SettingsStackNavigator"],
-  "EmployeesListScreen"
+  "RentalRatesListScreen"
 >;
 
-const EmployeesListScreen = (props: Props) => {
-  const employeesQuery = api.company.getEmployees.useQuery();
-  useRefreshOnFocus(employeesQuery.refetch);
+const RentalRatesListScreen = (props: Props) => {
+  const [locationId, setLocationId] = useState("");
+
+  const locationsQuery = api.location.getAll.useQuery(undefined, {
+    onSuccess: (data) => {
+      if (data.length > 0 && data[0]) {
+        setLocationId(data[0].id);
+      }
+    },
+  });
+  useRefreshOnFocus(locationsQuery.refetch);
+
+  const ratesQuery = api.rate.getAll.useQuery(
+    { locationId },
+    { enabled: locationId !== "" },
+  );
+  useRefreshOnFocus(ratesQuery.refetch);
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
       <StatusBar />
       <View style={[styles.pageContainer, { paddingBottom: 20 }]}>
         <MainHeader
-          title="Employees"
+          title="Rental rates"
           leftButton={{
             onPress: () => {
               props.navigation.canGoBack()
@@ -38,8 +52,9 @@ const EmployeesListScreen = (props: Props) => {
           }}
           rightButton={{
             onPress: () => {
-              props.navigation.push("EmployeeEditScreen", {
-                employeeId: "",
+              props.navigation.push("RentalRateEditScreen", {
+                rentalRateId: "",
+                locationId,
               });
             },
             content: <AntDesign name="plus" size={24} color="black" />,
@@ -48,14 +63,14 @@ const EmployeesListScreen = (props: Props) => {
         <View
           style={{ gap: 15, paddingTop: 40, width: "100%", height: "100%" }}
         >
-          {employeesQuery.isInitialLoading && (
+          {ratesQuery.isInitialLoading && (
             <View style={{ maxHeight: 30, width: "100%" }}>
               <Text>Loading...</Text>
             </View>
           )}
-          {employeesQuery.status === "error" && (
+          {ratesQuery.status === "error" && (
             <View style={{ maxHeight: 30, width: "100%" }}>
-              <Text>{employeesQuery.error.message}</Text>
+              <Text>{ratesQuery.error.message}</Text>
             </View>
           )}
 
@@ -67,30 +82,34 @@ const EmployeesListScreen = (props: Props) => {
             }}
           >
             <FlashList
-              data={employeesQuery.data || []}
-              renderItem={({ item: employee, index }) => {
+              data={ratesQuery.data || []}
+              renderItem={({ item: rateItem, index }) => {
                 return (
                   <PressableSettingsOption
-                    text={`${index + 1}. ${employee.name}`}
+                    text={`${index + 1}. ${rateItem.name}`}
                     onPress={() => {
-                      props.navigation.push("EmployeeEditScreen", {
-                        employeeId: employee.id,
+                      props.navigation.push("RentalRateEditScreen", {
+                        rentalRateId: rateItem.id,
+                        locationId,
                       });
                     }}
                     bottomContent={
-                      <View>
-                        <Text>{employee.account.email}</Text>
+                      <View style={{ marginLeft: 20 }}>
+                        <Text>Vehicle type: {rateItem.vehicleType.name}</Text>
+                        <Text>
+                          Calculation type: {rateItem.calculationType}
+                        </Text>
+                        <Text>Daily rate: {rateItem.dailyRate}</Text>
                       </View>
                     }
                   />
                 );
               }}
-              estimatedItemSize={60}
+              estimatedItemSize={100}
               refreshing={
-                employeesQuery.isInitialLoading === false &&
-                employeesQuery.isLoading
+                ratesQuery.isInitialLoading === false && ratesQuery.isLoading
               }
-              onRefresh={employeesQuery.refetch}
+              onRefresh={ratesQuery.refetch}
               scrollEnabled
             />
           </View>
@@ -100,4 +119,4 @@ const EmployeesListScreen = (props: Props) => {
   );
 };
 
-export default EmployeesListScreen;
+export default RentalRatesListScreen;

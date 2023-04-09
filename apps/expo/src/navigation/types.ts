@@ -29,6 +29,7 @@ export type GlobalRoutingType = {
     CompanyEditScreen: undefined;
     //
     RentalRatesListScreen: undefined;
+    RentalRateEditScreen: { locationId: string; rentalRateId: string };
     //
     TaxesListScreen: undefined;
     TaxEditScreen: { taxId: string; locationId: string };
