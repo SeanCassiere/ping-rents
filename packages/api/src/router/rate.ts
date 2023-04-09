@@ -17,9 +17,9 @@ export const ratesRouter = createTRPCRouter({
       });
     }),
   getRate: protectedProcedure
-    .input(z.object({ rateId: z.string() }))
+    .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      return await RateLogic.getById(ctx.user, { id: input.rateId });
+      return await RateLogic.getById(ctx.user, { id: input.id });
     }),
   create: protectedProcedure
     .input(CreateRateNewSchema)
