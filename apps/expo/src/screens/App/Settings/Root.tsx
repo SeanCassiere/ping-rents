@@ -7,6 +7,7 @@ import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
 
 import MainHeader from "../../../components/MainHeader";
+import { useIsPrivilegedUser } from "../../../hooks/useIsPrivilegedUser";
 import { type GlobalRoutingType } from "../../../navigation/types";
 import { styles } from "../../../utils/styles";
 
@@ -20,15 +21,25 @@ type SettingOption = {
 };
 
 const RootSettingsScreen = (props: Props) => {
+  const isPrivileged = useIsPrivilegedUser();
   const settingsOptions: SettingOption[] = useMemo(() => {
-    return [
-      { text: "Company", to: "CompanyEditScreen" },
+    const options: SettingOption[] = [];
+
+    if (isPrivileged) {
+      options.push({ text: "Company", to: "CompanyEditScreen" });
+    }
+
+    const defaultOptions: SettingOption[] = [
       { text: "Employees", to: "EmployeesListScreen" },
       { text: "Vehicle types", to: "VehicleTypesListScreen" },
       { text: "Rental rates", to: "RentalRatesListScreen" },
       { text: "Taxes", to: "TaxesListScreen" },
     ];
-  }, []);
+
+    defaultOptions.forEach((item) => options.push(item));
+
+    return options;
+  }, [isPrivileged]);
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
