@@ -19,6 +19,8 @@ export type GlobalRoutingType = {
   };
   CustomersStackNavigator: {
     RootCustomersList: undefined;
+    CustomerEditScreen: { customerId: string };
+    CustomerViewScreen: { customerId: string };
   };
   VehiclesStackNavigator: {
     RootVehiclesList: undefined;

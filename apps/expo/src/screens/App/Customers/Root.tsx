@@ -1,17 +1,17 @@
 import React from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 import { DrawerActions } from "@react-navigation/native";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
-import { Text, View } from "native-base";
 
 import EmptyState from "../../../components/EmptyState";
 import MainHeader from "../../../components/MainHeader";
 import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
 import { type GlobalRoutingType } from "../../../navigation/types";
-import { api } from "../../../utils/api";
+import { api, type RouterOutputs } from "../../../utils/api";
 import { styles } from "../../../utils/styles";
 
 type Props = NativeStackScreenProps<
@@ -76,11 +76,17 @@ const CustomerListScreen = (props: Props) => {
             customersQuery.data.length !== 0 && (
               <FlashList
                 data={customersQuery.data || []}
-                renderItem={({ item }) => {
+                renderItem={({ item, index }) => {
                   return (
-                    <View>
-                      <Text>{JSON.stringify(item, null, 2)}</Text>
-                    </View>
+                    <CustomerListItem
+                      customer={item}
+                      position={index + 1}
+                      onPress={() => {
+                        navigation.push("CustomerViewScreen", {
+                          customerId: item.id,
+                        });
+                      }}
+                    />
                   );
                 }}
                 estimatedItemSize={200}
@@ -95,3 +101,41 @@ const CustomerListScreen = (props: Props) => {
 };
 
 export default CustomerListScreen;
+
+const CustomerListItem = (props: {
+  customer: RouterOutputs["customer"]["getAll"][number];
+  position: number;
+  onPress: () => void;
+}) => {
+  const { customer, position } = props;
+  return (
+    <TouchableOpacity
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        paddingHorizontal: 15,
+        paddingVertical: 15,
+        borderRadius: 5,
+        borderColor: "black",
+        borderStyle: "solid",
+        borderWidth: 2,
+        marginTop: position === 0 || position === 1 ? 20 : 10,
+      }}
+    >
+      <Text style={{ width: 20 }}>{position}</Text>
+      <View
+        style={{
+          paddingVertical: 5,
+          paddingHorizontal: 6,
+          backgroundColor: "black",
+          borderRadius: 100,
+        }}
+      >
+        <Ionicons name="person" size={18} color="white" />
+      </View>
+      <View style={{ marginLeft: 10 }}>
+        <Text>{customer.fullName}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
