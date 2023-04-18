@@ -6,6 +6,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
 
+import EmptyState from "../../../components/EmptyState";
 import MainHeader from "../../../components/MainHeader";
 import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
 import { type GlobalRoutingType } from "../../../navigation/types";
@@ -81,34 +82,57 @@ const TaxesListScreen = (props: Props) => {
               height: "100%",
             }}
           >
-            <FlashList
-              data={taxesQuery.data || []}
-              renderItem={({ item: tax, index }) => {
-                let text = `${index + 1}. ${tax.name}`;
-
-                if (tax.calculationType === "percentage") {
-                  text += ` - (${Number(tax.value).toFixed(2)}%)`;
-                }
-
-                return (
-                  <PressableSettingsOption
-                    text={text}
-                    onPress={() => {
-                      props.navigation.push("TaxEditScreen", {
-                        taxId: tax.id,
-                        locationId,
-                      });
+            {taxesQuery.status === "success" &&
+              taxesQuery.data.length === 0 && (
+                <View style={{ marginTop: 30 }}>
+                  <EmptyState
+                    title="No taxes"
+                    description="Taxes haven't been configured"
+                    buttonProps={{
+                      text: "Add tax",
+                      onPress: () => {
+                        props.navigation.push("TaxEditScreen", {
+                          taxId: "",
+                          locationId,
+                        });
+                      },
                     }}
                   />
-                );
-              }}
-              estimatedItemSize={60}
-              refreshing={
-                taxesQuery.isInitialLoading === false && taxesQuery.isLoading
-              }
-              onRefresh={taxesQuery.refetch}
-              scrollEnabled
-            />
+                </View>
+              )}
+
+            {taxesQuery.status === "success" &&
+              taxesQuery.data.length !== 0 && (
+                <FlashList
+                  data={taxesQuery.data || []}
+                  renderItem={({ item: tax, index }) => {
+                    let text = `${index + 1}. ${tax.name}`;
+
+                    if (tax.calculationType === "percentage") {
+                      text += ` - (${Number(tax.value).toFixed(2)}%)`;
+                    }
+
+                    return (
+                      <PressableSettingsOption
+                        text={text}
+                        onPress={() => {
+                          props.navigation.push("TaxEditScreen", {
+                            taxId: tax.id,
+                            locationId,
+                          });
+                        }}
+                      />
+                    );
+                  }}
+                  estimatedItemSize={60}
+                  refreshing={
+                    taxesQuery.isInitialLoading === false &&
+                    taxesQuery.isLoading
+                  }
+                  onRefresh={taxesQuery.refetch}
+                  scrollEnabled
+                />
+              )}
           </View>
         </View>
       </View>
