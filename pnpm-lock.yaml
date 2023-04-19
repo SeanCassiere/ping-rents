@@ -280,8 +280,8 @@ importers:
         specifier: 1.9.1
         version: 1.9.1
       trpc-panel:
-        specifier: ^1.2.8
-        version: 1.2.8(@trpc/server@10.18.0)(zod@3.21.4)
+        specifier: ^1.3.0
+        version: 1.3.0(@trpc/server@10.18.0)(zod@3.21.4)
       zod:
         specifier: ^3.21.4
         version: 3.21.4
@@ -12971,8 +12971,8 @@ packages:
     resolution: {integrity: sha512-/y956gpUo9ZNCb99YjxG7OaslxZWHfCHAUUfshwqOXmxUIvqLjVO581BT+gM59+QV9tFe6/CGG53tsA1Y7RSdg==}
     dev: false
 
-  /trpc-panel@1.2.8(@trpc/server@10.18.0)(zod@3.21.4):
-    resolution: {integrity: sha512-jaBP1g9sajHtq3Wx+G3DOSsCtekwyDnWEBCspNQpQERXrk47TyZaMw68cRTXQno6bHD0SrS/i7NTm9wS5lfR8g==}
+  /trpc-panel@1.3.0(@trpc/server@10.18.0)(zod@3.21.4):
+    resolution: {integrity: sha512-e30ouFzzBryT350l6Eg3eJ41Y5+LW20DJbuKNzfQ5qZjKB2A6hPtwG4KBXmgfg97+/gdzl/Rc543kZwzST3Syw==}
     peerDependencies:
       '@trpc/server': ^10.0.0
       zod: ^3.19.1
