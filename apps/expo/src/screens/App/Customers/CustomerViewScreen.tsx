@@ -47,7 +47,7 @@ const CustomerViewScreen = (props: Props) => {
           }}
         />
         <View
-          style={{ paddingTop: 40, justifyContent: "space-between", flex: 1 }}
+          style={{ paddingTop: 30, justifyContent: "space-between", flex: 1 }}
         >
           <View>
             <View
