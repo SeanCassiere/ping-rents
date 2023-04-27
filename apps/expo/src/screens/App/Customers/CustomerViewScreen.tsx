@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Button } from "native-base";
 
@@ -94,11 +94,39 @@ const CustomerViewScreen = (props: Props) => {
             paddingBottom: 20,
             flexDirection: "row",
             justifyContent: "space-between",
-            gap: 15,
+            gap: 10,
           }}
         >
-          <Button style={{ width: "47%" }}>Reservation</Button>
-          <Button style={{ width: "47%" }}>Agreement</Button>
+          <Button style={{ width: "48%" }}>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                gap: 5,
+              }}
+            >
+              <Text style={{ color: "white", fontWeight: "600" }}>
+                Reservation
+              </Text>
+              <Entypo name="plus" size={24} color="white" />
+            </View>
+          </Button>
+          <Button style={{ width: "48%" }}>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                gap: 5,
+              }}
+            >
+              <Text style={{ color: "white", fontWeight: "600" }}>
+                Agreement
+              </Text>
+              <Entypo name="plus" size={24} color="white" />
+            </View>
+          </Button>
         </View>
       </View>
     </SafeAreaView>
