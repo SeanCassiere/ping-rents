@@ -65,6 +65,17 @@ class CustomerController {
       fullName: `${customer.firstName} ${customer.lastName}`.trim(),
     };
   }
+
+  public async getById(_: AuthMetaUser, payload: { customerId: string }) {
+    const customer = await prisma.customer.findUniqueOrThrow({
+      where: { id: payload.customerId },
+    });
+
+    return {
+      ...customer,
+      fullName: `${customer.firstName} ${customer.lastName}`.trim(),
+    };
+  }
 }
 
 export const CustomerLogic = new CustomerController();

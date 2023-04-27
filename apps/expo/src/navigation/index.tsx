@@ -12,6 +12,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import DrawerNavigation from "../components/DrawerNavigation";
 import { useAuthContext } from "../context/auth.context";
+import CustomerEditScreen from "../screens/App/Customers/CustomerEditScreen";
+import CustomerViewScreen from "../screens/App/Customers/CustomerViewScreen";
 import CustomerListScreen from "../screens/App/Customers/Root";
 import HomeScreen from "../screens/App/Home";
 import CompanyEditScreen from "../screens/App/Settings/CompanyEdit";
@@ -213,10 +215,22 @@ const CustomerStack =
   createNativeStackNavigator<GlobalRoutingType["CustomersStackNavigator"]>();
 const CustomerStackRoutes = () => {
   return (
-    <CustomerStack.Navigator>
+    <CustomerStack.Navigator
+      screenOptions={{ animation: "slide_from_right", presentation: "card" }}
+    >
       <CustomerStack.Screen
         name="RootCustomersList"
         component={CustomerListScreen}
+        options={{ headerShown: false }}
+      />
+      <CustomerStack.Screen
+        name="CustomerViewScreen"
+        component={CustomerViewScreen}
+        options={{ headerShown: false }}
+      />
+      <CustomerStack.Screen
+        name="CustomerEditScreen"
+        component={CustomerEditScreen}
         options={{ headerShown: false }}
       />
     </CustomerStack.Navigator>

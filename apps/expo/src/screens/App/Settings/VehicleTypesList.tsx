@@ -6,6 +6,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
 
+import EmptyState from "../../../components/EmptyState";
 import MainHeader from "../../../components/MainHeader";
 import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
 import { type GlobalRoutingType } from "../../../navigation/types";
@@ -19,8 +20,8 @@ type Props = NativeStackScreenProps<
 >;
 
 const VehicleTypesListScreen = (props: Props) => {
-  const vehicleTypes = api.vehicleType.getAll.useQuery();
-  useRefreshOnFocus(vehicleTypes.refetch);
+  const vehicleTypesQuery = api.vehicleType.getAll.useQuery();
+  useRefreshOnFocus(vehicleTypesQuery.refetch);
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
@@ -48,14 +49,14 @@ const VehicleTypesListScreen = (props: Props) => {
         <View
           style={{ gap: 15, paddingTop: 40, width: "100%", height: "100%" }}
         >
-          {vehicleTypes.isInitialLoading && (
+          {vehicleTypesQuery.isInitialLoading && (
             <View style={{ maxHeight: 30, width: "100%" }}>
               <Text>Loading...</Text>
             </View>
           )}
-          {vehicleTypes.status === "error" && (
+          {vehicleTypesQuery.status === "error" && (
             <View style={{ maxHeight: 30, width: "100%" }}>
-              <Text>{vehicleTypes.error.message}</Text>
+              <Text>{vehicleTypesQuery.error.message}</Text>
             </View>
           )}
 
@@ -66,28 +67,49 @@ const VehicleTypesListScreen = (props: Props) => {
               height: "100%",
             }}
           >
-            <FlashList
-              data={vehicleTypes.data || []}
-              renderItem={({ item: vehicleType, index }) => {
-                return (
-                  <PressableSettingsOption
-                    text={`${index + 1}. ${vehicleType.name}`}
-                    onPress={() => {
-                      props.navigation.push("VehicleTypeEditScreen", {
-                        vehicleTypeId: vehicleType.id,
-                      });
+            {vehicleTypesQuery.status === "success" &&
+              vehicleTypesQuery.data.length === 0 && (
+                <View style={{ marginTop: 30 }}>
+                  <EmptyState
+                    title="No vehicle types"
+                    description="Vehicle types haven't been configured"
+                    buttonProps={{
+                      text: "Add vehicle type",
+                      onPress: () => {
+                        props.navigation.push("VehicleTypeEditScreen", {
+                          vehicleTypeId: "",
+                        });
+                      },
                     }}
                   />
-                );
-              }}
-              estimatedItemSize={60}
-              refreshing={
-                vehicleTypes.isInitialLoading === false &&
-                vehicleTypes.isLoading
-              }
-              onRefresh={vehicleTypes.refetch}
-              scrollEnabled
-            />
+                </View>
+              )}
+
+            {vehicleTypesQuery.status === "success" &&
+              vehicleTypesQuery.data.length !== 0 && (
+                <FlashList
+                  data={vehicleTypesQuery.data || []}
+                  renderItem={({ item: vehicleType, index }) => {
+                    return (
+                      <PressableSettingsOption
+                        text={`${index + 1}. ${vehicleType.name}`}
+                        onPress={() => {
+                          props.navigation.push("VehicleTypeEditScreen", {
+                            vehicleTypeId: vehicleType.id,
+                          });
+                        }}
+                      />
+                    );
+                  }}
+                  estimatedItemSize={60}
+                  refreshing={
+                    vehicleTypesQuery.isInitialLoading === false &&
+                    vehicleTypesQuery.isLoading
+                  }
+                  onRefresh={vehicleTypesQuery.refetch}
+                  scrollEnabled
+                />
+              )}
           </View>
         </View>
       </View>

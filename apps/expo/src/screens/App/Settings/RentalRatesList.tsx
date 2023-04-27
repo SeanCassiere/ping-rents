@@ -6,6 +6,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
 
+import EmptyState from "../../../components/EmptyState";
 import MainHeader from "../../../components/MainHeader";
 import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
 import { type GlobalRoutingType } from "../../../navigation/types";
@@ -81,37 +82,62 @@ const RentalRatesListScreen = (props: Props) => {
               height: "100%",
             }}
           >
-            <FlashList
-              data={ratesQuery.data || []}
-              renderItem={({ item: rateItem, index }) => {
-                return (
-                  <PressableSettingsOption
-                    text={`${index + 1}. ${rateItem.name}`}
-                    onPress={() => {
-                      props.navigation.push("RentalRateEditScreen", {
-                        rentalRateId: rateItem.id,
-                        locationId: rateItem.locationId,
-                      });
+            {ratesQuery.status === "success" &&
+              ratesQuery.data.length === 0 && (
+                <View style={{ marginTop: 30 }}>
+                  <EmptyState
+                    title="No rental rates"
+                    description="Rental rates haven't been configured"
+                    buttonProps={{
+                      text: "Add rental rate",
+                      onPress: () => {
+                        props.navigation.push("RentalRateEditScreen", {
+                          rentalRateId: "",
+                          locationId,
+                        });
+                      },
                     }}
-                    bottomContent={
-                      <View style={{ marginLeft: 20 }}>
-                        <Text>Vehicle type: {rateItem.vehicleType.name}</Text>
-                        <Text>
-                          Calculation type: {rateItem.calculationType}
-                        </Text>
-                        <Text>Daily rate: {rateItem.dailyRate}</Text>
-                      </View>
-                    }
                   />
-                );
-              }}
-              estimatedItemSize={100}
-              refreshing={
-                ratesQuery.isInitialLoading === false && ratesQuery.isLoading
-              }
-              onRefresh={ratesQuery.refetch}
-              scrollEnabled
-            />
+                </View>
+              )}
+
+            {ratesQuery.status === "success" &&
+              ratesQuery.data.length !== 0 && (
+                <FlashList
+                  data={ratesQuery.data || []}
+                  renderItem={({ item: rateItem, index }) => {
+                    return (
+                      <PressableSettingsOption
+                        text={`${index + 1}. ${rateItem.name}`}
+                        onPress={() => {
+                          props.navigation.push("RentalRateEditScreen", {
+                            rentalRateId: rateItem.id,
+                            locationId: rateItem.locationId,
+                          });
+                        }}
+                        bottomContent={
+                          <View style={{ marginLeft: 20 }}>
+                            <Text>
+                              Vehicle type: {rateItem.vehicleType.name}
+                            </Text>
+                            <Text>
+                              Calculation type: {rateItem.calculationType}
+                            </Text>
+                            <Text>Daily rate: {rateItem.dailyRate}</Text>
+                          </View>
+                        }
+                      />
+                    );
+                  }}
+                  estimatedItemSize={100}
+                  refreshing={
+                    ratesQuery.isInitialLoading === false &&
+                    ratesQuery.isLoading
+                  }
+                  onRefresh={ratesQuery.refetch}
+                  scrollEnabled
+                />
+              )}
           </View>
         </View>
       </View>
