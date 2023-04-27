@@ -1,3 +1,4 @@
+import { z } from "@acme/validator";
 import {
   CreateCustomerSchema,
   UpdateCustomerSchema,
@@ -10,6 +11,13 @@ export const customersRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
     return CustomerLogic.getAll(ctx.user);
   }),
+
+  getCustomer: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await CustomerLogic.getById(ctx.user, { customerId: input.id });
+    }),
+
   create: protectedProcedure
     .input(CreateCustomerSchema)
     .mutation(async ({ ctx, input }) => {
