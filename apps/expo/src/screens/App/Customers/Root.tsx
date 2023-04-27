@@ -121,6 +121,7 @@ const CustomerListItem = (props: {
         borderWidth: 2,
         marginTop: position === 0 || position === 1 ? 20 : 10,
       }}
+      onPress={props.onPress}
     >
       <Text style={{ width: 20 }}>{position}</Text>
       <View
