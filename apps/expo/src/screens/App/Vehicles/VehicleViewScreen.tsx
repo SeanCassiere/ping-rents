@@ -41,6 +41,7 @@ const VehicleViewScreen = (props: Props) => {
             onPress: () => {
               props.navigation.push("VehicleEditScreen", {
                 vehicleId,
+                currentLocationId: vehicle.data?.currentLocationId ?? "",
               });
             },
             content: <AntDesign name="edit" size={24} color="black" />,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -24,8 +24,21 @@ type Props = NativeStackScreenProps<
 const VehiclesListScreen = (props: Props) => {
   const navigation = props.navigation;
 
+  const locations = api.location.getAll.useQuery();
+
   const vehiclesQuery = api.vehicle.getAll.useQuery({});
   useRefreshOnFocus(vehiclesQuery.refetch);
+
+  const locationId = useMemo(() => {
+    if (
+      locations.status === "success" &&
+      locations.data.length > 0 &&
+      locations.data[0]
+    ) {
+      return locations.data[0].id;
+    }
+    return "";
+  }, [locations.data, locations.status]);
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
@@ -49,7 +62,10 @@ const VehiclesListScreen = (props: Props) => {
           }}
           rightButton={{
             onPress: () => {
-              navigation.push("VehicleEditScreen", { vehicleId: "" });
+              navigation.push("VehicleEditScreen", {
+                vehicleId: "",
+                currentLocationId: "",
+              });
             },
             content: <AntDesign name="plus" size={24} color="black" />,
           }}
@@ -67,7 +83,10 @@ const VehiclesListScreen = (props: Props) => {
                   buttonProps={{
                     text: "Add vehicle",
                     onPress: () => {
-                      navigation.push("VehicleEditScreen", { vehicleId: "" });
+                      navigation.push("VehicleEditScreen", {
+                        vehicleId: "",
+                        currentLocationId: locationId,
+                      });
                     },
                   }}
                 />
