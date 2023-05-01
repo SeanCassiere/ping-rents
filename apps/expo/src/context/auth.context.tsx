@@ -39,7 +39,6 @@ type AuthContextState = {
 
 const AuthContext = createContext<AuthContextState | undefined>(undefined);
 
-// const KEY_ACCESS_TOKEN = "access-token" as const;
 const KEY_SESSION_ID = "session-id" as const;
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -75,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const authMode = useMemo(() => state.mode, [state.mode]);
   const firstLoad = useMemo(() => isInitialLoad, [isInitialLoad]);
 
-  const bag: AuthContextState = {
+  const contextAccessibleValues: AuthContextState = {
     isAuthed: state.mode === "logged-in",
     state,
     logout: handleLogout,
@@ -95,20 +94,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .then((res) => res.json())
         .then(async (res) => {
           const parsed = VerifyRefreshTokenPayloadSchema.parse(res);
-          if (parsed && parsed.data) {
-            const nowData = parsed.data;
-
-            await saveToSecureStore(KEY_SESSION_ID, nowData.sessionId).then(
-              () => {
-                setState((prev) => ({
-                  ...prev,
-                  accessToken: nowData.accessToken,
-                  sessionId: nowData.sessionId,
-                  mode: "logged-in",
-                }));
-              },
-            );
+          if (!parsed || !parsed.data) {
+            throw new Error("Parsing refresh token payload has failed!");
           }
+
+          const nowData = parsed.data;
+
+          await saveToSecureStore(KEY_SESSION_ID, nowData.sessionId).then(
+            () => {
+              setState((prev) => ({
+                ...prev,
+                accessToken: nowData.accessToken,
+                sessionId: nowData.sessionId,
+                mode: "logged-in",
+              }));
+            },
+          );
         })
         .catch((err) => {
           console.log("AuthProvider.Refresh.Error", err);
@@ -128,7 +129,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [authMode, sessionId]);
 
   useEffect(() => {
-    setIsInitialLoad(true);
     (async () => {
       const savedSessionId = await getValueFromSecureStore(KEY_SESSION_ID);
       if (!savedSessionId) {
@@ -146,7 +146,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })();
   }, []);
 
-  return <AuthContext.Provider value={bag}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={contextAccessibleValues}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuthContext() {
