@@ -84,7 +84,7 @@ const VehiclesListScreen = (props: Props) => {
                       vehicle={item}
                       position={index + 1}
                       onPress={() => {
-                        navigation.push("VehicleEditScreen", {
+                        navigation.push("VehicleViewScreen", {
                           vehicleId: item.id,
                         });
                       }}

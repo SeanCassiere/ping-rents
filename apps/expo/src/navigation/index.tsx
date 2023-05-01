@@ -1,12 +1,7 @@
 import { useCallback } from "react";
 import { View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
-import {
-  FontAwesome5,
-  Ionicons,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -27,6 +22,7 @@ import TaxesListScreen from "../screens/App/Settings/TaxesList";
 import VehicleTypesEditScreen from "../screens/App/Settings/VehicleTypeEdit";
 import VehicleTypesListScreen from "../screens/App/Settings/VehicleTypesList";
 import VehiclesListScreen from "../screens/App/Vehicles/RootVehiclesList";
+import VehicleViewScreen from "../screens/App/Vehicles/VehicleViewScreen";
 import LoginAccessCodeScreen from "../screens/Auth/LoginAccessCode";
 import LoginCompaniesScreen from "../screens/Auth/LoginCompanies";
 import LoginEmailScreen from "../screens/Auth/LoginEmail";
@@ -248,6 +244,11 @@ const VehicleStackRoutes = () => {
       <VehicleStack.Screen
         name="RootVehiclesList"
         component={VehiclesListScreen}
+        options={{ headerShown: false }}
+      />
+      <VehicleStack.Screen
+        name="VehicleViewScreen"
+        component={VehicleViewScreen}
         options={{ headerShown: false }}
       />
     </VehicleStack.Navigator>
