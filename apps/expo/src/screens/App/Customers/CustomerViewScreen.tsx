@@ -7,6 +7,7 @@ import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Button } from "native-base";
 
 import MainHeader from "../../../components/MainHeader";
+import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
 import { type GlobalRoutingType } from "../../../navigation/types";
 import { api } from "../../../utils/api";
 import { styles } from "../../../utils/styles";
@@ -26,6 +27,7 @@ const CustomerViewScreen = (props: Props) => {
   const customer = api.customer.getCustomer.useQuery({
     id: props.route.params.customerId,
   });
+  useRefreshOnFocus(customer.refetch);
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
