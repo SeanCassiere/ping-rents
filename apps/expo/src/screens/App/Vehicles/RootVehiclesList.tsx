@@ -11,6 +11,7 @@ import { type RouterOutputs } from "@acme/api";
 
 import EmptyState from "../../../components/EmptyState";
 import MainHeader from "../../../components/MainHeader";
+import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
 import { type GlobalRoutingType } from "../../../navigation/types";
 import { api } from "../../../utils/api";
 import { styles } from "../../../utils/styles";
@@ -24,6 +25,7 @@ const VehiclesListScreen = (props: Props) => {
   const navigation = props.navigation;
 
   const vehiclesQuery = api.vehicle.getAll.useQuery({});
+  useRefreshOnFocus(vehiclesQuery.refetch);
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
