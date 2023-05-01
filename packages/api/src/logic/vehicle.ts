@@ -15,25 +15,59 @@ const unique_LICENSE_PLAY_COMPANY_KEY_INDEX =
   "Unique constraint failed on the constraint: `Vehicle_licensePlate_companyId_key`";
 
 class VehicleController {
+  /**
+   *
+   * @param user User context data from the request
+   * @param makeId Make ID of the vehicle
+   * @returns displayName of the make
+   */
+  private getDisplayMakeName(
+    _: Omit<AuthMetaUser, "grantId">,
+    makeId: string,
+  ): string {
+    return makeId;
+  }
+
+  /**
+   *
+   * @param user User context data from the request
+   * @param makeId Make ID of the vehicle
+   * @param modelId Model ID of the vehicle in relation to the make
+   * @returns displayName of the model
+   */
+  private getDisplayModelName(
+    _: Omit<AuthMetaUser, "grantId">,
+    __: string,
+    modelId: string,
+  ): string {
+    return modelId;
+  }
+
   public async getMakes(_: AuthMetaUser) {
     return makesAndModelsDataset
       .map((dataSet) => dataSet.company)
-      .sort((a, b) => a.localeCompare(b));
+      .sort((a, b) => a.localeCompare(b))
+      .map((make) => ({ id: make, displayMake: make }));
   }
 
-  public async getModels(_: AuthMetaUser, company: string): Promise<string[]> {
-    const filtered: string[] = makesAndModelsDataset
+  public async getModels(_: AuthMetaUser, company: string) {
+    const filtered = makesAndModelsDataset
       .filter((dataSet) => dataSet.company === company)
       .map((dataSet) => dataSet.model)
       .reduce((prev, curr) => {
         return [...prev, ...curr];
       }, [] as string[])
-      .sort((a, b) => a.localeCompare(b));
+      .sort((a, b) => a.localeCompare(b))
+      .map((model) => ({
+        id: model,
+        displayMake: company,
+        displayModel: model,
+      }));
     return filtered;
   }
 
   public async getAll(user: AuthMetaUser, payload: InputGetAllVehicles) {
-    return prisma.vehicle.findMany({
+    const vehicles = await prisma.vehicle.findMany({
       where: {
         companyId: user.companyId,
         ...(payload.status ? { status: payload.status } : {}),
@@ -56,6 +90,11 @@ class VehicleController {
         },
       },
     });
+    return vehicles.map((vehicle) => ({
+      ...vehicle,
+      displayMake: this.getDisplayMakeName(user, vehicle.make),
+      displayModel: this.getDisplayModelName(user, vehicle.make, vehicle.model),
+    }));
   }
 
   public async create(user: AuthMetaUser, payload: InputCreateVehicle) {
@@ -102,7 +141,11 @@ class VehicleController {
         }
       });
 
-    return vehicle;
+    return {
+      ...vehicle,
+      displayMake: this.getDisplayMakeName(user, payload.make),
+      displayModel: this.getDisplayModelName(user, payload.make, payload.model),
+    };
   }
 
   public async getById(user: AuthMetaUser, { id }: { id: string }) {
@@ -128,10 +171,14 @@ class VehicleController {
       throw new Error("Vehicle does not exist");
     }
 
-    return vehicle;
+    return {
+      ...vehicle,
+      displayMake: this.getDisplayMakeName(user, vehicle.make),
+      displayModel: this.getDisplayModelName(user, vehicle.make, vehicle.model),
+    };
   }
 
-  public async updateById(_: AuthMetaUser, payload: InputUpdateVehicle) {
+  public async updateById(user: AuthMetaUser, payload: InputUpdateVehicle) {
     const { id, ...input } = payload;
     const vehicle = await prisma.vehicle.update({
       where: { id },
@@ -161,7 +208,11 @@ class VehicleController {
         },
       },
     });
-    return vehicle;
+    return {
+      ...vehicle,
+      displayMake: this.getDisplayMakeName(user, vehicle.make),
+      displayModel: this.getDisplayModelName(user, vehicle.make, vehicle.model),
+    };
   }
 }
 
