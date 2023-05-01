@@ -88,7 +88,7 @@ const VehicleViewScreen = (props: Props) => {
                         { flex: 1, flexWrap: "wrap" },
                       ]}
                     >
-                      {vehicle.data.make} {vehicle.data.model} -{" "}
+                      {vehicle.data.displayMake} {vehicle.data.displayModel} -{" "}
                       {vehicle.data.year}
                     </Text>
                   </View>

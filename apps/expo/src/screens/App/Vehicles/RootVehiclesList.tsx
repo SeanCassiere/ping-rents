@@ -139,7 +139,7 @@ const VehicleListItem = (props: {
       <View style={{ marginLeft: 10 }}>
         <Text>License: {vehicle.licensePlate}</Text>
         <Text>
-          Vehicle: {vehicle.make} {vehicle.model}
+          Vehicle: {vehicle.displayMake} {vehicle.displayModel}
         </Text>
         <Text>Year: {vehicle.year}</Text>
         <Text>Type: {vehicle.vehicleType.name}</Text>
