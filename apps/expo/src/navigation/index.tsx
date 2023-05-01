@@ -14,7 +14,7 @@ import DrawerNavigation from "../components/DrawerNavigation";
 import { useAuthContext } from "../context/auth.context";
 import CustomerEditScreen from "../screens/App/Customers/CustomerEditScreen";
 import CustomerViewScreen from "../screens/App/Customers/CustomerViewScreen";
-import CustomerListScreen from "../screens/App/Customers/Root";
+import CustomerListScreen from "../screens/App/Customers/RootCustomersList";
 import HomeScreen from "../screens/App/Home";
 import CompanyEditScreen from "../screens/App/Settings/CompanyEdit";
 import EmployeeEditScreen from "../screens/App/Settings/EmployeeEdit";
