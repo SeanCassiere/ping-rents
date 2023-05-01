@@ -24,6 +24,8 @@ export type GlobalRoutingType = {
   };
   VehiclesStackNavigator: {
     RootVehiclesList: undefined;
+    VehicleEditScreen: { vehicleId: string };
+    VehicleViewScreen: { vehicleId: string };
   };
   SettingsStackNavigator: {
     RootSettingsScreen: undefined;

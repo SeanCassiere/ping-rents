@@ -43,7 +43,7 @@ const HomeScreen = (props: Props) => {
           >
             Vehicles
           </Button>
-          <Button
+          {/* <Button
             variant="link"
             onPress={() => {
               props.navigation.navigate("Reservations");
@@ -58,7 +58,7 @@ const HomeScreen = (props: Props) => {
             }}
           >
             Agreements
-          </Button>
+          </Button> */}
           <Button
             variant="link"
             onPress={() => {
