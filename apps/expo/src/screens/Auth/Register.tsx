@@ -13,7 +13,7 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Button, Pressable, Text, useToast } from "native-base";
+import { Pressable, Text, useToast } from "native-base";
 import { useForm } from "react-hook-form";
 
 import {
@@ -21,6 +21,7 @@ import {
   type InputRegisterNewCompanyAndAccount,
 } from "@acme/validator/src/auth";
 
+import Button from "../../components/Button";
 import MainHeader from "../../components/MainHeader";
 import TextInput from "../../components/TextInput";
 import { type GlobalRoutingType } from "../../navigation/types";

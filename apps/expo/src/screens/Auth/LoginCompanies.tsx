@@ -3,12 +3,13 @@ import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Button, useToast } from "native-base";
+import { useToast } from "native-base";
 
 import "@acme/validator/src/auth";
 import { AntDesign } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 
+import Button from "../../components/Button";
 import MainHeader from "../../components/MainHeader";
 import { useAuthContext } from "../../context/auth.context";
 import { useCustomNavigation } from "../../hooks/useNavigation";

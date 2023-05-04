@@ -11,12 +11,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Button, useToast } from "native-base";
+import { useToast } from "native-base";
 import { useForm } from "react-hook-form";
 
 import { z } from "@acme/validator";
 
 import "@acme/validator/src/auth";
+import Button from "../../components/Button";
 import MainHeader from "../../components/MainHeader";
 import TextInput from "../../components/TextInput";
 import { type GlobalRoutingType } from "../../navigation/types";

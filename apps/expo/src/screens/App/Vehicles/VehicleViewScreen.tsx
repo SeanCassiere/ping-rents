@@ -2,10 +2,9 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
+import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 
-import Button from "../../../components/Button";
 import MainHeader from "../../../components/MainHeader";
 import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
 import { type GlobalRoutingType } from "../../../navigation/types";
@@ -13,36 +12,36 @@ import { api } from "../../../utils/api";
 import { styles } from "../../../utils/styles";
 
 type Props = NativeStackScreenProps<
-  GlobalRoutingType["CustomersStackNavigator"],
-  "CustomerViewScreen"
+  GlobalRoutingType["VehiclesStackNavigator"],
+  "VehicleViewScreen"
 >;
 
-const CustomerViewScreen = (props: Props) => {
+const VehicleViewScreen = (props: Props) => {
+  const vehicleId = props.route.params.vehicleId;
   const backNavigation = () => {
     props.navigation.canGoBack()
       ? props.navigation.goBack()
-      : props.navigation.navigate("RootCustomersList");
+      : props.navigation.navigate("RootVehiclesList");
   };
 
-  const customer = api.customer.getCustomer.useQuery({
-    id: props.route.params.customerId,
-  });
-  useRefreshOnFocus(customer.refetch);
+  const vehicle = api.vehicle.getVehicle.useQuery({ id: vehicleId });
+  useRefreshOnFocus(vehicle.refetch);
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
       <StatusBar />
       <View style={[styles.pageContainer]}>
         <MainHeader
-          title="View customer"
+          title="View vehicle"
           leftButton={{
             onPress: backNavigation,
             content: <AntDesign name="left" size={24} color="black" />,
           }}
           rightButton={{
             onPress: () => {
-              props.navigation.push("CustomerEditScreen", {
-                customerId: props.route.params.customerId,
+              props.navigation.push("VehicleEditScreen", {
+                vehicleId,
+                currentLocationId: vehicle.data?.currentLocationId ?? "",
               });
             },
             content: <AntDesign name="edit" size={24} color="black" />,
@@ -65,70 +64,51 @@ const CustomerViewScreen = (props: Props) => {
                 marginBottom: 20,
               }}
             >
-              <Ionicons name="person" size={64} color="white" />
+              <FontAwesome5 name="car" size={64} color="white" />
             </View>
-            {customer.status === "success" && (
+            {vehicle.status === "success" && (
               <View style={{ gap: 10 }}>
                 <View style={textStyle.labelWrapper}>
-                  <Text style={textStyle.tagStyle}>First name:</Text>
+                  <Text style={textStyle.tagStyle}>License plate:</Text>
                   <Text style={textStyle.labelStyle}>
-                    {customer.data.firstName}
+                    {vehicle.data.licensePlate}
                   </Text>
                 </View>
                 <View style={textStyle.labelWrapper}>
-                  <Text style={textStyle.tagStyle}>Last name:</Text>
+                  <Text style={textStyle.tagStyle}>Category:</Text>
                   <Text style={textStyle.labelStyle}>
-                    {customer.data.lastName}
+                    {vehicle.data.vehicleType.name}
                   </Text>
                 </View>
                 <View style={textStyle.labelWrapper}>
-                  <Text style={textStyle.tagStyle}>Email:</Text>
-                  <Text style={textStyle.labelStyle}>
-                    {customer.data.email}
-                  </Text>
+                  <Text style={textStyle.tagStyle}>Make-Model-Year:</Text>
+                  <View style={{ flexDirection: "row" }}>
+                    <Text
+                      style={[
+                        textStyle.labelStyle,
+                        { flex: 1, flexWrap: "wrap" },
+                      ]}
+                    >
+                      {vehicle.data.displayMake} {vehicle.data.displayModel} -{" "}
+                      {vehicle.data.year}
+                    </Text>
+                  </View>
+                </View>
+                <View style={textStyle.labelWrapper}>
+                  <Text style={textStyle.tagStyle}>Color:</Text>
+                  <Text style={textStyle.labelStyle}>{vehicle.data.color}</Text>
+                </View>
+                <View style={textStyle.labelWrapper}>
+                  <Text style={textStyle.tagStyle}>VIN no:</Text>
+                  <Text style={textStyle.labelStyle}>{vehicle.data.vin}</Text>
+                </View>
+                <View style={[textStyle.labelWrapper, { marginTop: 45 }]}>
+                  <Text style={textStyle.tagStyle}>Current renter:</Text>
+                  <Text style={textStyle.labelStyle}>n/a</Text>
                 </View>
               </View>
             )}
           </View>
-        </View>
-        <View
-          style={{
-            paddingBottom: 20,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            gap: 10,
-          }}
-        >
-          <Button style={{ width: "48%" }}>
-            <View
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "row",
-                gap: 5,
-              }}
-            >
-              <Text style={{ color: "white", fontWeight: "600" }}>
-                Reservation
-              </Text>
-              <Entypo name="plus" size={24} color="white" />
-            </View>
-          </Button>
-          <Button style={{ width: "48%" }}>
-            <View
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "row",
-                gap: 5,
-              }}
-            >
-              <Text style={{ color: "white", fontWeight: "600" }}>
-                Agreement
-              </Text>
-              <Entypo name="plus" size={24} color="white" />
-            </View>
-          </Button>
         </View>
       </View>
     </SafeAreaView>
@@ -150,4 +130,4 @@ const textStyle = StyleSheet.create({
   },
 });
 
-export default CustomerViewScreen;
+export default VehicleViewScreen;

@@ -1,12 +1,7 @@
 import { useCallback } from "react";
 import { View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
-import {
-  FontAwesome5,
-  Ionicons,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -14,7 +9,7 @@ import DrawerNavigation from "../components/DrawerNavigation";
 import { useAuthContext } from "../context/auth.context";
 import CustomerEditScreen from "../screens/App/Customers/CustomerEditScreen";
 import CustomerViewScreen from "../screens/App/Customers/CustomerViewScreen";
-import CustomerListScreen from "../screens/App/Customers/Root";
+import CustomerListScreen from "../screens/App/Customers/RootCustomersList";
 import HomeScreen from "../screens/App/Home";
 import CompanyEditScreen from "../screens/App/Settings/CompanyEdit";
 import EmployeeEditScreen from "../screens/App/Settings/EmployeeEdit";
@@ -26,6 +21,9 @@ import TaxEditScreen from "../screens/App/Settings/TaxEdit";
 import TaxesListScreen from "../screens/App/Settings/TaxesList";
 import VehicleTypesEditScreen from "../screens/App/Settings/VehicleTypeEdit";
 import VehicleTypesListScreen from "../screens/App/Settings/VehicleTypesList";
+import VehiclesListScreen from "../screens/App/Vehicles/RootVehiclesList";
+import VehicleEditScreen from "../screens/App/Vehicles/VehicleEditScreen";
+import VehicleViewScreen from "../screens/App/Vehicles/VehicleViewScreen";
 import LoginAccessCodeScreen from "../screens/Auth/LoginAccessCode";
 import LoginCompaniesScreen from "../screens/Auth/LoginCompanies";
 import LoginEmailScreen from "../screens/Auth/LoginEmail";
@@ -158,7 +156,7 @@ const AppDrawerRoutes = () => {
 
       <AppDrawer.Screen
         name="Vehicles"
-        component={CustomerStackRoutes}
+        component={VehicleStackRoutes}
         options={{
           headerShown: false,
           title: "Vehicles",
@@ -168,7 +166,7 @@ const AppDrawerRoutes = () => {
         }}
       />
 
-      <AppDrawer.Screen
+      {/* <AppDrawer.Screen
         name="Reservations"
         component={CustomerStackRoutes}
         options={{
@@ -194,7 +192,7 @@ const AppDrawerRoutes = () => {
             <FontAwesome5 name="file-signature" size={size} color={color} />
           ),
         }}
-      />
+      /> */}
 
       <AppDrawer.Screen
         name="Settings"
@@ -234,6 +232,32 @@ const CustomerStackRoutes = () => {
         options={{ headerShown: false }}
       />
     </CustomerStack.Navigator>
+  );
+};
+
+const VehicleStack =
+  createNativeStackNavigator<GlobalRoutingType["VehiclesStackNavigator"]>();
+const VehicleStackRoutes = () => {
+  return (
+    <VehicleStack.Navigator
+      screenOptions={{ animation: "slide_from_right", presentation: "card" }}
+    >
+      <VehicleStack.Screen
+        name="RootVehiclesList"
+        component={VehiclesListScreen}
+        options={{ headerShown: false }}
+      />
+      <VehicleStack.Screen
+        name="VehicleViewScreen"
+        component={VehicleViewScreen}
+        options={{ headerShown: false }}
+      />
+      <VehicleStack.Screen
+        name="VehicleEditScreen"
+        component={VehicleEditScreen}
+        options={{ headerShown: false }}
+      />
+    </VehicleStack.Navigator>
   );
 };
 

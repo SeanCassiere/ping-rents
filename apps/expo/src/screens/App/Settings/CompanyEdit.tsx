@@ -5,11 +5,12 @@ import { StatusBar } from "expo-status-bar";
 import { AntDesign } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Button, useToast } from "native-base";
+import { useToast } from "native-base";
 import { useForm } from "react-hook-form";
 
 import { UpdateCompanyInformationSchema } from "@acme/validator/src/company";
 
+import Button from "../../../components/Button";
 import MainHeader from "../../../components/MainHeader";
 import TextInput from "../../../components/TextInput";
 import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
