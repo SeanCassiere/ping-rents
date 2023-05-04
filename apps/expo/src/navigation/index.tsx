@@ -22,6 +22,7 @@ import TaxesListScreen from "../screens/App/Settings/TaxesList";
 import VehicleTypesEditScreen from "../screens/App/Settings/VehicleTypeEdit";
 import VehicleTypesListScreen from "../screens/App/Settings/VehicleTypesList";
 import VehiclesListScreen from "../screens/App/Vehicles/RootVehiclesList";
+import VehicleEditScreen from "../screens/App/Vehicles/VehicleEditScreen";
 import VehicleViewScreen from "../screens/App/Vehicles/VehicleViewScreen";
 import LoginAccessCodeScreen from "../screens/Auth/LoginAccessCode";
 import LoginCompaniesScreen from "../screens/Auth/LoginCompanies";
@@ -249,6 +250,11 @@ const VehicleStackRoutes = () => {
       <VehicleStack.Screen
         name="VehicleViewScreen"
         component={VehicleViewScreen}
+        options={{ headerShown: false }}
+      />
+      <VehicleStack.Screen
+        name="VehicleEditScreen"
+        component={VehicleEditScreen}
         options={{ headerShown: false }}
       />
     </VehicleStack.Navigator>

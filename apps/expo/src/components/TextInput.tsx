@@ -28,6 +28,7 @@ const TextInput = (
             value={value}
             onChangeText={onChange}
             onBlur={onBlur}
+            size="md"
           />
           {error && <Text style={{ color: "red" }}>{error.message}</Text>}
         </View>

@@ -2,14 +2,17 @@ import { Text, View } from "react-native";
 import { Select, type ISelectItemProps, type ISelectProps } from "native-base";
 import { Controller, type Control } from "react-hook-form";
 
+type OptionBag = { key: string; value: string; label: string };
+
 const SelectInput = (props: {
   control: Control<any>;
   name: string;
   label: string;
   placeholder?: string;
-  options: { key: string; value: string; label: string }[];
+  options: OptionBag[];
   selectProps?: ISelectProps;
   selectItemProps?: ISelectItemProps;
+  onChangeCb?: (option: OptionBag) => void;
 }) => {
   const {
     control,
@@ -33,9 +36,17 @@ const SelectInput = (props: {
             {label}
           </Text>
           <Select
+            size="md"
             {...selectProps}
             selectedValue={value}
-            onValueChange={(itemValue) => onChange(itemValue)}
+            onValueChange={(itemValue) => {
+              const option = options.find((o) => o.value === itemValue);
+              if (option) {
+                props.onChangeCb?.(option);
+              }
+
+              onChange(itemValue);
+            }}
             onClose={onBlur}
           >
             {options.map((option) => (
