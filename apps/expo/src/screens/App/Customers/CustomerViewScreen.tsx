@@ -4,8 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Button } from "native-base";
 
+import Button from "../../../components/Button";
 import MainHeader from "../../../components/MainHeader";
 import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
 import { type GlobalRoutingType } from "../../../navigation/types";

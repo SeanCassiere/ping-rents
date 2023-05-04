@@ -309,7 +309,11 @@ const CreateForm = (props: {
         </View>
 
         <View style={{ paddingTop: 20, paddingBottom: 30 }}>
-          <Button onPress={onSubmit} isDisabled={isDisabled}>
+          <Button
+            onPress={onSubmit}
+            isDisabled={isDisabled}
+            isLoading={isDisabled}
+          >
             Create
           </Button>
         </View>
@@ -471,7 +475,11 @@ const UpdateForm = (props: {
         </View>
 
         <View style={{ paddingTop: 20, paddingBottom: 30 }}>
-          <Button onPress={onSubmit} isDisabled={isDisabled}>
+          <Button
+            onPress={onSubmit}
+            isDisabled={isDisabled}
+            isLoading={isDisabled}
+          >
             Update
           </Button>
         </View>
