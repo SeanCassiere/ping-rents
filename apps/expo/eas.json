@@ -23,6 +23,9 @@
     "production": {
       "ios": {
         "resourceClass": "m1-medium"
+      },
+      "android": {
+        "buildType": "apk"
       }
     }
   },
