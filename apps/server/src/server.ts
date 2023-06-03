@@ -1,3 +1,4 @@
+import path from "path";
 import { createExpressMiddleware as createTrpcExpressMiddleware } from "@trpc/server/adapters/express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -52,6 +53,35 @@ export async function makeExpressServer() {
   app.get("/health", (_, res) => {
     res.json({ status: "OK", uptime: process.uptime() ?? 0 });
   });
+
+  // public routes
+  app.get("/public/privacy-policy", (_, res) =>
+    res.sendFile(path.join(__dirname, "../public/privacy-policy.html"), {
+      maxAge: 60 * 60 * 5, // 5 hours
+    }),
+  );
+
+  app.get("/public/terms-and-conditions", (_, res) =>
+    res.sendFile(path.join(__dirname, "../public/terms-and-conditions.html"), {
+      maxAge: 60 * 60 * 5, // 5 hours
+    }),
+  );
+
+  app.get("/public/delete-account", (_, res) =>
+    res.sendFile(path.join(__dirname, "../public/delete-account.html"), {
+      maxAge: 60 * 60 * 5, // 5 hours
+    }),
+  );
+
+  app.get("/public/eula", (_, res) =>
+    res.sendFile(path.join(__dirname, "../public/eula.html"), {
+      maxAge: 60 * 60 * 5, // 5 hours
+    }),
+  );
+
+  app.get("/public", (_, res) =>
+    res.sendFile(path.join(__dirname, "../public/index.html")),
+  );
 
   // hello world
   app.get("/", (_, res) => {
