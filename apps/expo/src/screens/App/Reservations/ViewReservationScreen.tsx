@@ -45,7 +45,9 @@ const ReservationViewScreen = (props: Props) => {
       <StatusBar />
       <View style={[styles.pageContainer]}>
         <MainHeader
-          title="Reservation - 1"
+          title={`Reservation - ${
+            reservation?.data ? reservation.data.displayRefNo : "0"
+          }`}
           leftButton={{
             onPress: backNavigation,
             content: <AntDesign name="left" size={24} color="black" />,
@@ -94,14 +96,12 @@ const ReservationViewScreen = (props: Props) => {
             ]}
             activeKey={view}
           />
-          {reservation.status === "success" && summary.status === "success" && (
+          {reservation.status === "success" && (
             <>
               {view === "summary" && (
-                <RentalRatesSummary
-                  rate={reservation.data.rate}
-                  summary={summary.data}
-                  checkoutDate={reservation.data.checkoutDate}
-                  checkinDate={reservation.data.checkinDate}
+                <ReservationSummaryTab
+                  reservation={reservation.data}
+                  reservationId={reservationId}
                 />
               )}
               {view === "details" && (
@@ -186,5 +186,29 @@ const ReservationDetailsTab = ({
         </View>
       </View>
     </ScrollView>
+  );
+};
+
+const ReservationSummaryTab = ({
+  reservation,
+  reservationId,
+}: {
+  reservation: ReservationOutput;
+  reservationId: string;
+}) => {
+  const summary = api.rental.getReservationSummary.useQuery({
+    id: reservationId,
+  });
+  useRefreshOnFocus(summary.refetch);
+
+  if (summary.status !== "success") return null;
+
+  return (
+    <RentalRatesSummary
+      rate={reservation.rate}
+      summary={summary.data}
+      checkoutDate={reservation.checkoutDate}
+      checkinDate={reservation.checkinDate}
+    />
   );
 };

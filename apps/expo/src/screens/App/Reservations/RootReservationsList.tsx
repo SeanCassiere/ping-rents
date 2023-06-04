@@ -142,7 +142,7 @@ const ReservationListItem = ({
       }}
       onPress={onPress}
     >
-      <Text style={{ width: 20 }}>{index + 1}</Text>
+      <Text style={{ width: 20 }}>{reservation.displayRefNo}</Text>
       <View style={{ marginLeft: 10, flex: 1 }}>
         <Box flexDirection="row">
           <Text ellipsizeMode="tail" numberOfLines={1}>

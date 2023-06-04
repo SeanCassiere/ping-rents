@@ -35,15 +35,14 @@ const AgreementViewScreen = (props: Props) => {
   const agreement = api.rental.getAgreement.useQuery({ id: agreementId });
   useRefreshOnFocus(agreement.refetch);
 
-  const summary = api.rental.getAgreementSummary.useQuery({ id: agreementId });
-  useRefreshOnFocus(summary.refetch);
-
   return (
     <SafeAreaView style={[styles.safeArea]}>
       <StatusBar />
       <View style={[styles.pageContainer]}>
         <MainHeader
-          title="Agreement - 1"
+          title={`Agreement - ${
+            agreement?.data ? agreement.data.displayRefNo : "0"
+          }`}
           leftButton={{
             onPress: backNavigation,
             content: <AntDesign name="left" size={24} color="black" />,
@@ -102,18 +101,12 @@ const AgreementViewScreen = (props: Props) => {
             ]}
             activeKey={view}
           />
-          {agreement.status === "success" && summary.status === "success" && (
+          {agreement.status === "success" && (
             <>
               {view === "summary" && (
-                <RentalRatesSummary
-                  rate={agreement.data.rate}
-                  summary={summary.data}
-                  checkoutDate={agreement.data.checkoutDate}
-                  checkinDate={
-                    agreement.data.status === "on_rent"
-                      ? agreement.data.checkinDate
-                      : agreement.data.returnDate
-                  }
+                <AgreementSummaryTab
+                  agreement={agreement.data}
+                  agreementId={agreementId}
                 />
               )}
               {view === "details" && (
@@ -214,5 +207,31 @@ const AgreementDetailsTab = ({ agreement }: { agreement: AgreementOutput }) => {
         </View>
       </View>
     </ScrollView>
+  );
+};
+
+const AgreementSummaryTab = ({
+  agreement,
+  agreementId,
+}: {
+  agreement: AgreementOutput;
+  agreementId: string;
+}) => {
+  const summary = api.rental.getAgreementSummary.useQuery({ id: agreementId });
+  useRefreshOnFocus(summary.refetch);
+
+  if (summary.status !== "success") return null;
+
+  return (
+    <RentalRatesSummary
+      rate={agreement.rate}
+      summary={summary.data}
+      checkoutDate={agreement.checkoutDate}
+      checkinDate={
+        agreement.status === "on_rent"
+          ? agreement.checkinDate
+          : agreement.returnDate
+      }
+    />
   );
 };
