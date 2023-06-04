@@ -88,10 +88,11 @@ const AgreementsListScreen = (props: Props) => {
                   <AgreementListItem
                     agreement={item}
                     index={index}
-                    onPress={(agreement) => {
-                      // props.navigation.push("VehicleViewScreen", {
-                      //   vehicleId: item.id,
-                      // });
+                    onPress={() => {
+                      props.navigation.push("AgreementViewScreen", {
+                        agreementId: item.id,
+                        view: "overview",
+                      });
                     }}
                   />
                 );
@@ -118,11 +119,8 @@ const AgreementListItem = ({
 }: {
   agreement: OutputAgreement;
   index: number;
-  onPress: (agreement: OutputAgreement) => void;
+  onPress: () => void;
 }) => {
-  const handlePress = () => {
-    onPress(agreement);
-  };
   return (
     <TouchableOpacity
       style={{
@@ -136,7 +134,7 @@ const AgreementListItem = ({
         borderWidth: 2,
         marginTop: index === 0 ? 20 : 10,
       }}
-      onPress={handlePress}
+      onPress={onPress}
     >
       <Text style={{ width: 20 }}>{index + 1}</Text>
       <View style={{ marginLeft: 10, flex: 1 }}>
