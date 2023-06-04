@@ -49,6 +49,7 @@
     "react-native-screens": "~3.20.0",
     "react-native-svg": "13.4.0",
     "react-native-web": "~0.18.10",
+    "react-native-webview": "^11.26.0",
     "superjson": "1.9.1"
   },
   "devDependencies": {

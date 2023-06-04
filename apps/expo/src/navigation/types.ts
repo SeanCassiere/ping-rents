@@ -8,6 +8,7 @@ export type GlobalRoutingType = {
     LoginEmail: undefined;
     LoginAccessCode: { email: string };
     LoginCompanies: { email: string; accessCode: string; companyId: string };
+    PolicyWebView: { title: string; url: string };
   };
   AppDrawer: {
     Home: undefined;
