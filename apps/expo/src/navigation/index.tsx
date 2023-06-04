@@ -27,6 +27,7 @@ import VehicleViewScreen from "../screens/App/Vehicles/VehicleViewScreen";
 import LoginAccessCodeScreen from "../screens/Auth/LoginAccessCode";
 import LoginCompaniesScreen from "../screens/Auth/LoginCompanies";
 import LoginEmailScreen from "../screens/Auth/LoginEmail";
+import PolicyViewerScreen from "../screens/Auth/PolicyViewer";
 import RegisterScreen from "../screens/Auth/Register";
 import { type GlobalRoutingType } from "./types";
 
@@ -103,6 +104,11 @@ export const AuthStackRoutes = () => {
       <AuthStack.Screen
         name="Register"
         component={RegisterScreen}
+        options={{ headerShown: false }}
+      />
+      <AuthStack.Screen
+        name="PolicyWebView"
+        component={PolicyViewerScreen}
         options={{ headerShown: false }}
       />
     </AuthStack.Navigator>

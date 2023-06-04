@@ -6,14 +6,11 @@ import {
   StatusBar,
   View,
 } from "react-native";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Pressable, Text, useToast } from "native-base";
+import { Box, Pressable, Text, useToast } from "native-base";
 import { useForm } from "react-hook-form";
 
 import {
@@ -25,7 +22,7 @@ import Button from "../../components/Button";
 import MainHeader from "../../components/MainHeader";
 import TextInput from "../../components/TextInput";
 import { type GlobalRoutingType } from "../../navigation/types";
-import { api } from "../../utils/api";
+import { PingRentsStaticLinks, api } from "../../utils/api";
 import { styles } from "../../utils/styles";
 
 const messages = {
@@ -40,10 +37,11 @@ type Props = NativeStackScreenProps<
   "Register"
 >;
 
+type RegisterScreenNavigation = Props["navigation"];
+
 const RegisterScreen = (props: Props) => {
   const { navigation } = props;
 
-  const insets = useSafeAreaInsets();
   const toast = useToast();
 
   const { control, handleSubmit, reset } = useForm({
@@ -132,6 +130,40 @@ const RegisterScreen = (props: Props) => {
               inputMode="email"
             />
             <View>
+              <Box mb={5} mt={5}>
+                <Text lineHeight={25}>
+                  By clicking {'"Register"'}, you agree to our{" "}
+                  <TextHyperLink
+                    text="Terms"
+                    title="Terms and Conditions"
+                    url={PingRentsStaticLinks.termsAndConditions}
+                    navigation={navigation}
+                  />
+                  <Text>,</Text>
+                  <TextHyperLink
+                    text=" Privacy Policy"
+                    title="Privacy Policy"
+                    url={PingRentsStaticLinks.privacyPolicy}
+                    navigation={navigation}
+                  />
+                  <Text>,</Text>
+                  <TextHyperLink
+                    text=" End-User License Agreement (EULA)"
+                    title="EULA"
+                    url={PingRentsStaticLinks.eula}
+                    navigation={navigation}
+                  />
+                  <Text>, and</Text>
+                  <TextHyperLink
+                    text=" Account Deletion
+                    Policy"
+                    title="Account Deletion Policy"
+                    url={PingRentsStaticLinks.deleteAccountPolicy}
+                    navigation={navigation}
+                  />
+                  <Text>.</Text>
+                </Text>
+              </Box>
               <Button
                 onPress={handleSubmit(onSubmit)}
                 disabled={register.isLoading}
@@ -160,6 +192,29 @@ const RegisterScreen = (props: Props) => {
         </KeyboardAvoidingView>
       </View>
     </SafeAreaView>
+  );
+};
+
+const TextHyperLink = ({
+  text,
+  title,
+  url,
+  navigation,
+}: {
+  text: string;
+  url: string;
+  title: string;
+  navigation: RegisterScreenNavigation;
+}) => {
+  return (
+    <Text
+      onPress={() => {
+        navigation.push("PolicyWebView", { title, url });
+      }}
+      color="blue.500"
+    >
+      {text}
+    </Text>
   );
 };
 

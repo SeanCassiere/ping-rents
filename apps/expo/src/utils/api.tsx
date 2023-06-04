@@ -52,8 +52,16 @@ export const getBaseUrl = () => {
     return Constants.expoConfig?.extra?.PUBLIC_API_URL as string;
   }
 
-  return "https://api-ping-rents.pingstash.com";
+  return "https://pingrents-api.pingstash.com";
 };
+
+export const PingRentsStaticLinks = {
+  trpcEndpoint: `${getBaseUrl()}/trpc`,
+  termsAndConditions: `${getBaseUrl()}/public/terms-and-conditions?hideHeader=true`,
+  privacyPolicy: `${getBaseUrl()}/public/privacy-policy?hideHeader=true`,
+  eula: `${getBaseUrl()}/public/eula?hideHeader=true`,
+  deleteAccountPolicy: `${getBaseUrl()}/public/delete-account?hideHeader=true`,
+} as const;
 
 /**
  * Use this to manage the online-status of your app in tanstack-query.
@@ -80,7 +88,7 @@ export const TRPCProvider: React.FC<{
       transformer: superjson,
       links: [
         httpBatchLink({
-          url: `${getBaseUrl()}/trpc`,
+          url: PingRentsStaticLinks.trpcEndpoint,
           headers: () => ({
             ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
             ...(sessionId
