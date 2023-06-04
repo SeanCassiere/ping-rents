@@ -13,11 +13,13 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import DrawerNavigation from "../components/DrawerNavigation";
 import { useAuthContext } from "../context/auth.context";
 import AgreementsListScreen from "../screens/App/Agreements/RootAgreementsList";
+import AgreementViewScreen from "../screens/App/Agreements/ViewAgreementScreen";
 import CustomerEditScreen from "../screens/App/Customers/CustomerEditScreen";
 import CustomerViewScreen from "../screens/App/Customers/CustomerViewScreen";
 import CustomerListScreen from "../screens/App/Customers/RootCustomersList";
 import HomeScreen from "../screens/App/Home";
 import ReservationsListScreen from "../screens/App/Reservations/RootReservationsList";
+import ReservationViewScreen from "../screens/App/Reservations/ViewReservationScreen";
 import CompanyEditScreen from "../screens/App/Settings/CompanyEdit";
 import EmployeeEditScreen from "../screens/App/Settings/EmployeeEdit";
 import EmployeesListScreen from "../screens/App/Settings/EmployeesList";
@@ -141,7 +143,7 @@ const AppDrawerRoutes = () => {
         drawerItemStyle: {
           paddingHorizontal: 5,
         },
-        swipeEdgeWidth: 250,
+        swipeEdgeWidth: 80,
         drawerType: "back",
       }}
     >
@@ -349,6 +351,11 @@ const AgreementStackRoutes = () => {
         component={AgreementsListScreen}
         options={{ headerShown: false }}
       />
+      <AgreementStack.Screen
+        name="AgreementViewScreen"
+        component={AgreementViewScreen}
+        options={{ headerShown: false }}
+      />
     </AgreementStack.Navigator>
   );
 };
@@ -363,6 +370,11 @@ const ReservationStackRoutes = () => {
       <ReservationStack.Screen
         name="RootReservationsList"
         component={ReservationsListScreen}
+        options={{ headerShown: false }}
+      />
+      <ReservationStack.Screen
+        name="ReservationViewScreen"
+        component={ReservationViewScreen}
         options={{ headerShown: false }}
       />
     </ReservationStack.Navigator>

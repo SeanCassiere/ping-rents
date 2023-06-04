@@ -94,10 +94,11 @@ const ReservationsListScreen = (props: Props) => {
                     <ReservationListItem
                       reservation={item}
                       index={index}
-                      onPress={(reservation) => {
-                        // props.navigation.push("VehicleViewScreen", {
-                        //   vehicleId: item.id,
-                        // });
+                      onPress={() => {
+                        props.navigation.push("ReservationViewScreen", {
+                          reservationId: item.id,
+                          view: "summary",
+                        });
                       }}
                     />
                   );
@@ -124,11 +125,8 @@ const ReservationListItem = ({
 }: {
   reservation: OutputReservation;
   index: number;
-  onPress: (reservation: OutputReservation) => void;
+  onPress: () => void;
 }) => {
-  const handlePress = () => {
-    onPress(reservation);
-  };
   return (
     <TouchableOpacity
       style={{
@@ -142,9 +140,9 @@ const ReservationListItem = ({
         borderWidth: 2,
         marginTop: index === 0 ? 20 : 10,
       }}
-      onPress={handlePress}
+      onPress={onPress}
     >
-      <Text style={{ width: 20 }}>{index + 1}</Text>
+      <Text style={{ width: 20 }}>{reservation.displayRefNo}</Text>
       <View style={{ marginLeft: 10, flex: 1 }}>
         <Box flexDirection="row">
           <Text ellipsizeMode="tail" numberOfLines={1}>

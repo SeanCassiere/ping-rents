@@ -1,3 +1,4 @@
+// import { add } from "@acme/date-fns";
 import { z } from "@acme/validator";
 import {
   CheckInRentalSchema,
@@ -22,6 +23,26 @@ export const rentalsRouter = createTRPCRouter({
   getAgreement: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
+      // const now = new Date();
+      // const checkinDate = add(now, { days: 3 });
+      // await RentalLogic.createRental(
+      //   ctx.user,
+      //   { type: "agreement", status: "on_rent" },
+      //   {
+      //     reservationId: null,
+      //     checkoutLocationId: "cliherrbb0002fy2kcjm3reys",
+      //     checkinLocationId: "cliherrbb0002fy2kcjm3reys",
+      //     returnLocationId: "cliherrbb0002fy2kcjm3reys",
+      //     checkoutDate: now,
+      //     checkinDate: checkinDate,
+      //     returnDate: checkinDate,
+      //     taxIdList: ["cliheu0sw000kfy2ko1z2lwj0"],
+      //     vehicleId: "clihewj50000ofy2k4xdfdptl",
+      //     rate: { id: "clihetcq5000gfy2k5ukjy9mj", dailyRate: 10 },
+      //     customerId: "cliheufmd000mfy2kratuug2i",
+      //     odometerOut: 910,
+      //   },
+      // );
       return await RentalLogic.getById(ctx.user, "agreement", input);
     }),
   getAgreementSummary: protectedProcedure
@@ -63,6 +84,26 @@ export const rentalsRouter = createTRPCRouter({
   getReservation: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
+      // const now = add(new Date(), { hours: 9 });
+      // const checkinDate = add(now, { days: 3 });
+      // await RentalLogic.createRental(
+      //   ctx.user,
+      //   { type: "reservation", status: "open" },
+      //   {
+      //     reservationId: null,
+      //     checkoutLocationId: "cliherrbb0002fy2kcjm3reys",
+      //     checkinLocationId: "cliherrbb0002fy2kcjm3reys",
+      //     returnLocationId: "cliherrbb0002fy2kcjm3reys",
+      //     checkoutDate: now,
+      //     checkinDate: checkinDate,
+      //     returnDate: checkinDate,
+      //     taxIdList: ["cliheu0sw000kfy2ko1z2lwj0"],
+      //     vehicleId: "clihewj50000ofy2k4xdfdptl",
+      //     rate: { id: "clihetcq5000gfy2k5ukjy9mj", dailyRate: 12 },
+      //     customerId: "cliheufmd000mfy2kratuug2i",
+      //     odometerOut: 910,
+      //   },
+      // );
       return await RentalLogic.getById(ctx.user, "reservation", input);
     }),
   getReservationSummary: protectedProcedure

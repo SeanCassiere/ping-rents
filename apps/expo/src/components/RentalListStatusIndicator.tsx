@@ -40,9 +40,9 @@ export const RentalListStatusIndicator = ({
           : status === "closed"
           ? "red.500"
           : status === "on_rent"
-          ? "orange.500"
+          ? "green.500"
           : status === "pending_payment"
-          ? "purple.500"
+          ? "orange.500"
           : "blue.500"
       }
     >

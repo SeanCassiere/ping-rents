@@ -32,14 +32,14 @@ export type GlobalRoutingType = {
     RootAgreementsList: undefined;
     AgreementViewScreen: {
       agreementId: string;
-      view: "overview" | "details" | "payments" | "notes";
+      view: "summary" | "details" | "payments" | "notes";
     };
   };
   ReservationsStackNavigator: {
     RootReservationsList: undefined;
     ReservationViewScreen: {
       reservationId: string;
-      view: "overview" | "details" | "notes";
+      view: "summary" | "details" | "notes";
     };
   };
   SettingsStackNavigator: {
