@@ -27,7 +27,7 @@ export const rentalsRouter = createTRPCRouter({
       // const checkinDate = add(now, { days: 3 });
       // await RentalLogic.createRental(
       //   ctx.user,
-      //   { type: "agreement", status: "open" },
+      //   { type: "agreement", status: "on_rent" },
       //   {
       //     reservationId: null,
       //     checkoutLocationId: "cliherrbb0002fy2kcjm3reys",
@@ -37,7 +37,7 @@ export const rentalsRouter = createTRPCRouter({
       //     checkinDate: checkinDate,
       //     returnDate: checkinDate,
       //     taxIdList: ["cliheu0sw000kfy2ko1z2lwj0"],
-      //     vehicleId: "clihezxkt000qfy2kbzwr6xsk",
+      //     vehicleId: "clihewj50000ofy2k4xdfdptl",
       //     rate: { id: "clihetcq5000gfy2k5ukjy9mj", dailyRate: 10 },
       //     customerId: "cliheufmd000mfy2kratuug2i",
       //     odometerOut: 910,

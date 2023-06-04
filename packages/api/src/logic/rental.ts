@@ -79,6 +79,33 @@ class RentalController {
     }
 
     return await prisma.$transaction(async (tx) => {
+      const companyProfile = await tx.company.findFirst({
+        where: { id: user.companyId },
+      });
+      if (!companyProfile) {
+        throw new Error("Company not found.");
+      }
+
+      const newDisplayNumber =
+        type === "agreement"
+          ? `${companyProfile.nextAgreementTrackNumber}`
+          : `${companyProfile.nextReservationTrackNumber}`;
+
+      await tx.company.update({
+        where: {
+          id: user.companyId,
+        },
+        data: {
+          ...(type === "agreement"
+            ? {
+                nextAgreementTrackNumber: { increment: 1 },
+              }
+            : {
+                nextReservationTrackNumber: { increment: 1 },
+              }),
+        },
+      });
+
       // set reservation status to checkout for agreement checkouts
       if (type === "agreement" && payload.reservationId) {
         const reservation = await tx.rental.findFirst({
@@ -108,6 +135,8 @@ class RentalController {
         data: {
           type,
           status,
+          displayRefNo: newDisplayNumber,
+
           checkoutDate: payload.checkoutDate,
           checkinDate: payload.checkinDate,
           returnDate: payload.returnDate,
