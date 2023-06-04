@@ -35,6 +35,13 @@ export type GlobalRoutingType = {
       view: "overview" | "details" | "payments" | "notes";
     };
   };
+  ReservationsStackNavigator: {
+    RootReservationsList: undefined;
+    ReservationViewScreen: {
+      reservationId: string;
+      view: "overview" | "details" | "notes";
+    };
+  };
   SettingsStackNavigator: {
     RootSettingsScreen: undefined;
     //

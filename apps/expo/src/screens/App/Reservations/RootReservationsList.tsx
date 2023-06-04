@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { AntDesign, Entypo, FontAwesome5 } from "@expo/vector-icons";
+import { AntDesign, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import { DrawerActions } from "@react-navigation/native";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
@@ -20,13 +20,13 @@ import { DateFormatter } from "../../../utils/dates";
 import { styles } from "../../../utils/styles";
 
 type Props = NativeStackScreenProps<
-  GlobalRoutingType["AgreementsStackNavigator"],
-  "RootAgreementsList"
+  GlobalRoutingType["ReservationsStackNavigator"],
+  "RootReservationsList"
 >;
 
-const AgreementsListScreen = (props: Props) => {
-  const agreements = api.rental.getAgreements.useQuery();
-  useRefreshOnFocus(agreements.refetch);
+const ReservationsListScreen = (props: Props) => {
+  const reservations = api.rental.getReservations.useQuery();
+  useRefreshOnFocus(reservations.refetch);
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
@@ -41,7 +41,7 @@ const AgreementsListScreen = (props: Props) => {
         ]}
       >
         <MainHeader
-          title="Agreements"
+          title="Reservations"
           leftButton={{
             onPress: () => {
               props.navigation.dispatch(DrawerActions.toggleDrawer());
@@ -59,69 +59,75 @@ const AgreementsListScreen = (props: Props) => {
           }}
         />
         <View style={{ flex: 1 }}>
-          {agreements.status === "success" && agreements.data.length === 0 && (
-            <View style={{ marginTop: 30 }}>
-              <EmptyState
-                renderIcon={() => (
-                  <FontAwesome5 name="file-signature" size={38} color="black" />
-                )}
-                title="No agreements"
-                description="Start by creating a new rental agreement."
-                buttonProps={{
-                  text: "Create an agreement",
-                  onPress: () => {
-                    // props.navigation.push("VehicleEditScreen", {
-                    //   vehicleId: "",
-                    //   currentLocationId: locationId,
-                    // });
-                  },
-                }}
-              />
-            </View>
-          )}
-
-          {agreements.status === "success" && agreements.data.length > 0 && (
-            <FlashList
-              data={agreements.data || []}
-              renderItem={({ item, index }) => {
-                return (
-                  <AgreementListItem
-                    agreement={item}
-                    index={index}
-                    onPress={(agreement) => {
-                      // props.navigation.push("VehicleViewScreen", {
-                      //   vehicleId: item.id,
+          {reservations.status === "success" &&
+            reservations.data.length === 0 && (
+              <View style={{ marginTop: 30 }}>
+                <EmptyState
+                  renderIcon={() => (
+                    <MaterialCommunityIcons
+                      name="bookshelf"
+                      size={24}
+                      color="black"
+                    />
+                  )}
+                  title="No reservations"
+                  description="Start by creating a new reservation."
+                  buttonProps={{
+                    text: "Create a reservation",
+                    onPress: () => {
+                      // props.navigation.push("VehicleEditScreen", {
+                      //   vehicleId: "",
+                      //   currentLocationId: locationId,
                       // });
-                    }}
-                  />
-                );
-              }}
-              estimatedItemSize={200}
-              onRefresh={agreements.refetch}
-              refreshing={agreements.isLoading}
-            />
-          )}
+                    },
+                  }}
+                />
+              </View>
+            )}
+
+          {reservations.status === "success" &&
+            reservations.data.length > 0 && (
+              <FlashList
+                data={reservations.data || []}
+                renderItem={({ item, index }) => {
+                  return (
+                    <ReservationListItem
+                      reservation={item}
+                      index={index}
+                      onPress={(reservation) => {
+                        // props.navigation.push("VehicleViewScreen", {
+                        //   vehicleId: item.id,
+                        // });
+                      }}
+                    />
+                  );
+                }}
+                estimatedItemSize={200}
+                onRefresh={reservations.refetch}
+                refreshing={reservations.isLoading}
+              />
+            )}
         </View>
       </View>
     </SafeAreaView>
   );
 };
 
-export default AgreementsListScreen;
+export default ReservationsListScreen;
 
-type OutputAgreement = RouterOutputs["rental"]["getAgreements"][number];
+type OutputReservation = RouterOutputs["rental"]["getReservations"][number];
 
-const AgreementListItem = ({
-  agreement,
+const ReservationListItem = ({
+  reservation,
   index,
   onPress,
 }: {
-  agreement: OutputAgreement;
+  reservation: OutputReservation;
   index: number;
-  onPress: (agreement: OutputAgreement) => void;
+  onPress: (reservation: OutputReservation) => void;
 }) => {
   const handlePress = () => {
-    onPress(agreement);
+    onPress(reservation);
   };
   return (
     <TouchableOpacity
@@ -144,30 +150,28 @@ const AgreementListItem = ({
           <Text ellipsizeMode="tail" numberOfLines={1}>
             Status:
           </Text>
-          <RentalListStatusIndicator status={agreement.status} />
+          <RentalListStatusIndicator status={reservation.status} />
         </Box>
         <Text ellipsizeMode="tail" numberOfLines={1}>
-          Customer: {agreement.customer.firstName} {agreement.customer.lastName}
+          Customer: {reservation.customer.firstName}{" "}
+          {reservation.customer.lastName}
         </Text>
         <Text ellipsizeMode="tail" numberOfLines={1}>
-          License: {agreement.vehicle.licensePlate}
+          License: {reservation.vehicle.licensePlate}
         </Text>
         <Text ellipsizeMode="tail" numberOfLines={1}>
-          Vehicle: {agreement.vehicle.make} {agreement.vehicle.model}{" "}
-          {agreement.vehicle.year}
+          Vehicle Type: {reservation.vehicleType.name}
+        </Text>
+        <Text ellipsizeMode="tail" numberOfLines={1}>
+          Vehicle: {reservation.vehicle.make} {reservation.vehicle.model}{" "}
+          {reservation.vehicle.year}
         </Text>
         <Text ellipsizeMode="tail">
-          Checkout: {DateFormatter.rentalListView(agreement.checkoutDate)}
+          Checkout: {DateFormatter.rentalListView(reservation.checkoutDate)}
         </Text>
-        {agreement.status === "open" ? (
-          <Text ellipsizeMode="tail" numberOfLines={1}>
-            Checkin: {DateFormatter.rentalListView(agreement.checkinDate)}
-          </Text>
-        ) : (
-          <Text ellipsizeMode="tail" numberOfLines={1}>
-            Return: {DateFormatter.rentalListView(agreement.returnDate)}
-          </Text>
-        )}
+        <Text ellipsizeMode="tail" numberOfLines={1}>
+          Checkin: {DateFormatter.rentalListView(reservation.checkinDate)}
+        </Text>
       </View>
       <View
         style={{
