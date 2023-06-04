@@ -62,6 +62,8 @@
     "JWT_SECRET",
     "PORT",
     "SERVER_HOST",
-    "PUBLIC_API_URL"
+    "PUBLIC_API_URL",
+    "SENDGRID_API_KEY",
+    "SENDGRID_FROM_EMAIL"
   ]
 }
