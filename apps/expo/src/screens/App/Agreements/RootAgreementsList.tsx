@@ -91,7 +91,7 @@ const AgreementsListScreen = (props: Props) => {
                     onPress={() => {
                       props.navigation.push("AgreementViewScreen", {
                         agreementId: item.id,
-                        view: "overview",
+                        view: "summary",
                       });
                     }}
                   />

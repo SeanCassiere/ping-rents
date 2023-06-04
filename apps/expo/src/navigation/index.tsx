@@ -142,7 +142,7 @@ const AppDrawerRoutes = () => {
         drawerItemStyle: {
           paddingHorizontal: 5,
         },
-        swipeEdgeWidth: 250,
+        swipeEdgeWidth: 80,
         drawerType: "back",
       }}
     >
