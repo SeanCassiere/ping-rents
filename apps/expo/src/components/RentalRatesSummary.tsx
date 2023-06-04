@@ -3,15 +3,24 @@ import { ScrollView, Text, View } from "native-base";
 
 import { type RouterOutputs } from "@acme/api";
 
+import { DateFormatter } from "../utils/dates";
+
 type RentalRate = Omit<RouterOutputs["rental"]["getAgreement"]["rate"], "id">;
 type RentalSummary = RouterOutputs["rental"]["getAgreementSummary"];
 
 type Props = {
   rate: RentalRate;
   summary: RentalSummary;
+  checkoutDate: Date;
+  checkinDate: Date;
 };
 
-const RentalRatesSummary = ({ rate, summary }: Props) => {
+const RentalRatesSummary = ({
+  rate,
+  summary,
+  checkoutDate,
+  checkinDate,
+}: Props) => {
   return (
     <ScrollView width="100%" mt={5} ml={0} mr={-0.5}>
       <View flexDirection="row" style={{ gap: 6 }}>
@@ -19,6 +28,24 @@ const RentalRatesSummary = ({ rate, summary }: Props) => {
           Rate name:
         </Text>
         <Text fontSize={18}>{rate.name}</Text>
+      </View>
+      <View flexDirection="row" style={{ gap: 6 }}>
+        <Text fontSize={18} fontWeight="bold">
+          Daily rate:
+        </Text>
+        <Text fontSize={18}>$ {rate.dailyRate.toFixed(2)}</Text>
+      </View>
+      <View flexDirection="row" mt={2} style={{ gap: 6 }}>
+        <Text fontSize={18} fontWeight="bold">
+          Checkout:
+        </Text>
+        <Text fontSize={18}>{DateFormatter.rentalListView(checkoutDate)}</Text>
+      </View>
+      <View flexDirection="row" style={{ gap: 6 }}>
+        <Text fontSize={18} fontWeight="bold">
+          Checkin:
+        </Text>
+        <Text fontSize={18}>{DateFormatter.rentalListView(checkinDate)}</Text>
       </View>
       <View rounded="xs" mt={4} py={4} bgColor="gray.100" style={{ gap: 10 }}>
         <TableRow label="Base rate" value={summary.baseRate} />

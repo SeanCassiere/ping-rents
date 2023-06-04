@@ -100,6 +100,8 @@ const ReservationViewScreen = (props: Props) => {
                 <RentalRatesSummary
                   rate={reservation.data.rate}
                   summary={summary.data}
+                  checkoutDate={reservation.data.checkoutDate}
+                  checkinDate={reservation.data.checkinDate}
                 />
               )}
               {view === "details" && (

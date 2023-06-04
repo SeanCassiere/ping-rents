@@ -108,6 +108,12 @@ const AgreementViewScreen = (props: Props) => {
                 <RentalRatesSummary
                   rate={agreement.data.rate}
                   summary={summary.data}
+                  checkoutDate={agreement.data.checkoutDate}
+                  checkinDate={
+                    agreement.data.status === "on_rent"
+                      ? agreement.data.checkinDate
+                      : agreement.data.returnDate
+                  }
                 />
               )}
               {view === "details" && (
