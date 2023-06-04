@@ -14,6 +14,11 @@ model Company {
     id   String @id @default(cuid())
     name String @db.VarChar(255)
 
+    // used to track the next number to use for a rental, agreement, or reservation
+    nextAgreementTrackNumber   Int @default(1)
+    nextReservationTrackNumber Int @default(1)
+    nextPaymentTrackNumber     Int @default(1)
+
     companyAccountConnections CompanyAccountConnection[]
     locations                 Location[]
     sessions                  Session[]
@@ -251,11 +256,11 @@ enum EnumRentalType {
 }
 
 enum EnumRentalStatus {
-    open
-    checkout
-    on_rent
-    pending_payment
-    closed
+    open // for reservation
+    checkout // for reservation
+    on_rent // for agreement
+    pending_payment // for agreeemnt
+    closed // for agreement
 }
 
 model Rental {
@@ -265,6 +270,8 @@ model Rental {
     checkoutDate DateTime
     checkinDate  DateTime
     returnDate   DateTime
+
+    displayRefNo String @default("1") @db.VarChar(255)
 
     odometerOut Int @default(0)
     odometerIn  Int @default(0)
