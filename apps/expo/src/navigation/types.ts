@@ -28,6 +28,13 @@ export type GlobalRoutingType = {
     VehicleEditScreen: { vehicleId: string; currentLocationId: string };
     VehicleViewScreen: { vehicleId: string };
   };
+  AgreementsStackNavigator: {
+    RootAgreementsList: undefined;
+    AgreementViewScreen: {
+      agreementId: string;
+      view: "overview" | "details" | "payments" | "notes";
+    };
+  };
   SettingsStackNavigator: {
     RootSettingsScreen: undefined;
     //

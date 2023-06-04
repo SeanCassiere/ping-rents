@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import DrawerNavigation from "../components/DrawerNavigation";
 import { useAuthContext } from "../context/auth.context";
+import AgreementsListScreen from "../screens/App/Agreements/RootAgreementsList";
 import CustomerEditScreen from "../screens/App/Customers/CustomerEditScreen";
 import CustomerViewScreen from "../screens/App/Customers/CustomerViewScreen";
 import CustomerListScreen from "../screens/App/Customers/RootCustomersList";
@@ -134,6 +135,8 @@ const AppDrawerRoutes = () => {
         drawerItemStyle: {
           paddingHorizontal: 5,
         },
+        swipeEdgeWidth: 250,
+        drawerType: "back",
       }}
     >
       <AppDrawer.Screen
@@ -188,9 +191,10 @@ const AppDrawerRoutes = () => {
         }}
       />
 
+    */}
       <AppDrawer.Screen
         name="Agreements"
-        component={CustomerStackRoutes}
+        component={AgreementStackRoutes}
         options={{
           headerShown: false,
           title: "Agreements",
@@ -198,7 +202,7 @@ const AppDrawerRoutes = () => {
             <FontAwesome5 name="file-signature" size={size} color={color} />
           ),
         }}
-      /> */}
+      />
 
       <AppDrawer.Screen
         name="Settings"
@@ -325,5 +329,21 @@ const SettingsStackRoutes = () => {
         options={{ headerShown: false }}
       />
     </SettingsStack.Navigator>
+  );
+};
+
+const AgreementStack =
+  createNativeStackNavigator<GlobalRoutingType["AgreementsStackNavigator"]>();
+const AgreementStackRoutes = () => {
+  return (
+    <AgreementStack.Navigator
+      screenOptions={{ animation: "slide_from_right", presentation: "card" }}
+    >
+      <AgreementStack.Screen
+        name="RootAgreementsList"
+        component={AgreementsListScreen}
+        options={{ headerShown: false }}
+      />
+    </AgreementStack.Navigator>
   );
 };

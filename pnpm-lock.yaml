@@ -34,6 +34,9 @@ importers:
 
   apps/expo:
     dependencies:
+      '@acme/date-fns':
+        specifier: '*'
+        version: link:../../packages/date-fns
       '@acme/validator':
         specifier: '*'
         version: link:../../packages/validator
