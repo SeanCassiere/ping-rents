@@ -8,6 +8,7 @@ import { ScrollView, Text, View } from "native-base";
 
 import Button from "../../../components/Button";
 import MainHeader from "../../../components/MainHeader";
+import RentalRatesSummary from "../../../components/RentalRatesSummary";
 import RentalTabList from "../../../components/RentalTabList";
 import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
 import { type GlobalRoutingType } from "../../../navigation/types";
@@ -33,6 +34,9 @@ const AgreementViewScreen = (props: Props) => {
 
   const agreement = api.rental.getAgreement.useQuery({ id: agreementId });
   useRefreshOnFocus(agreement.refetch);
+
+  const summary = api.rental.getAgreementSummary.useQuery({ id: agreementId });
+  useRefreshOnFocus(summary.refetch);
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
@@ -99,23 +103,33 @@ const AgreementViewScreen = (props: Props) => {
             ]}
             activeKey={view}
           />
-          {agreement.status === "success" && (
+          {agreement.status === "success" && summary.status === "success" && (
             <>
+              {view === "summary" && (
+                <RentalRatesSummary
+                  rate={agreement.data.rate}
+                  summary={summary.data}
+                />
+              )}
               {view === "details" && (
                 <AgreementDetailsTab agreement={agreement.data} />
               )}
             </>
           )}
         </View>
-        <View mb={5}>
-          <Button
-            onPress={() => {
-              console.log("checkin button pressed");
-            }}
-          >
-            Checkin
-          </Button>
-        </View>
+        {agreement.status === "success" &&
+          agreement.data.status === "on_rent" &&
+          (view === "summary" || view === "details") && (
+            <View mb={5}>
+              <Button
+                onPress={() => {
+                  console.log("checkin button pressed");
+                }}
+              >
+                Checkin
+              </Button>
+            </View>
+          )}
       </View>
     </SafeAreaView>
   );
