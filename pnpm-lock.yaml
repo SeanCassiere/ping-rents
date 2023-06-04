@@ -34,6 +34,9 @@ importers:
 
   apps/expo:
     dependencies:
+      '@acme/date-fns':
+        specifier: '*'
+        version: link:../../packages/date-fns
       '@acme/validator':
         specifier: '*'
         version: link:../../packages/validator
@@ -365,12 +368,12 @@ importers:
       '@acme/validator':
         specifier: '*'
         version: link:../validator
+      '@sendgrid/mail':
+        specifier: ^7.7.0
+        version: 7.7.0
       jsonwebtoken:
         specifier: ^9.0.0
         version: 9.0.0
-      nodemailer:
-        specifier: ^6.9.1
-        version: 6.9.1
     devDependencies:
       '@acme/eslint-config':
         specifier: '*'
@@ -378,9 +381,6 @@ importers:
       '@types/jsonwebtoken':
         specifier: ^9.0.1
         version: 9.0.1
-      '@types/nodemailer':
-        specifier: ^6.4.7
-        version: 6.4.7
       eslint:
         specifier: ^8.36.0
         version: 8.36.0
@@ -4020,6 +4020,33 @@ packages:
       join-component: 1.1.0
     dev: false
 
+  /@sendgrid/client@7.7.0:
+    resolution: {integrity: sha512-SxH+y8jeAQSnDavrTD0uGDXYIIkFylCo+eDofVmZLQ0f862nnqbC3Vd1ej6b7Le7lboyzQF6F7Fodv02rYspuA==}
+    engines: {node: 6.* || 8.* || >=10.*}
+    dependencies:
+      '@sendgrid/helpers': 7.7.0
+      axios: 0.26.1
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
+  /@sendgrid/helpers@7.7.0:
+    resolution: {integrity: sha512-3AsAxfN3GDBcXoZ/y1mzAAbKzTtUZ5+ZrHOmWQ279AuaFXUNCh9bPnRpN504bgveTqoW+11IzPg3I0WVgDINpw==}
+    engines: {node: '>= 6.0.0'}
+    dependencies:
+      deepmerge: 4.3.1
+    dev: false
+
+  /@sendgrid/mail@7.7.0:
+    resolution: {integrity: sha512-5+nApPE9wINBvHSUxwOxkkQqM/IAAaBYoP9hw7WwgDNQPxraruVqHizeTitVtKGiqWCKm2mnjh4XGN3fvFLqaw==}
+    engines: {node: 6.* || 8.* || >=10.*}
+    dependencies:
+      '@sendgrid/client': 7.7.0
+      '@sendgrid/helpers': 7.7.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /@shopify/flash-list@1.4.0(@babel/runtime@7.21.0)(react-native@0.71.4)(react@18.2.0):
     resolution: {integrity: sha512-PvPOyk353LuETFnNA038+QaJsAFlCQ2TYC7DHP3YnYqTX72g2BM6qLoLsPaptXKuoXX+dinOo0MbEm7HDjTy1g==}
     peerDependencies:
@@ -4318,12 +4345,6 @@ packages:
 
   /@types/node@18.15.10:
     resolution: {integrity: sha512-9avDaQJczATcXgfmMAW3MIWArOO7A+m90vuCFLr8AotWf8igO/mRoYukrk2cqZVtv38tHs33retzHEilM7FpeQ==}
-
-  /@types/nodemailer@6.4.7:
-    resolution: {integrity: sha512-f5qCBGAn/f0qtRcd4SEn88c8Fp3Swct1731X4ryPKqS61/A3LmmzN8zaEz7hneJvpjFbUUgY7lru/B/7ODTazg==}
-    dependencies:
-      '@types/node': 18.15.10
-    dev: true
 
   /@types/prettier@2.7.2:
     resolution: {integrity: sha512-KufADq8uQqo1pYKVIYzfKbJfBAc0sOeXqGbFaSpv8MRmC/zXgowNZmFcbngndGk922QDmOASEXUZCaY48gs4cg==}
@@ -5073,6 +5094,14 @@ packages:
   /axe-core@4.6.3:
     resolution: {integrity: sha512-/BQzOX780JhsxDnPpH4ZiyrJAzcd8AfzFPkv+89veFSr1rcMjuq2JDCwypKaPeB6ljHp9KjXhPpjgCvQlWYuqg==}
     engines: {node: '>=4'}
+    dev: false
+
+  /axios@0.26.1:
+    resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
+    dependencies:
+      follow-redirects: 1.15.2
+    transitivePeerDependencies:
+      - debug
     dev: false
 
   /axobject-query@3.1.1:
@@ -6265,6 +6294,11 @@ packages:
 
   /deepmerge@3.3.0:
     resolution: {integrity: sha512-GRQOafGHwMHpjPx9iCvTgpu9NojZ49q794EEL94JVEw6VaeA8XTUyBKvAkOOjBX9oJNiV6G3P+T+tihFjo2TqA==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
+  /deepmerge@4.3.1:
+    resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
     engines: {node: '>=0.10.0'}
     dev: false
 
@@ -10125,11 +10159,6 @@ packages:
   /node-stream-zip@1.15.0:
     resolution: {integrity: sha512-LN4fydt9TqhZhThkZIVQnF9cwjU3qmUH9h78Mx/K7d3VvfRqqwthLwJEUOEL0QPZ0XQmNN7be5Ggit5+4dq3Bw==}
     engines: {node: '>=0.12.0'}
-    dev: false
-
-  /nodemailer@6.9.1:
-    resolution: {integrity: sha512-qHw7dOiU5UKNnQpXktdgQ1d3OFgRAekuvbJLcdG5dnEo/GtcTHRYM7+UfJARdOFU9WUQO8OiIamgWPmiSFHYAA==}
-    engines: {node: '>=6.0.0'}
     dev: false
 
   /nodemon@2.0.22:

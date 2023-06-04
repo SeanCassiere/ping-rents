@@ -12,6 +12,7 @@
     "watch": "pnpm with-env prisma studio --port 5556",
     "dev": "pnpm watch",
     "dev:android": "pnpm watch",
+    "dev:ios": "pnpm watch",
     "dev:web": "pnpm watch",
     "with-env": "dotenv -e ../../.env --"
   },

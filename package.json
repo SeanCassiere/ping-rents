@@ -15,6 +15,7 @@
     "db:push-force": "turbo db:push-force db:generate",
     "dev": "turbo dev --parallel --concurrency=12",
     "dev:android": "turbo dev:android --parallel --concurrency=12",
+    "dev:ios": "turbo dev:ios --parallel --concurrency=12",
     "dev:web": "turbo dev:web --parallel --concurrency=12",
     "format": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .gitignore",
     "lint": "turbo lint && manypkg check",

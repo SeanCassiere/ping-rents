@@ -80,7 +80,7 @@ const LoginEmailScreen = (props: Props) => {
       >
         <MainHeader title="Login" />
         <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
           enabled={Platform.OS !== "web"}
           style={{ gap: 30, justifyContent: "space-between" }}
         >

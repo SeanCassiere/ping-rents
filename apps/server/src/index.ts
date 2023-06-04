@@ -26,4 +26,5 @@ async function main() {
 
 void main().catch((err) => {
   console.error("💥 Server crashed with an error: ", err);
+  process.exit(1);
 });

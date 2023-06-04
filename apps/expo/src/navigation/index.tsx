@@ -1,16 +1,23 @@
 import { useCallback } from "react";
 import { View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
-import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {
+  FontAwesome5,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import DrawerNavigation from "../components/DrawerNavigation";
 import { useAuthContext } from "../context/auth.context";
+import AgreementsListScreen from "../screens/App/Agreements/RootAgreementsList";
 import CustomerEditScreen from "../screens/App/Customers/CustomerEditScreen";
 import CustomerViewScreen from "../screens/App/Customers/CustomerViewScreen";
 import CustomerListScreen from "../screens/App/Customers/RootCustomersList";
 import HomeScreen from "../screens/App/Home";
+import ReservationsListScreen from "../screens/App/Reservations/RootReservationsList";
 import CompanyEditScreen from "../screens/App/Settings/CompanyEdit";
 import EmployeeEditScreen from "../screens/App/Settings/EmployeeEdit";
 import EmployeesListScreen from "../screens/App/Settings/EmployeesList";
@@ -134,6 +141,8 @@ const AppDrawerRoutes = () => {
         drawerItemStyle: {
           paddingHorizontal: 5,
         },
+        swipeEdgeWidth: 250,
+        drawerType: "back",
       }}
     >
       <AppDrawer.Screen
@@ -172,9 +181,9 @@ const AppDrawerRoutes = () => {
         }}
       />
 
-      {/* <AppDrawer.Screen
+      <AppDrawer.Screen
         name="Reservations"
-        component={CustomerStackRoutes}
+        component={ReservationStackRoutes}
         options={{
           headerShown: false,
           title: "Reservations",
@@ -190,7 +199,7 @@ const AppDrawerRoutes = () => {
 
       <AppDrawer.Screen
         name="Agreements"
-        component={CustomerStackRoutes}
+        component={AgreementStackRoutes}
         options={{
           headerShown: false,
           title: "Agreements",
@@ -198,7 +207,7 @@ const AppDrawerRoutes = () => {
             <FontAwesome5 name="file-signature" size={size} color={color} />
           ),
         }}
-      /> */}
+      />
 
       <AppDrawer.Screen
         name="Settings"
@@ -325,5 +334,37 @@ const SettingsStackRoutes = () => {
         options={{ headerShown: false }}
       />
     </SettingsStack.Navigator>
+  );
+};
+
+const AgreementStack =
+  createNativeStackNavigator<GlobalRoutingType["AgreementsStackNavigator"]>();
+const AgreementStackRoutes = () => {
+  return (
+    <AgreementStack.Navigator
+      screenOptions={{ animation: "slide_from_right", presentation: "card" }}
+    >
+      <AgreementStack.Screen
+        name="RootAgreementsList"
+        component={AgreementsListScreen}
+        options={{ headerShown: false }}
+      />
+    </AgreementStack.Navigator>
+  );
+};
+
+const ReservationStack =
+  createNativeStackNavigator<GlobalRoutingType["ReservationsStackNavigator"]>();
+const ReservationStackRoutes = () => {
+  return (
+    <ReservationStack.Navigator
+      screenOptions={{ animation: "slide_from_right", presentation: "card" }}
+    >
+      <ReservationStack.Screen
+        name="RootReservationsList"
+        component={ReservationsListScreen}
+        options={{ headerShown: false }}
+      />
+    </ReservationStack.Navigator>
   );
 };

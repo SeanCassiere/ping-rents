@@ -1,6 +1,6 @@
 import * as crypto from "crypto";
+import SendGrid from "@sendgrid/mail";
 import jwt from "jsonwebtoken";
-import nodemailer from "nodemailer";
 
 import { add } from "@acme/date-fns";
 import { prisma } from "@acme/db";
@@ -18,35 +18,22 @@ function generateAccessCode() {
   return `${Math.floor(100000 + Math.random() * 900000)}`;
 }
 
-const isUsingTestMailer = true;
-let mailer: nodemailer.Transporter | null = null;
+const SendGridApiKey = process.env.SENDGRID_API_KEY;
+const SendGridFromEmail = process.env.SENDGRID_FROM_EMAIL;
 
-async function setupTransport() {
-  if (!mailer && isUsingTestMailer) {
-    const testAccount = await nodemailer.createTestAccount();
-    mailer = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: testAccount.user, // generated ethereal user
-        pass: testAccount.pass, // generated ethereal password
-      },
-    });
-  } else if (!mailer) {
-    const testAccount = await nodemailer.createTestAccount();
-    mailer = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: testAccount.user, // generated ethereal user
-        pass: testAccount.pass, // generated ethereal password
-      },
-    });
-  }
-  return mailer;
+if (!SendGridApiKey) {
+  throw new Error(
+    "🤯 AUTH: Missing the SendGrid API Key. process.env.SENDGRID_API_KEY",
+  );
 }
+
+if (!SendGridFromEmail) {
+  throw new Error(
+    "🤯 AUTH: Missing the SendGrid From Email. process.env.SENDGRID_FROM_EMAIL",
+  );
+}
+
+SendGrid.setApiKey(SendGridApiKey);
 
 const accessCodeExpiryMinutes = 10;
 
@@ -151,7 +138,7 @@ export class AuthService {
     const hashedAccessCode = sha256(accessCode);
     const expiresAt = add(new Date(), { minutes: accessCodeExpiryMinutes });
 
-    await prisma.accountLoginAttempt.create({
+    const attempt = await prisma.accountLoginAttempt.create({
       data: {
         accessCode: hashedAccessCode,
         expiresAt,
@@ -160,23 +147,13 @@ export class AuthService {
       },
     });
 
-    const transport = await setupTransport();
-
-    const emailSent = await transport.sendMail({
-      from: '"Ping Rents 👻" <admin@pingstash.com>', // sender address
-      to: user.email, // list of receivers
-      subject: "Ping Rents | Access Code", // Subject line
-      text: `Access Code: ${accessCode}, Expires in ${accessCodeExpiryMinutes} minutes.`, // plain text body
-      html: `<p>Access Code: <b>${accessCode}</b>.<br>expires in ${accessCodeExpiryMinutes} minutes.</p>`, // html body
+    await SendGrid.send({
+      from: { email: SendGridFromEmail!, name: "NoReply@pingstash.com" },
+      to: { email: user.email },
+      subject: `Ping Rents | Access Code | Attempt ID#${attempt.id}`,
+      html: `<p>Access Code: <b>${accessCode}</b>.<br>expires in ${accessCodeExpiryMinutes} minutes.</p>`,
+      text: `Access Code: ${accessCode}, Expires in ${accessCodeExpiryMinutes} minutes.`,
     });
-
-    if (isUsingTestMailer) {
-      // Preview only available when sending through an Ethereal account
-      console.log(
-        "Login Magic Link Preview URL: %s",
-        nodemailer.getTestMessageUrl(emailSent), // eslint-disable-line
-      );
-    }
 
     return { expiresInMinutes: accessCodeExpiryMinutes };
   }
