@@ -19,6 +19,7 @@ import CustomerViewScreen from "../screens/App/Customers/CustomerViewScreen";
 import CustomerListScreen from "../screens/App/Customers/RootCustomersList";
 import HomeScreen from "../screens/App/Home";
 import ReservationsListScreen from "../screens/App/Reservations/RootReservationsList";
+import ReservationViewScreen from "../screens/App/Reservations/ViewReservationScreen";
 import CompanyEditScreen from "../screens/App/Settings/CompanyEdit";
 import EmployeeEditScreen from "../screens/App/Settings/EmployeeEdit";
 import EmployeesListScreen from "../screens/App/Settings/EmployeesList";
@@ -369,6 +370,11 @@ const ReservationStackRoutes = () => {
       <ReservationStack.Screen
         name="RootReservationsList"
         component={ReservationsListScreen}
+        options={{ headerShown: false }}
+      />
+      <ReservationStack.Screen
+        name="ReservationViewScreen"
+        component={ReservationViewScreen}
         options={{ headerShown: false }}
       />
     </ReservationStack.Navigator>

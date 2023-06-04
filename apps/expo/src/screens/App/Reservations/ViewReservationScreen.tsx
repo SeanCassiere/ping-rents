@@ -17,25 +17,27 @@ import { DateFormatter } from "../../../utils/dates";
 import { styles } from "../../../utils/styles";
 
 type Props = NativeStackScreenProps<
-  GlobalRoutingType["AgreementsStackNavigator"],
-  "AgreementViewScreen"
+  GlobalRoutingType["ReservationsStackNavigator"],
+  "ReservationViewScreen"
 >;
 
-type AgreementOutput = RouterOutputs["rental"]["getAgreement"];
+type ReservationOutput = RouterOutputs["rental"]["getReservation"];
 
-const AgreementViewScreen = (props: Props) => {
+const ReservationViewScreen = (props: Props) => {
   const backNavigation = () => {
     props.navigation.canGoBack()
       ? props.navigation.goBack()
-      : props.navigation.navigate("RootAgreementsList");
+      : props.navigation.navigate("RootReservationsList");
   };
 
-  const { agreementId, view } = props.route.params;
+  const { reservationId, view } = props.route.params;
 
-  const agreement = api.rental.getAgreement.useQuery({ id: agreementId });
-  useRefreshOnFocus(agreement.refetch);
+  const reservation = api.rental.getReservation.useQuery({ id: reservationId });
+  useRefreshOnFocus(reservation.refetch);
 
-  const summary = api.rental.getAgreementSummary.useQuery({ id: agreementId });
+  const summary = api.rental.getReservationSummary.useQuery({
+    id: reservationId,
+  });
   useRefreshOnFocus(summary.refetch);
 
   return (
@@ -43,7 +45,7 @@ const AgreementViewScreen = (props: Props) => {
       <StatusBar />
       <View style={[styles.pageContainer]}>
         <MainHeader
-          title="Agreement - 1"
+          title="Reservation - 1"
           leftButton={{
             onPress: backNavigation,
             content: <AntDesign name="left" size={24} color="black" />,
@@ -64,8 +66,8 @@ const AgreementViewScreen = (props: Props) => {
                 key: "summary",
                 displayText: "Summary",
                 onPress: () =>
-                  props.navigation.navigate("AgreementViewScreen", {
-                    agreementId,
+                  props.navigation.navigate("ReservationViewScreen", {
+                    reservationId,
                     view: "summary",
                   }),
               },
@@ -73,19 +75,9 @@ const AgreementViewScreen = (props: Props) => {
                 key: "details",
                 displayText: "Details",
                 onPress: () => {
-                  props.navigation.navigate("AgreementViewScreen", {
-                    agreementId,
+                  props.navigation.navigate("ReservationViewScreen", {
+                    reservationId,
                     view: "details",
-                  });
-                },
-              },
-              {
-                key: "payments",
-                displayText: "Payments",
-                onPress: () => {
-                  props.navigation.navigate("AgreementViewScreen", {
-                    agreementId,
-                    view: "payments",
                   });
                 },
               },
@@ -93,8 +85,8 @@ const AgreementViewScreen = (props: Props) => {
                 key: "notes",
                 displayText: "Notes",
                 onPress: () => {
-                  props.navigation.navigate("AgreementViewScreen", {
-                    agreementId,
+                  props.navigation.navigate("ReservationViewScreen", {
+                    reservationId,
                     view: "notes",
                   });
                 },
@@ -102,30 +94,30 @@ const AgreementViewScreen = (props: Props) => {
             ]}
             activeKey={view}
           />
-          {agreement.status === "success" && summary.status === "success" && (
+          {reservation.status === "success" && summary.status === "success" && (
             <>
               {view === "summary" && (
                 <RentalRatesSummary
-                  rate={agreement.data.rate}
+                  rate={reservation.data.rate}
                   summary={summary.data}
                 />
               )}
               {view === "details" && (
-                <AgreementDetailsTab agreement={agreement.data} />
+                <ReservationDetailsTab reservation={reservation.data} />
               )}
             </>
           )}
         </View>
-        {agreement.status === "success" &&
-          agreement.data.status === "on_rent" &&
+        {reservation.status === "success" &&
+          reservation.data.status === "open" &&
           (view === "summary" || view === "details") && (
             <View mb={5}>
               <Button
                 onPress={() => {
-                  console.log("checkin button pressed");
+                  console.log("checkout button pressed");
                 }}
               >
-                Checkin
+                Checkout
               </Button>
             </View>
           )}
@@ -134,7 +126,7 @@ const AgreementViewScreen = (props: Props) => {
   );
 };
 
-export default AgreementViewScreen;
+export default ReservationViewScreen;
 
 const fontSize = 18;
 
@@ -151,59 +143,43 @@ const textStyle = StyleSheet.create({
   },
 });
 
-const AgreementDetailsTab = ({ agreement }: { agreement: AgreementOutput }) => {
+const ReservationDetailsTab = ({
+  reservation,
+}: {
+  reservation: ReservationOutput;
+}) => {
   return (
     <ScrollView>
       <View mt={5} mb={5} style={{ gap: 25 }}>
         <View style={textStyle.labelWrapper}>
           <Text style={textStyle.tagStyle}>Checkout date & time</Text>
           <Text style={textStyle.labelStyle}>
-            {DateFormatter.rentalListView(agreement.checkoutDate)}
+            {DateFormatter.rentalListView(reservation.checkoutDate)}
           </Text>
         </View>
         <View style={textStyle.labelWrapper}>
           <Text style={textStyle.tagStyle}>Checkin date & time</Text>
           <Text style={textStyle.labelStyle}>
-            {DateFormatter.rentalListView(agreement.checkinDate)}
+            {DateFormatter.rentalListView(reservation.checkinDate)}
           </Text>
         </View>
-        {agreement.status !== "on_rent" && (
-          <View style={textStyle.labelWrapper}>
-            <Text style={textStyle.tagStyle}>Return date & time</Text>
-            <Text style={textStyle.labelStyle}>
-              {DateFormatter.rentalListView(agreement.returnDate)}
-            </Text>
-          </View>
-        )}
         <View style={textStyle.labelWrapper}>
           <Text style={textStyle.tagStyle}>Vehicle category</Text>
-          <Text style={textStyle.labelStyle}>{agreement.vehicleType.name}</Text>
+          <Text style={textStyle.labelStyle}>
+            {reservation.vehicleType.name}
+          </Text>
         </View>
         <View style={textStyle.labelWrapper}>
           <Text style={textStyle.tagStyle}>Vehicle</Text>
           <Text style={textStyle.labelStyle}>
-            {agreement.vehicle.make} {agreement.vehicle.model}{" "}
-            {agreement.vehicle.year}
+            {reservation.vehicle.make} {reservation.vehicle.model}{" "}
+            {reservation.vehicle.year}
           </Text>
         </View>
-        <View style={textStyle.labelWrapper}>
-          <Text style={textStyle.tagStyle}>Vehicle checkout odometer</Text>
-          <Text style={textStyle.labelStyle}>
-            {agreement.odometerOut.toString()}
-          </Text>
-        </View>
-        {agreement.status !== "on_rent" && (
-          <View style={textStyle.labelWrapper}>
-            <Text style={textStyle.tagStyle}>Vehicle checkin odometer</Text>
-            <Text style={textStyle.labelStyle}>
-              {agreement.odometerIn.toString()}
-            </Text>
-          </View>
-        )}
         <View style={textStyle.labelWrapper}>
           <Text style={textStyle.tagStyle}>Renter</Text>
           <Text style={textStyle.labelStyle}>
-            {agreement.customer.firstName} {agreement.customer.lastName}
+            {reservation.customer.firstName} {reservation.customer.lastName}
           </Text>
         </View>
       </View>
