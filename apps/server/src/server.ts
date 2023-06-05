@@ -1,6 +1,7 @@
+import fs from "fs";
 import path from "path";
 import fastifyCors from "@fastify/cors";
-import { createExpressMiddleware as createTrpcExpressMiddleware } from "@trpc/server/adapters/express";
+// import { createExpressMiddleware as createTrpcExpressMiddleware } from "@trpc/server/adapters/express";
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -192,10 +193,48 @@ export async function makeFastifyServer() {
       );
   });
 
+  // public routes
+  app.get("/public/privacy-policy", (_, reply) => {
+    const stream = fs.createReadStream(
+      path.join(__dirname, "../public/privacy-policy.html"),
+    );
+    reply.type("text/html").send(stream);
+  });
+
+  app.get("/public/terms-and-conditions", (_, reply) => {
+    const stream = fs.createReadStream(
+      path.join(__dirname, "../public/terms-and-conditions.html"),
+    );
+    reply.type("text/html").send(stream);
+  });
+
+  app.get("/public/delete-account", (_, reply) => {
+    const stream = fs.createReadStream(
+      path.join(__dirname, "../public/delete-account.html"),
+    );
+    reply.type("text/html").send(stream);
+  });
+
+  app.get("/public/eula", (_, reply) => {
+    const stream = fs.createReadStream(
+      path.join(__dirname, "../public/eula.html"),
+    );
+    reply.type("text/html").send(stream);
+  });
+
+  app.get("/public", (_, reply) => {
+    const stream = fs.createReadStream(
+      path.join(__dirname, "../public/index.html"),
+    );
+    reply.type("text/html").send(stream);
+  });
+
+  // health check
   app.get("/health", (_, reply) => {
     reply.code(200).send({ status: "OK", uptime: process.uptime() ?? 0 });
   });
 
+  // hello world
   app.get("/", async (_, reply) => {
     reply.code(200).send("Hello World from a Fastify server");
   });
