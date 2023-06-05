@@ -94,7 +94,6 @@ const RentalEditForm = (props: RentalEditFormProps) => {
     setValue: create_setValue,
     handleSubmit: create_handleSubmit,
     register: create_register,
-    formState: { errors: create_errors },
   } = useForm<InputCreateRental & { vehicleTypeId: string }>({
     resolver: zodResolver(CreateRentalSchema),
     defaultValues: {
@@ -180,7 +179,6 @@ const RentalEditForm = (props: RentalEditFormProps) => {
   const handleSubmit = isEdit
     ? edit_handleSubmit(async (data) => {
         if (referenceType === "agreement") {
-          console.log("updating agreement", data);
           updateAgreementMutation.mutate(data);
         }
         if (referenceType === "reservation") {
@@ -216,10 +214,6 @@ const RentalEditForm = (props: RentalEditFormProps) => {
   useEffect(() => {
     edit_setValue("returnDate", edit_checkinDate);
   }, [edit_checkinDate, edit_setValue]);
-
-  useEffect(() => {
-    console.log("errors", create_errors);
-  }, [create_errors]);
 
   return (
     <KeyboardAvoidingView
