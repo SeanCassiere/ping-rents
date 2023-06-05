@@ -1,4 +1,10 @@
 {
-  "extends": "../../tsconfig.json",
-  "include": ["src", "index.ts"]
+  "compilerOptions": {
+    "lib": ["ES2015"],
+    "module": "CommonJS",
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "extends": "../../tsconfig.package.json",
+  "include": ["src"]
 }
