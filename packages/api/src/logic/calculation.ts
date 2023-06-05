@@ -1,4 +1,4 @@
-import { differenceInDays, differenceInHours } from "date-fns";
+import { differenceInCalendarDays } from "date-fns";
 
 import { type EnumRentalType } from "@acme/db";
 import { type InputRentalCalculation } from "@acme/validator";
@@ -24,31 +24,13 @@ function formatNumber(num: number, decimals = 2): number {
 class CalculationController {
   private calculateBaseRate(input: InputRentalCalculation): number {
     if (input.rate.calculationType === "retail") {
-      const hourlyRate = input.rate.dailyRate / 24;
+      const leftDate = input.isCheckIn ? input.returnDate : input.checkinDate;
+      const rightDate = input.checkoutDate;
 
-      // const hours =
-      //   differenceInHours(
-      //     input.checkinDate,
-      //     input.isCheckIn ? input.returnDate : input.checkoutDate,
-      //   ) / 24;
-      const hours =
-        (differenceInHours(
-          input.checkinDate,
-          input.isCheckIn ? input.returnDate : input.checkoutDate,
-        ) +
-          1) %
-        24;
+      const days = differenceInCalendarDays(leftDate, rightDate);
 
-      const days =
-        differenceInDays(
-          input.checkinDate,
-          input.isCheckIn ? input.returnDate : input.checkoutDate,
-        ) + 1;
-
-      const totalHoursCost = hours * hourlyRate;
       const totalDaysCost = days * input.rate.dailyRate;
-
-      return totalHoursCost + totalDaysCost;
+      return totalDaysCost;
     }
 
     return 0;
