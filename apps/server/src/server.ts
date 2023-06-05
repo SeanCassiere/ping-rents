@@ -9,6 +9,11 @@ import fastify from "fastify";
 import { renderTrpcPanel } from "trpc-panel";
 
 import { appRouter, createTRPCContext } from "@acme/api";
+import { AuthService } from "@acme/auth";
+import {
+  COOKIE_SESSION_ID_IDENTIFIER,
+  HEADER_SESSION_ID_IDENTIFIER,
+} from "@acme/validator/src/auth";
 
 import v1Router from "./routes/v1";
 import { ENV_VARS } from "./vars";
@@ -106,6 +111,72 @@ export async function makeFastifyServer() {
     useWss: false,
     trpcOptions: { router: appRouter, createContext: createTRPCContext },
   } as any);
+
+  app.get("/api/v1/auth/refresh", async (req, reply) => {
+    let sessionId: string | null = null;
+
+    req.headers["cookie"]?.split(";").forEach((cookie) => {
+      const parts = cookie.split("=");
+      if (
+        parts[0] &&
+        parts[1] &&
+        parts[0].trim() === COOKIE_SESSION_ID_IDENTIFIER
+      ) {
+        sessionId = parts[1].trim();
+      } else if (parts[0] && parts[1] && parts[0].trim() === "cookie") {
+        parts[1].split(";").forEach((cookie) => {
+          const parts = cookie.split("=");
+          if (
+            parts[0] &&
+            parts[1] &&
+            parts[0].trim() === COOKIE_SESSION_ID_IDENTIFIER
+          ) {
+            sessionId = parts[1].trim();
+          }
+        });
+      }
+    });
+
+    if (
+      req.headers?.[HEADER_SESSION_ID_IDENTIFIER] ||
+      req.headers?.[HEADER_SESSION_ID_IDENTIFIER.toLowerCase()]
+    ) {
+      const value =
+        req.headers?.[HEADER_SESSION_ID_IDENTIFIER] ??
+        req.headers?.[HEADER_SESSION_ID_IDENTIFIER.toLowerCase()];
+      if (typeof value === "string") {
+        sessionId = value;
+      }
+    }
+
+    if (!sessionId) {
+      reply
+        .code(200)
+        .header("content-type", "application/json")
+        .send({ success: false, data: null });
+      return;
+    }
+
+    try {
+      const result = await AuthService.refreshAccessTokenWithSessionId(
+        sessionId,
+      );
+
+      reply
+        .code(200)
+        .header(
+          "set-cookie",
+          `${COOKIE_SESSION_ID_IDENTIFIER}=${result.sessionId}; HttpOnly; Path=/; SameSite=Strict; Max-Age=31536000;`,
+        )
+        .header("content-type", "application/json")
+        .send({ success: true, data: result });
+    } catch (error) {
+      reply
+        .code(200)
+        .header("content-type", "application/json")
+        .send({ success: false, data: null });
+    }
+  });
 
   app.get("/trpc-panel", (_, reply) => {
     reply
