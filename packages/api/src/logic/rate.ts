@@ -2,7 +2,7 @@ import { prisma } from "@acme/db";
 import {
   type InputCreateNewRate,
   type InputUpdateRate,
-} from "@acme/validator/src/rate";
+} from "@acme/validator";
 
 import type { AuthMetaUser } from "../trpc";
 

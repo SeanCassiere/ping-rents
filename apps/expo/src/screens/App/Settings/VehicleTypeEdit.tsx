@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import {
   CreateVehicleTypeSchema,
   UpdateVehicleTypeSchema,
-} from "@acme/validator/src/vehicleType";
+} from "@acme/validator";
 
 import Button from "../../../components/Button";
 import MainHeader from "../../../components/MainHeader";

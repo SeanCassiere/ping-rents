@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import {
   AddUserToCompanySchema,
   UpdateUserInCompanySchema,
-} from "@acme/validator/src/company";
+} from "@acme/validator";
 
 import Button from "../../../components/Button";
 import MainHeader from "../../../components/MainHeader";

@@ -12,7 +12,7 @@
     "dev:web": "pnpm watch",
     "lint": "dotenv -v SKIP_ENV_VALIDATION=1 eslint",
     "lint:fix": "pnpm lint --fix",
-    "start": "pnpm with-env nodemon",
+    "start": "pnpm with-env node ./dist/index.js",
     "type-check": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },

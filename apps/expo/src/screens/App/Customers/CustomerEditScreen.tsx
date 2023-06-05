@@ -13,7 +13,7 @@ import {
   UpdateCustomerSchema,
   type InputCreateCustomer,
   type InputUpdateCustomer,
-} from "@acme/validator/src/customer";
+} from "@acme/validator";
 
 import Button from "../../../components/Button";
 import MainHeader from "../../../components/MainHeader";

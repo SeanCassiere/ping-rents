@@ -11,7 +11,7 @@ import { createTRPCReact } from "@trpc/react-query";
 import superjson from "superjson";
 
 import { type AppRouter } from "@acme/api";
-import { HEADER_SESSION_ID_IDENTIFIER } from "@acme/validator/src/auth";
+import { HEADER_SESSION_ID_IDENTIFIER } from "@acme/validator";
 
 import { useAppState } from "../hooks/useAppState";
 import { useOnlineManager } from "../hooks/useOnlineManager";

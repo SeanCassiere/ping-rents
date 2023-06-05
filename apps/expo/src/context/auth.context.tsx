@@ -11,7 +11,7 @@ import {
 import {
   HEADER_SESSION_ID_IDENTIFIER,
   VerifyRefreshTokenPayloadSchema,
-} from "@acme/validator/src/auth";
+} from "@acme/validator";
 
 import { getBaseUrl } from "../utils/api";
 import {

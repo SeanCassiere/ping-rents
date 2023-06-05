@@ -5,7 +5,7 @@ import { StatusBar } from "expo-status-bar";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useToast } from "native-base";
 
-import "@acme/validator/src/auth";
+import "@acme/validator";
 import { AntDesign } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 
