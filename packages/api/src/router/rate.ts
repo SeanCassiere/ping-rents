@@ -1,8 +1,4 @@
-import { z } from "@acme/validator";
-import {
-  CreateRateNewSchema,
-  UpdateRateSchema,
-} from "@acme/validator/src/rate";
+import { CreateRateNewSchema, UpdateRateSchema, z } from "@acme/validator";
 
 import { RateLogic } from "../logic/rate";
 import { createTRPCRouter, protectedProcedure } from "../trpc";

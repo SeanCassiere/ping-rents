@@ -1,8 +1,4 @@
-import { z } from "@acme/validator";
-import {
-  CreateCustomerSchema,
-  UpdateCustomerSchema,
-} from "@acme/validator/src/customer";
+import { CreateCustomerSchema, UpdateCustomerSchema, z } from "@acme/validator";
 
 import { CustomerLogic } from "../logic/customer";
 import { createTRPCRouter, protectedProcedure } from "../trpc";

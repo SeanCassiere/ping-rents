@@ -10,7 +10,7 @@ import { AuthService } from "@acme/auth";
 import {
   COOKIE_SESSION_ID_IDENTIFIER,
   HEADER_SESSION_ID_IDENTIFIER,
-} from "@acme/validator/src/auth";
+} from "@acme/validator";
 
 import { ENV_VARS } from "./vars";
 

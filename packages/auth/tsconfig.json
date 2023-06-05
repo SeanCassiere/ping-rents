@@ -3,7 +3,8 @@
     "lib": ["ES2015"],
     "module": "CommonJS",
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "esModuleInterop": true
   },
   "extends": "../../tsconfig.package.json",
   "include": ["src"]

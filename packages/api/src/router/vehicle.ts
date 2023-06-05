@@ -1,9 +1,9 @@
-import { z } from "@acme/validator";
 import {
   CreateVehicleSchema,
   GetAllVehiclesSchema,
   UpdateVehicleSchema,
-} from "@acme/validator/src/vehicle";
+  z,
+} from "@acme/validator";
 
 import { VehicleLogic } from "../logic/vehicle";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
