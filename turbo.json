@@ -34,14 +34,21 @@
       "dependsOn": ["^build", "^db:generate"],
       "outputs": [".next/**", ".expo/**", "dist/**", "web-build/**"]
     },
+    "@acme/db#build": {
+      "dependsOn": ["^db:generate"]
+    },
     "@acme/validator#build": {
       "dependsOn": []
     },
     "@acme/auth#build": {
-      "dependsOn": ["@acme/validator#build"]
+      "dependsOn": ["@acme/validator#build", "@acme/db#build"]
     },
     "@acme/api#build": {
-      "dependsOn": ["@acme/validator#build", "@acme/auth#build"]
+      "dependsOn": [
+        "@acme/validator#build",
+        "@acme/auth#build",
+        "@acme/db#build"
+      ]
     },
     "@acme/server#build": {
       "dependsOn": ["@acme/api#build", "@acme/auth#build"]
