@@ -3,14 +3,15 @@ import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign } from "@expo/vector-icons";
-import { DrawerActions } from "@react-navigation/native";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ScrollView, Text, View } from "native-base";
 
 import Button from "../../../components/Button";
 import MainHeader from "../../../components/MainHeader";
+import { RentalListStatusIndicator } from "../../../components/RentalListStatusIndicator";
 import RentalRatesSummary from "../../../components/RentalRatesSummary";
 import RentalTabList from "../../../components/RentalTabList";
+import { useIsomorphicConfirm } from "../../../hooks/useIsomorphicConfirm";
 import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
 import { type GlobalRoutingType } from "../../../navigation/types";
 import { api, type RouterOutputs } from "../../../utils/api";
@@ -35,6 +36,8 @@ const AgreementViewScreen = (props: Props) => {
 
   const agreement = api.rental.getAgreement.useQuery({ id: agreementId });
   useRefreshOnFocus(agreement.refetch);
+
+  const confirm = useIsomorphicConfirm();
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
@@ -62,7 +65,12 @@ const AgreementViewScreen = (props: Props) => {
               }
             : {})}
         />
-        <View style={{ paddingTop: 30, flex: 1 }}>
+        <View style={{ paddingTop: 15, flex: 1 }}>
+          {agreement.status === "success" && (
+            <View mb={2}>
+              <RentalListStatusIndicator large status={agreement.data.status} />
+            </View>
+          )}
           <RentalTabList
             tabs={[
               {
@@ -127,7 +135,11 @@ const AgreementViewScreen = (props: Props) => {
             <View mb={5}>
               <Button
                 onPress={() => {
-                  console.log("checkin button pressed");
+                  confirm("Checkin rental", "Are you sure?", {
+                    onConfirm: async () => {
+                      console.log("checking in rental");
+                    },
+                  });
                 }}
               >
                 Checkin
