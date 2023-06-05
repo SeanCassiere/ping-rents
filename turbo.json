@@ -43,6 +43,9 @@
     "@acme/api#build": {
       "dependsOn": ["@acme/validator#build", "@acme/auth#build"]
     },
+    "@acme/server": {
+      "dependsOn": ["@acme/api#build", "@acme/auth#build"]
+    },
     "build": {
       "dependsOn": ["^build", "^db:generate"],
       "outputs": [".next/**", ".expo/**", "dist/**", "web-build/**"]
