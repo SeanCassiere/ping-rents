@@ -17,10 +17,10 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@acme/date-fns": "*",
     "@acme/db": "*",
     "@acme/validator": "*",
     "@sendgrid/mail": "^7.7.0",
+    "date-fns": "^2.29.3",
     "jsonwebtoken": "^9.0.0"
   },
   "devDependencies": {

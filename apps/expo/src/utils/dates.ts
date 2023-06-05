@@ -1,4 +1,4 @@
-import { format } from "@acme/date-fns";
+import { format } from "date-fns";
 
 export const DateFormatter = {
   rentalListView: (date: Date) => {

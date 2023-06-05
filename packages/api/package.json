@@ -18,11 +18,11 @@
   },
   "dependencies": {
     "@acme/auth": "*",
-    "@acme/date-fns": "*",
     "@acme/db": "*",
     "@acme/validator": "*",
     "@trpc/client": "^10.18.0",
     "@trpc/server": "^10.18.0",
+    "date-fns": "^2.29.3",
     "superjson": "1.9.1"
   },
   "devDependencies": {

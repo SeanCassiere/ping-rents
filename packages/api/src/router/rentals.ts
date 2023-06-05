@@ -1,4 +1,4 @@
-// import { add } from "@acme/date-fns";
+// import { add } from "date-fns";
 import {
   CheckInRentalSchema,
   CreateRentalSchema,

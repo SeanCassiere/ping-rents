@@ -34,9 +34,6 @@ importers:
 
   apps/expo:
     dependencies:
-      '@acme/date-fns':
-        specifier: '*'
-        version: link:../../packages/date-fns
       '@acme/validator':
         specifier: '*'
         version: link:../../packages/validator
@@ -85,6 +82,9 @@ importers:
       '@trpc/server':
         specifier: ^10.18.0
         version: 10.18.0
+      date-fns:
+        specifier: ^2.29.3
+        version: 2.29.3
       expo:
         specifier: ^48.0.9
         version: 48.0.9(@babel/core@7.21.3)
@@ -322,9 +322,6 @@ importers:
       '@acme/auth':
         specifier: '*'
         version: link:../auth
-      '@acme/date-fns':
-        specifier: '*'
-        version: link:../date-fns
       '@acme/db':
         specifier: '*'
         version: link:../db
@@ -337,6 +334,9 @@ importers:
       '@trpc/server':
         specifier: ^10.18.0
         version: 10.18.0
+      date-fns:
+        specifier: ^2.29.3
+        version: 2.29.3
       superjson:
         specifier: 1.9.1
         version: 1.9.1
@@ -353,9 +353,6 @@ importers:
 
   packages/auth:
     dependencies:
-      '@acme/date-fns':
-        specifier: '*'
-        version: link:../date-fns
       '@acme/db':
         specifier: '*'
         version: link:../db
@@ -365,6 +362,9 @@ importers:
       '@sendgrid/mail':
         specifier: ^7.7.0
         version: 7.7.0
+      date-fns:
+        specifier: ^2.29.3
+        version: 2.29.3
       jsonwebtoken:
         specifier: ^9.0.0
         version: 9.0.0
@@ -424,22 +424,6 @@ importers:
       tailwindcss:
         specifier: ^3.3.0
         version: 3.3.0(postcss@8.4.21)
-
-  packages/date-fns:
-    dependencies:
-      date-fns:
-        specifier: ^2.29.3
-        version: 2.29.3
-    devDependencies:
-      '@acme/eslint-config':
-        specifier: '*'
-        version: link:../config/eslint
-      eslint:
-        specifier: ^8.36.0
-        version: 8.36.0
-      typescript:
-        specifier: ^5.0.2
-        version: 5.0.2
 
   packages/db:
     dependencies:

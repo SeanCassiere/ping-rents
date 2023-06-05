@@ -1,4 +1,5 @@
-import { differenceInDays, differenceInHours } from "@acme/date-fns";
+import { differenceInDays, differenceInHours } from "date-fns";
+
 import { type EnumRentalType } from "@acme/db";
 import { type InputRentalCalculation } from "@acme/validator";
 
