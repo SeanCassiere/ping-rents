@@ -59,7 +59,7 @@ export const rentalsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return await RentalLogic.createRental(
         ctx.user,
-        { type: "agreement", status: "open" },
+        { type: "agreement", status: "on_rent" },
         input,
       );
     }),

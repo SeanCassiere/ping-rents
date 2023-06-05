@@ -17,7 +17,7 @@ export const CreateRentalSchema = z
     returnLocationId: z.string().min(1),
     returnDate: z.date(),
 
-    rate: RateSchema.extend({ id: z.string() }),
+    rate: RateSchema.extend({ id: z.string().min(1) }),
     taxIdList: z.array(z.string().min(1)),
 
     vehicleId: z.string().min(1),
