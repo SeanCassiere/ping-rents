@@ -6,8 +6,10 @@ type OutputAgreement = RouterOutputs["rental"]["getAgreements"][number];
 
 export const RentalListStatusIndicator = ({
   status,
+  large = false,
 }: {
   status: OutputAgreement["status"];
+  large?: boolean;
 }) => {
   let statusText = "";
   switch (status) {
@@ -58,7 +60,7 @@ export const RentalListStatusIndicator = ({
             ? "white"
             : "white"
         }
-        fontSize={12}
+        fontSize={large ? 18 : 12}
       >
         {statusText}
       </Text>

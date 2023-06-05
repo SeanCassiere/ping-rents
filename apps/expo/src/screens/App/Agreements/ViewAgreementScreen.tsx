@@ -8,8 +8,10 @@ import { ScrollView, Text, View } from "native-base";
 
 import Button from "../../../components/Button";
 import MainHeader from "../../../components/MainHeader";
+import { RentalListStatusIndicator } from "../../../components/RentalListStatusIndicator";
 import RentalRatesSummary from "../../../components/RentalRatesSummary";
 import RentalTabList from "../../../components/RentalTabList";
+import { useIsomorphicConfirm } from "../../../hooks/useIsomorphicConfirm";
 import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
 import { type GlobalRoutingType } from "../../../navigation/types";
 import { api, type RouterOutputs } from "../../../utils/api";
@@ -35,6 +37,8 @@ const AgreementViewScreen = (props: Props) => {
   const agreement = api.rental.getAgreement.useQuery({ id: agreementId });
   useRefreshOnFocus(agreement.refetch);
 
+  const confirm = useIsomorphicConfirm();
+
   return (
     <SafeAreaView style={[styles.safeArea]}>
       <StatusBar />
@@ -47,16 +51,26 @@ const AgreementViewScreen = (props: Props) => {
             onPress: backNavigation,
             content: <AntDesign name="left" size={24} color="black" />,
           }}
-          rightButton={{
-            onPress: () => {
-              // props.navigation.push("CustomerEditScreen", {
-              //   customerId: props.route.params.customerId,
-              // });
-            },
-            content: <AntDesign name="edit" size={24} color="black" />,
-          }}
+          {...(agreement.status === "success" &&
+          agreement.data.status === "on_rent"
+            ? {
+                rightButton: {
+                  onPress: () => {
+                    props.navigation.push("AgreementEditScreen", {
+                      agreementId,
+                    });
+                  },
+                  content: <AntDesign name="edit" size={24} color="black" />,
+                },
+              }
+            : {})}
         />
-        <View style={{ paddingTop: 30, flex: 1 }}>
+        <View style={{ paddingTop: 15, flex: 1 }}>
+          {agreement.status === "success" && (
+            <View mb={2}>
+              <RentalListStatusIndicator large status={agreement.data.status} />
+            </View>
+          )}
           <RentalTabList
             tabs={[
               {
@@ -121,7 +135,11 @@ const AgreementViewScreen = (props: Props) => {
             <View mb={5}>
               <Button
                 onPress={() => {
-                  console.log("checkin button pressed");
+                  confirm("Checkin rental", "Are you sure?", {
+                    onConfirm: async () => {
+                      console.log("checking in rental");
+                    },
+                  });
                 }}
               >
                 Checkin

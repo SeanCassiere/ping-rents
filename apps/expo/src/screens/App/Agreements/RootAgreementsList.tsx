@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -28,6 +28,20 @@ const AgreementsListScreen = (props: Props) => {
   const agreements = api.rental.getAgreements.useQuery();
   useRefreshOnFocus(agreements.refetch);
 
+  const locations = api.location.getAll.useQuery();
+  useRefreshOnFocus(locations.refetch);
+
+  const locationId = useMemo(() => {
+    if (
+      locations.status === "success" &&
+      locations.data.length > 0 &&
+      locations.data[0]
+    ) {
+      return locations.data[0].id;
+    }
+    return "";
+  }, [locations.data, locations.status]);
+
   return (
     <SafeAreaView style={[styles.safeArea]}>
       <StatusBar />
@@ -50,10 +64,7 @@ const AgreementsListScreen = (props: Props) => {
           }}
           rightButton={{
             onPress: () => {
-              // props.navigation.push("VehicleEditScreen", {
-              //   vehicleId: "",
-              //   currentLocationId: locationId,
-              // });
+              props.navigation.push("AgreementEditScreen", { locationId });
             },
             content: <AntDesign name="plus" size={24} color="black" />,
           }}
@@ -70,10 +81,9 @@ const AgreementsListScreen = (props: Props) => {
                 buttonProps={{
                   text: "Create an agreement",
                   onPress: () => {
-                    // props.navigation.push("VehicleEditScreen", {
-                    //   vehicleId: "",
-                    //   currentLocationId: locationId,
-                    // });
+                    props.navigation.push("AgreementEditScreen", {
+                      locationId,
+                    });
                   },
                 }}
               />
