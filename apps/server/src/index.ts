@@ -1,8 +1,8 @@
-import { makeExpressServer } from "./server";
+import { makeFastifyServer } from "./server";
 import { ENV_VARS } from "./vars";
 
 async function main() {
-  const app = await makeExpressServer();
+  // const express = await makeExpressServer();
 
   ["SIGINT", "SIGTERM"].forEach((signal) => {
     process.on(signal, async () => {
@@ -10,17 +10,32 @@ async function main() {
     });
   });
 
-  if (ENV_VARS.IS_PRODUCTION) {
-    app.listen(Number(ENV_VARS.PORT), ENV_VARS.SERVER_HOST, () => {
-      console.log("🚀 Server available at:", `${ENV_VARS.SERVER_HOST}`);
+  // if (ENV_VARS.IS_PRODUCTION) {
+  //   express.listen(Number(ENV_VARS.PORT), ENV_VARS.SERVER_HOST, () => {
+  //     console.log("🚀 Server available at:", `${ENV_VARS.SERVER_HOST}`);
+  //   });
+  // } else {
+  //   express.listen(Number(ENV_VARS.PORT), () => {
+  //     console.log(
+  //       "🚀 Server available at:",
+  //       `http://localhost:${ENV_VARS.PORT}`,
+  //     );
+  //   });
+  // }
+
+  const fastify = await makeFastifyServer();
+
+  try {
+    await fastify.listen({
+      port: Number(ENV_VARS.PORT),
+      host: ENV_VARS.IS_PRODUCTION ? "0.0.0.0" : undefined,
     });
-  } else {
-    app.listen(Number(ENV_VARS.PORT), () => {
-      console.log(
-        "🚀 Server available at:",
-        `http://localhost:${ENV_VARS.PORT}`,
-      );
-    });
+    console.log(
+      "🚀 Server available at:",
+      `${ENV_VARS.SERVER_HOST}:${ENV_VARS.PORT}`,
+    );
+  } catch (error) {
+    throw error;
   }
 }
 

@@ -25,10 +25,32 @@ export const authRouter = createTRPCRouter({
   refreshAccessToken: publicProcedure.mutation(async ({ ctx }) => {
     let sessionId: string | null = null;
 
-    const cookieSessionId = ctx.req.cookies[COOKIE_SESSION_ID_IDENTIFIER];
-    if (typeof cookieSessionId === "string") {
-      sessionId = cookieSessionId;
-    }
+    // const cookieSessionId = ctx.req.cookies[COOKIE_SESSION_ID_IDENTIFIER];
+    // if (typeof cookieSessionId === "string") {
+    //   sessionId = cookieSessionId;
+    // }
+    ctx.req.headers["cookie"]?.split(";").forEach((cookie) => {
+      console.log("cookies", cookie);
+      const parts = cookie.split("=");
+      if (
+        parts[0] &&
+        parts[1] &&
+        parts[0].trim() === COOKIE_SESSION_ID_IDENTIFIER
+      ) {
+        sessionId = parts[1].trim();
+      } else if (parts[0] && parts[1] && parts[0].trim() === "cookie") {
+        parts[1].split(";").forEach((cookie) => {
+          const parts = cookie.split("=");
+          if (
+            parts[0] &&
+            parts[1] &&
+            parts[0].trim() === COOKIE_SESSION_ID_IDENTIFIER
+          ) {
+            sessionId = parts[1].trim();
+          }
+        });
+      }
+    });
 
     if (!sessionId) {
       const fromHeader = ctx.req.headers[HEADER_SESSION_ID_IDENTIFIER];
@@ -42,9 +64,16 @@ export const authRouter = createTRPCRouter({
     }
 
     const result = await AuthService.refreshAccessTokenWithSessionId(sessionId);
-    ctx.res.cookie(COOKIE_SESSION_ID_IDENTIFIER, result.sessionId, {
-      httpOnly: true,
-    });
+    // ctx.res.cookie(COOKIE_SESSION_ID_IDENTIFIER, result.sessionId, {
+    //   httpOnly: true,
+    // });
+    ctx.res.header(
+      "Set-Cookie",
+      COOKIE_SESSION_ID_IDENTIFIER +
+        "=" +
+        result.sessionId +
+        "; HttpOnly; Path=/; Max-Age=${60 * 60 * 24 * 7}; SameSite=None; Secure",
+    );
 
     return result;
   }),
@@ -95,9 +124,16 @@ export const authRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       try {
         const result = await AuthService.userLoginWithAccessCode(input);
-        ctx.res.cookie(COOKIE_SESSION_ID_IDENTIFIER, result.sessionId, {
-          httpOnly: true,
-        });
+        // ctx.res.cookie(COOKIE_SESSION_ID_IDENTIFIER, result.sessionId, {
+        //   httpOnly: true,
+        // });
+        ctx.res.header(
+          "Set-Cookie",
+          COOKIE_SESSION_ID_IDENTIFIER +
+            "=" +
+            result.sessionId +
+            "; HttpOnly; Path=/; Max-Age=${60 * 60 * 24 * 7}; SameSite=None; Secure",
+        );
 
         return result;
       } catch (error) {
@@ -108,7 +144,12 @@ export const authRouter = createTRPCRouter({
       }
     }),
   logout: publicProcedure.mutation(({ ctx }) => {
-    ctx.res.clearCookie(COOKIE_SESSION_ID_IDENTIFIER);
+    // ctx.res.clearCookie(COOKIE_SESSION_ID_IDENTIFIER);
+    ctx.res.header(
+      "Set-Cookie",
+      COOKIE_SESSION_ID_IDENTIFIER +
+        "=; HttpOnly; Path=/; Max-Age=0; SameSite=None; Secure",
+    );
     return { success: true };
   }),
 });
