@@ -25,6 +25,12 @@ const AgreementEditScreen = (props: Props) => {
     { enabled: isEdit },
   );
 
+  const summary = api.rental.getAgreementSummary.useQuery(
+    { id: agreementId ?? "" },
+    { enabled: isEdit },
+  );
+  const amountPaid = summary.data?.amountPaid ?? 0;
+
   return (
     <SafeAreaView style={[styles.safeArea]}>
       <StatusBar />
@@ -53,6 +59,7 @@ const AgreementEditScreen = (props: Props) => {
               }
             }}
             locationId={locationId}
+            amountPaidInitial={amountPaid}
           />
         </View>
       </View>
