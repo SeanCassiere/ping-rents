@@ -184,7 +184,7 @@ const AppDrawerRoutes = () => {
         }}
       />
 
-      <AppDrawer.Screen
+      {/* <AppDrawer.Screen
         name="Reservations"
         component={ReservationStackRoutes}
         options={{
@@ -198,7 +198,7 @@ const AppDrawerRoutes = () => {
             />
           ),
         }}
-      />
+      /> */}
 
       <AppDrawer.Screen
         name="Agreements"
