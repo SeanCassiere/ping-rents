@@ -12,6 +12,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import DrawerNavigation from "../components/DrawerNavigation";
 import { useAuthContext } from "../context/auth.context";
+import AgreementEditScreen from "../screens/App/Agreements/AgreementEditScreen";
 import AgreementsListScreen from "../screens/App/Agreements/RootAgreementsList";
 import AgreementViewScreen from "../screens/App/Agreements/ViewAgreementScreen";
 import CustomerEditScreen from "../screens/App/Customers/CustomerEditScreen";
@@ -354,6 +355,11 @@ const AgreementStackRoutes = () => {
       <AgreementStack.Screen
         name="AgreementViewScreen"
         component={AgreementViewScreen}
+        options={{ headerShown: false }}
+      />
+      <AgreementStack.Screen
+        name="AgreementEditScreen"
+        component={AgreementEditScreen}
         options={{ headerShown: false }}
       />
     </AgreementStack.Navigator>

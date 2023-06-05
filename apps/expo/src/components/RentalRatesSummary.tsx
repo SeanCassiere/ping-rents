@@ -11,8 +11,9 @@ type RentalSummary = RouterOutputs["rental"]["getAgreementSummary"];
 type Props = {
   rate: RentalRate;
   summary: RentalSummary;
-  checkoutDate: Date;
-  checkinDate: Date;
+  checkoutDate?: Date;
+  checkinDate?: Date;
+  hideRateName?: boolean;
 };
 
 const RentalRatesSummary = ({
@@ -20,33 +21,42 @@ const RentalRatesSummary = ({
   summary,
   checkoutDate,
   checkinDate,
+  hideRateName = false,
 }: Props) => {
   return (
     <ScrollView width="100%" mt={5} ml={0} mr={-0.5}>
-      <View flexDirection="row" style={{ gap: 6 }}>
-        <Text fontSize={18} fontWeight="bold">
-          Rate name:
-        </Text>
-        <Text fontSize={18}>{rate.name}</Text>
-      </View>
+      {!hideRateName && (
+        <View flexDirection="row" style={{ gap: 6 }}>
+          <Text fontSize={18} fontWeight="bold">
+            Rate name:
+          </Text>
+          <Text fontSize={18}>{rate.name}</Text>
+        </View>
+      )}
       <View flexDirection="row" style={{ gap: 6 }}>
         <Text fontSize={18} fontWeight="bold">
           Daily rate:
         </Text>
         <Text fontSize={18}>$ {rate.dailyRate.toFixed(2)}</Text>
       </View>
-      <View flexDirection="row" mt={2} style={{ gap: 6 }}>
-        <Text fontSize={18} fontWeight="bold">
-          Checkout:
-        </Text>
-        <Text fontSize={18}>{DateFormatter.rentalListView(checkoutDate)}</Text>
-      </View>
-      <View flexDirection="row" style={{ gap: 6 }}>
-        <Text fontSize={18} fontWeight="bold">
-          Checkin:
-        </Text>
-        <Text fontSize={18}>{DateFormatter.rentalListView(checkinDate)}</Text>
-      </View>
+      {checkoutDate && (
+        <View flexDirection="row" mt={2} style={{ gap: 6 }}>
+          <Text fontSize={18} fontWeight="bold">
+            Checkout:
+          </Text>
+          <Text fontSize={18}>
+            {DateFormatter.rentalListView(checkoutDate)}
+          </Text>
+        </View>
+      )}
+      {checkinDate && (
+        <View flexDirection="row" style={{ gap: 6 }}>
+          <Text fontSize={18} fontWeight="bold">
+            Checkin:
+          </Text>
+          <Text fontSize={18}>{DateFormatter.rentalListView(checkinDate)}</Text>
+        </View>
+      )}
       <View rounded="xs" mt={4} py={4} bgColor="gray.100" style={{ gap: 10 }}>
         <TableRow label="Base rate" value={summary.baseRate} />
         <TableRow label="Subtotal" value={summary.subtotal} />

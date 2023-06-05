@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign } from "@expo/vector-icons";
+import { DrawerActions } from "@react-navigation/native";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ScrollView, Text, View } from "native-base";
 
@@ -47,14 +48,19 @@ const AgreementViewScreen = (props: Props) => {
             onPress: backNavigation,
             content: <AntDesign name="left" size={24} color="black" />,
           }}
-          rightButton={{
-            onPress: () => {
-              // props.navigation.push("CustomerEditScreen", {
-              //   customerId: props.route.params.customerId,
-              // });
-            },
-            content: <AntDesign name="edit" size={24} color="black" />,
-          }}
+          {...(agreement.status === "success" &&
+          agreement.data.status === "on_rent"
+            ? {
+                rightButton: {
+                  onPress: () => {
+                    props.navigation.push("AgreementEditScreen", {
+                      agreementId,
+                    });
+                  },
+                  content: <AntDesign name="edit" size={24} color="black" />,
+                },
+              }
+            : {})}
         />
         <View style={{ paddingTop: 30, flex: 1 }}>
           <RentalTabList

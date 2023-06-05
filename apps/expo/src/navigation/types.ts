@@ -34,6 +34,11 @@ export type GlobalRoutingType = {
       agreementId: string;
       view: "summary" | "details" | "payments" | "notes";
     };
+    AgreementEditScreen: {
+      agreementId?: string;
+      reservationId?: string | null;
+      locationId?: string;
+    };
   };
   ReservationsStackNavigator: {
     RootReservationsList: undefined;
