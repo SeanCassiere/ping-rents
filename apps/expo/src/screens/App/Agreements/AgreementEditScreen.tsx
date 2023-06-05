@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign } from "@expo/vector-icons";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Text, View } from "native-base";
+import { View } from "native-base";
 
 import MainHeader from "../../../components/MainHeader";
 import RentalEditForm from "../../../components/RentalEditForm";
