@@ -2,28 +2,13 @@ import { makeFastifyServer } from "./server";
 import { ENV_VARS } from "./vars";
 
 async function main() {
-  // const express = await makeExpressServer();
+  const fastify = await makeFastifyServer();
 
   ["SIGINT", "SIGTERM"].forEach((signal) => {
     process.on(signal, async () => {
       process.exit(0);
     });
   });
-
-  // if (ENV_VARS.IS_PRODUCTION) {
-  //   express.listen(Number(ENV_VARS.PORT), ENV_VARS.SERVER_HOST, () => {
-  //     console.log("🚀 Server available at:", `${ENV_VARS.SERVER_HOST}`);
-  //   });
-  // } else {
-  //   express.listen(Number(ENV_VARS.PORT), () => {
-  //     console.log(
-  //       "🚀 Server available at:",
-  //       `http://localhost:${ENV_VARS.PORT}`,
-  //     );
-  //   });
-  // }
-
-  const fastify = await makeFastifyServer();
 
   try {
     await fastify.listen({
