@@ -1,8 +1,11 @@
 import path from "path";
+import fastifyCors from "@fastify/cors";
 import { createExpressMiddleware as createTrpcExpressMiddleware } from "@trpc/server/adapters/express";
+import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
+import fastify from "fastify";
 import { renderTrpcPanel } from "trpc-panel";
 
 import { appRouter, createTRPCContext } from "@acme/api";
@@ -28,13 +31,13 @@ export async function makeExpressServer() {
   app.use(cookieParser());
 
   // trpc adapter
-  app.use(
-    "/trpc",
-    createTrpcExpressMiddleware({
-      router: appRouter,
-      createContext: createTRPCContext,
-    }),
-  );
+  // app.use(
+  //   "/trpc",
+  //   createTrpcExpressMiddleware({
+  //     router: appRouter,
+  //     createContext: createTRPCContext,
+  //   }),
+  // );
 
   app.use("/trpc-panel", (_, res) => {
     res.send(
@@ -85,7 +88,45 @@ export async function makeExpressServer() {
 
   // hello world
   app.get("/", (_, res) => {
-    res.send("Hello World from server");
+    res.send("Hello World from an Express server");
+  });
+
+  return app;
+}
+
+export async function makeFastifyServer() {
+  const app = fastify({
+    logger: true,
+  });
+
+  await app.register(fastifyCors);
+
+  await app.register(fastifyTRPCPlugin, {
+    prefix: "/trpc",
+    useWss: false,
+    trpcOptions: { router: appRouter, createContext: createTRPCContext },
+  } as any);
+
+  app.get("/trpc-panel", (_, reply) => {
+    reply
+      .code(200)
+      .header("content-type", "text/html")
+      .send(
+        renderTrpcPanel(appRouter, {
+          url: ENV_VARS.IS_PRODUCTION
+            ? `/trpc`
+            : `http://localhost:${ENV_VARS.PORT}/trpc`,
+          transformer: "superjson",
+        }),
+      );
+  });
+
+  app.get("/health", (_, reply) => {
+    reply.code(200).send({ status: "OK", uptime: process.uptime() ?? 0 });
+  });
+
+  app.get("/", async (_, reply) => {
+    reply.code(200).send("Hello World from a Fastify server");
   });
 
   return app;

@@ -8,6 +8,7 @@
  */
 import { TRPCError, initTRPC } from "@trpc/server";
 import { type CreateExpressContextOptions } from "@trpc/server/adapters/express";
+import { type CreateFastifyContextOptions } from "@trpc/server/adapters/fastify";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
@@ -32,8 +33,8 @@ export type AuthMetaUser = NonNullable<AuthUser>;
  */
 type CreateContextOptions = {
   user: AuthUser | null;
-  req: CreateExpressContextOptions["req"];
-  res: CreateExpressContextOptions["res"];
+  req: CreateFastifyContextOptions["req"];
+  res: CreateFastifyContextOptions["res"];
   sessionId: string | null;
 };
 
@@ -61,7 +62,7 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
  * process every request that goes through your tRPC endpoint
  * @link https://trpc.io/docs/context
  */
-export const createTRPCContext = async (opts: CreateExpressContextOptions) => {
+export const createTRPCContext = async (opts: CreateFastifyContextOptions) => {
   const { req, res } = opts;
 
   let decodedUser: AuthUser | null = null;
@@ -95,15 +96,38 @@ export const createTRPCContext = async (opts: CreateExpressContextOptions) => {
   }
 
   // checking for the sessionId in the cookie or the header using X-SESSION-ID
-  if (
-    req.cookies &&
-    (req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER] ||
-      req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER.toLowerCase()])
-  ) {
-    sessionId =
-      req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER] ??
-      req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER.toLowerCase()];
-  }
+  // const cookies = req.cookies
+  // if (
+  //   req.cookies &&
+  //   (req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER] ||
+  //     req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER.toLowerCase()])
+  // ) {
+  //   sessionId =
+  //     req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER] ??
+  //     req.cookies?.[COOKIE_SESSION_ID_IDENTIFIER.toLowerCase()];
+  // }
+
+  req.headers["cookie"]?.split(";").forEach((cookie) => {
+    const parts = cookie.split("=");
+    if (
+      parts[0] &&
+      parts[1] &&
+      parts[0].trim() === COOKIE_SESSION_ID_IDENTIFIER
+    ) {
+      sessionId = parts[1].trim();
+    } else if (parts[0] && parts[1] && parts[0].trim() === "cookie") {
+      parts[1].split(";").forEach((cookie) => {
+        const parts = cookie.split("=");
+        if (
+          parts[0] &&
+          parts[1] &&
+          parts[0].trim() === COOKIE_SESSION_ID_IDENTIFIER
+        ) {
+          sessionId = parts[1].trim();
+        }
+      });
+    }
+  });
 
   if (
     req.headers?.[HEADER_SESSION_ID_IDENTIFIER] ||
