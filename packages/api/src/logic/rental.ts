@@ -126,10 +126,12 @@ class RentalController {
         });
       }
 
-      await tx.vehicle.update({
-        where: { id: payload.vehicleId },
-        data: { status: "on_rental", currentOdometer: payload.odometerOut },
-      });
+      if (type === "agreement") {
+        await tx.vehicle.update({
+          where: { id: payload.vehicleId },
+          data: { status: "on_rental", currentOdometer: payload.odometerOut },
+        });
+      }
 
       const rental = await tx.rental.create({
         data: {
