@@ -34,6 +34,20 @@
       "dependsOn": ["^build", "^db:generate"],
       "outputs": [".next/**", ".expo/**", "dist/**", "web-build/**"]
     },
+    "@acme/date-fns#build": {},
+    "@acme/validator#build": {
+      "dependsOn": ["@acme/date-fns#build"]
+    },
+    "@acme/auth#build": {
+      "dependsOn": ["@acme/validator#build", "@acme/date-fns#build"]
+    },
+    "@acme/api#build": {
+      "dependsOn": [
+        "@acme/date-fns#build",
+        "@acme/validator#build",
+        "@acme/auth#build"
+      ]
+    },
     "build": {
       "dependsOn": ["^build", "^db:generate"],
       "outputs": [".next/**", ".expo/**", "dist/**", "web-build/**"]
