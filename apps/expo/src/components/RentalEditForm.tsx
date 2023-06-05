@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Platform } from "react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { add } from "date-fns";
-import { KeyboardAvoidingView, ScrollView, Text, View } from "native-base";
+import { KeyboardAvoidingView, ScrollView, View } from "native-base";
 import { useForm } from "react-hook-form";
 
 import { type RouterOutputs } from "@acme/api";
