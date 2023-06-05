@@ -17,7 +17,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@acme/date-fns": "*",
+    "date-fns": "^2.29.3",
     "zod": "^3.21.4"
   },
   "devDependencies": {

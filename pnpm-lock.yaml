@@ -459,9 +459,9 @@ importers:
 
   packages/validator:
     dependencies:
-      '@acme/date-fns':
-        specifier: '*'
-        version: link:../date-fns
+      date-fns:
+        specifier: ^2.29.3
+        version: 2.29.3
       zod:
         specifier: ^3.21.4
         version: 3.21.4
