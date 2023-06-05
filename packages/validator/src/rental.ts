@@ -125,7 +125,7 @@ export const CheckInRentalSchema = z
       });
     }
 
-    if (payload.odometerIn < payload.odometerOut) {
+    if (payload.odometerIn <= payload.odometerOut) {
       ctx.addIssue({
         code: "custom",
         message: "Must be greater than odometer out",
