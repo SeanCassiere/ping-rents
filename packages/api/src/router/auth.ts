@@ -1,13 +1,13 @@
 import { TRPCError } from "@trpc/server";
 
 import { AuthService } from "@acme/auth";
-import { z } from "@acme/validator";
 import {
   COOKIE_SESSION_ID_IDENTIFIER,
   HEADER_SESSION_ID_IDENTIFIER,
   LoginWithCompanyAndUserSchema,
   RegisterNewCompanyAndAccountSchema,
-} from "@acme/validator/src/auth";
+  z,
+} from "@acme/validator";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 

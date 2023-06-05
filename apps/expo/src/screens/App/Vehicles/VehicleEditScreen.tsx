@@ -13,7 +13,7 @@ import {
   UpdateVehicleSchema,
   type InputCreateVehicle,
   type InputUpdateVehicle,
-} from "@acme/validator/src/vehicle";
+} from "@acme/validator";
 
 import Button from "../../../components/Button";
 import MainHeader from "../../../components/MainHeader";

@@ -4,7 +4,7 @@ import {
   type InputAddUserToCompany,
   type InputUpdateCompanyInformation,
   type InputUpdateUserForCompany,
-} from "@acme/validator/src/company";
+} from "@acme/validator";
 
 import { type AuthMetaUser } from "../trpc";
 

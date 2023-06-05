@@ -8,7 +8,7 @@ import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useToast } from "native-base";
 import { useForm } from "react-hook-form";
 
-import { UpdateCompanyInformationSchema } from "@acme/validator/src/company";
+import { UpdateCompanyInformationSchema } from "@acme/validator";
 
 import Button from "../../../components/Button";
 import MainHeader from "../../../components/MainHeader";

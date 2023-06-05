@@ -1,12 +1,12 @@
 import { TRPCError } from "@trpc/server";
 
 import { AuthService } from "@acme/auth";
-import { z } from "@acme/validator";
 import {
   AddUserToCompanySchema,
   UpdateCompanyInformationSchema,
   UpdateUserInCompanySchema,
-} from "@acme/validator/src/company";
+  z,
+} from "@acme/validator";
 
 import { CompanyLogic } from "../logic/company";
 import { createTRPCRouter, protectedProcedure } from "../trpc";

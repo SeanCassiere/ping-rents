@@ -1,11 +1,10 @@
 import { TRPCError } from "@trpc/server";
 
-import "@acme/validator/src/vehicleType";
-import { z } from "@acme/validator";
 import {
   CreateVehicleTypeSchema,
   UpdateVehicleTypeSchema,
-} from "@acme/validator/src/vehicleType";
+  z,
+} from "@acme/validator";
 
 import { VehicleTypeLogic } from "../logic/vehicleType";
 import { createTRPCRouter, protectedProcedure } from "../trpc";

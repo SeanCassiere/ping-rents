@@ -8,10 +8,7 @@ import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useToast } from "native-base";
 import { useForm } from "react-hook-form";
 
-import {
-  CreateRateNewSchema,
-  UpdateRateSchema,
-} from "@acme/validator/src/rate";
+import { CreateRateNewSchema, UpdateRateSchema } from "@acme/validator";
 
 import Button from "../../../components/Button";
 import MainHeader from "../../../components/MainHeader";

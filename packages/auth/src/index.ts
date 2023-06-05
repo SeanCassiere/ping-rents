@@ -1,14 +1,14 @@
 import * as crypto from "crypto";
 import SendGrid from "@sendgrid/mail";
+import { add } from "date-fns";
 import jwt from "jsonwebtoken";
 
-import { add } from "@acme/date-fns";
 import { prisma } from "@acme/db";
-import { z } from "@acme/validator";
-import type {
-  InputLoginWithCompanyAndUser,
-  InputRegisterNewCompanyAndAccount,
-} from "@acme/validator/src/auth";
+import {
+  z,
+  type InputLoginWithCompanyAndUser,
+  type InputRegisterNewCompanyAndAccount,
+} from "@acme/validator";
 
 function sha256(content: string) {
   return crypto.createHash("sha256").update(content).digest("hex");

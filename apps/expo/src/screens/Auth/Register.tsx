@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import {
   RegisterNewCompanyAndAccountSchema,
   type InputRegisterNewCompanyAndAccount,
-} from "@acme/validator/src/auth";
+} from "@acme/validator";
 
 import Button from "../../components/Button";
 import MainHeader from "../../components/MainHeader";

@@ -1,4 +1,4 @@
-import { isBefore, isEqual } from "@acme/date-fns";
+import { isBefore, isEqual } from "date-fns";
 
 import { RateCalculationTypeEnum, RateSchema } from "./rate";
 import { TaxCalculationTypeEnum } from "./tax";

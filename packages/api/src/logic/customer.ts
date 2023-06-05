@@ -2,7 +2,7 @@ import { prisma } from "@acme/db";
 import type {
   InputCreateCustomer,
   InputUpdateCustomer,
-} from "@acme/validator/src/customer";
+} from "@acme/validator";
 
 import type { AuthMetaUser } from "../trpc";
 

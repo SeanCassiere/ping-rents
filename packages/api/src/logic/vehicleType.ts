@@ -2,7 +2,7 @@ import { prisma } from "@acme/db";
 import type {
   InputCreateVehicleType,
   InputUpdateVehicleType,
-} from "@acme/validator/src/vehicleType";
+} from "@acme/validator";
 
 import type { AuthMetaUser } from "../trpc";
 

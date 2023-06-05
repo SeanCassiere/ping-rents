@@ -1,11 +1,11 @@
-// import { add } from "@acme/date-fns";
-import { z } from "@acme/validator";
+// import { add } from "date-fns";
 import {
   CheckInRentalSchema,
   CreateRentalSchema,
   RentalCalculationSchema,
   UpdateRentalSchema,
-} from "@acme/validator/src/rental";
+  z,
+} from "@acme/validator";
 
 import { CalculationLogic } from "../logic/calculation";
 import { RentalLogic } from "../logic/rental";

@@ -16,7 +16,6 @@ import { useForm } from "react-hook-form";
 
 import { z } from "@acme/validator";
 
-import "@acme/validator/src/auth";
 import Button from "../../components/Button";
 import MainHeader from "../../components/MainHeader";
 import TextInput from "../../components/TextInput";

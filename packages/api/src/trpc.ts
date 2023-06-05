@@ -17,7 +17,7 @@ import { prisma } from "@acme/db";
 import {
   COOKIE_SESSION_ID_IDENTIFIER,
   HEADER_SESSION_ID_IDENTIFIER,
-} from "@acme/validator/src/auth";
+} from "@acme/validator";
 
 type AuthUser = ReturnType<(typeof AuthService)["verifyJWTToken"]>;
 export type AuthMetaUser = NonNullable<AuthUser>;

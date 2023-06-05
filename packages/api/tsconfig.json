@@ -1,4 +1,11 @@
 {
-  "extends": "../../tsconfig.json",
-  "include": ["src", "index.ts", "transformer.ts"]
+  "compilerOptions": {
+    "lib": ["ES2015"],
+    "module": "CommonJS",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "resolveJsonModule": true
+  },
+  "extends": "../../tsconfig.package.json",
+  "include": ["src"]
 }

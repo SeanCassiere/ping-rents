@@ -3,7 +3,7 @@ import type {
   InputCreateVehicle,
   InputGetAllVehicles,
   InputUpdateVehicle,
-} from "@acme/validator/src/vehicle";
+} from "@acme/validator";
 
 // https://github.com/amirhosseinkhodaei/CarCompaniesWithModels/blob/master/companyWithModel.json
 import makesAndModelsDataset from "../static/cars_makes_and_models.json";

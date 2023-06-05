@@ -1,9 +1,9 @@
-import { z } from "@acme/validator";
 import {
   CreateNewTaxSchema,
   GetTaxesSchema,
   UpdateTaxSchema,
-} from "@acme/validator/src/tax";
+  z,
+} from "@acme/validator";
 
 import { TaxLogic } from "../logic/tax";
 import { createTRPCRouter, protectedProcedure } from "../trpc";

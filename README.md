@@ -1,4 +1,4 @@
-# Ping Rents - Rental Management Application
+# Ping Rents - Car Rental Management Application
 
 This is a repo for the application I'll be developing for my Master of IT programme for the paper IT816 - Mobile application development. The application will be called called Ping Rents. The application will be developed using React Native and Expo.
 

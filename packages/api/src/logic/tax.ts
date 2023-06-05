@@ -4,7 +4,7 @@ import type {
   InputCreateNewTax,
   InputGetTaxes,
   InputUpdateTax,
-} from "@acme/validator/src/tax";
+} from "@acme/validator";
 
 import type { AuthMetaUser } from "../trpc";
 

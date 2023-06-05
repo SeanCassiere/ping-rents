@@ -3,7 +3,7 @@ import {
   type InputCheckInRental,
   type InputCreateRental,
   type InputUpdateRental,
-} from "@acme/validator/src/rental";
+} from "@acme/validator";
 
 import { type AuthMetaUser } from "../trpc";
 import { CalculationLogic } from "./calculation";
