@@ -43,7 +43,7 @@
     "@acme/api#build": {
       "dependsOn": ["@acme/validator#build", "@acme/auth#build"]
     },
-    "@acme/server": {
+    "@acme/server#build": {
       "dependsOn": ["@acme/api#build", "@acme/auth#build"]
     },
     "build": {
