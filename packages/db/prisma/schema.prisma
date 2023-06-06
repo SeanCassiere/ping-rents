@@ -330,4 +330,6 @@ model Note {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@unique([companyId, id], name: "companyId_id")
 }
