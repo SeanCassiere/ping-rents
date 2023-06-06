@@ -12,8 +12,7 @@
     "lint": "eslint .",
     "lint:fix": "pnpm lint --fix",
     "FIXME(no-work):type-check": "tsc --noEmit",
-    "with-env": "dotenv -e ../../.env --",
-    "postinstall": "cd ../.. && pnpm build"
+    "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
     "@acme/validator": "*",
