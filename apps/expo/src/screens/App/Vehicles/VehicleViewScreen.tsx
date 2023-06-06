@@ -6,6 +6,7 @@ import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import MainHeader from "../../../components/MainHeader";
+import { VehicleListStatusIndicator } from "../../../components/VehicleListStatusIndicator";
 import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
 import { type GlobalRoutingType } from "../../../navigation/types";
 import { api } from "../../../utils/api";
@@ -68,6 +69,10 @@ const VehicleViewScreen = (props: Props) => {
             </View>
             {vehicle.status === "success" && (
               <View style={{ gap: 10 }}>
+                <VehicleListStatusIndicator
+                  status={vehicle.data.status}
+                  large
+                />
                 <View style={textStyle.labelWrapper}>
                   <Text style={textStyle.tagStyle}>License plate:</Text>
                   <Text style={textStyle.labelStyle}>
