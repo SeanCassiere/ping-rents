@@ -20,7 +20,8 @@
     "dev:ios": "pnpm watch",
     "dev:web": "pnpm watch",
     "with-env": "dotenv -e ../../.env --",
-    "build": "tsc"
+    "build": "tsc",
+    "seed": "pnpm with-env tsx src/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^4.12.0"
@@ -28,6 +29,7 @@
   "devDependencies": {
     "dotenv-cli": "^7.1.0",
     "prisma": "^4.12.0",
+    "tsx": "^3.12.7",
     "typescript": "^5.0.2"
   }
 }
