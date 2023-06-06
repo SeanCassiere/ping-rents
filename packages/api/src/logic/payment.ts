@@ -34,8 +34,11 @@ class PaymentController {
       { id: input.rentalId },
       payments,
     );
-    if (summary.balanceDue < input.value) {
+    if (input.mode === "pay" && summary.balanceDue < input.value) {
       throw new Error("Payment amount is greater than balance due");
+    }
+    if (input.mode === "refund" && summary.balanceDue > input.value) {
+      throw new Error("Refund amount is greater than balance due");
     }
     return await prisma.$transaction(async (tx) => {
       await tx.payment.create({
@@ -58,6 +61,7 @@ class PaymentController {
         where: { id: input.rentalId },
       });
 
+      // if balance is zero and agreement is in pending_payment, close it
       if (
         newSummary.balanceDue <= 0 &&
         rental.status !== "open" &&
@@ -67,6 +71,14 @@ class PaymentController {
         await tx.rental.update({
           where: { id: input.rentalId },
           data: { status: "closed" },
+        });
+      }
+
+      // if balance is not zero and agreement is closed, reopen it
+      if (newSummary.balanceDue > 0 && rental.status === "closed") {
+        await tx.rental.update({
+          where: { id: input.rentalId },
+          data: { status: "pending_payment" },
         });
       }
 
