@@ -28,6 +28,7 @@ model Company {
     vehicles                  Vehicle[]
     rates                     Rate[]
     rentals                   Rental[]
+    notes                     Note[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -306,8 +307,27 @@ model Rental {
 
     rentalTaxes Tax[]
 
+    agreementNotes   Note[] @relation("AgreementNotes")
+    reservationNotes Note[] @relation("ReservationNotes")
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@unique([companyId, id], name: "companyId_id")
+}
+
+model Note {
+    id      String @id @default(cuid())
+    content String @db.Text
+
+    agreementId   String?
+    agreement     Rental? @relation("AgreementNotes", fields: [agreementId], references: [id], onDelete: SetNull)
+    reservationId String?
+    reservation   Rental? @relation("ReservationNotes", fields: [reservationId], references: [id], onDelete: SetNull)
+
+    companyId String
+    company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
