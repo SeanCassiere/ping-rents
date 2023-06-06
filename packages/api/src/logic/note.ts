@@ -56,9 +56,9 @@ class NoteController {
     }));
   }
 
-  public async updateNote(_: AuthMetaUser, payload: InputUpdateNote) {
+  public async updateNote(user: AuthMetaUser, payload: InputUpdateNote) {
     const note = await prisma.note.update({
-      where: { id: payload.id },
+      where: { companyId_id: { companyId: user.companyId, id: payload.id } },
       data: {
         content: payload.content,
       },
