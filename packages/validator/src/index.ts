@@ -9,3 +9,4 @@ export * from "./tax";
 export * from "./vehicle";
 export * from "./vehicleType";
 export * from "./note";
+export * from "./payment";

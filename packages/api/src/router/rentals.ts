@@ -2,6 +2,7 @@
 import {
   CheckInRentalSchema,
   CreateNoteForRentalSchema,
+  CreateRentalPaymentSchema,
   CreateRentalSchema,
   RentalCalculationSchema,
   UpdateNoteSchema,
@@ -11,6 +12,7 @@ import {
 
 import { CalculationLogic } from "../logic/calculation";
 import { NoteLogic } from "../logic/note";
+import { PaymentLogic } from "../logic/payment";
 import { RentalLogic } from "../logic/rental";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
@@ -63,6 +65,11 @@ export const rentalsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await NoteLogic.getNotesForRental(ctx.user, "agreement", input.id);
     }),
+  getAgreementPayments: protectedProcedure
+    .input(IdInputSchema)
+    .query(async ({ ctx, input }) => {
+      return PaymentLogic.getPaymentsByRentalId(ctx.user, input.id);
+    }),
   createAgreement: protectedProcedure
     .input(CreateRentalSchema)
     .mutation(async ({ ctx, input }) => {
@@ -76,6 +83,11 @@ export const rentalsRouter = createTRPCRouter({
     .input(CreateNoteForRentalSchema)
     .mutation(async ({ ctx, input }) => {
       return await NoteLogic.createNoteForRental(ctx.user, "agreement", input);
+    }),
+  createAgreementPayment: protectedProcedure
+    .input(CreateRentalPaymentSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await PaymentLogic.createPaymentForRental(ctx.user, input);
     }),
   updateAgreement: protectedProcedure
     .input(UpdateRentalSchema)
