@@ -124,7 +124,9 @@ const AgreementViewScreen = (props: Props) => {
               {view === "details" && (
                 <AgreementDetailsTab agreement={agreement.data} />
               )}
-              {view === "payments" && <RentalPaymentTab />}
+              {view === "payments" && (
+                <RentalPaymentTab agreementId={agreementId} />
+              )}
             </>
           )}
         </View>

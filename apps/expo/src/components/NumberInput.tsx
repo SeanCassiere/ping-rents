@@ -38,14 +38,17 @@ const MobileNumberInput = (props: NumberInputProps) => {
             containerStyle={{ borderRadius: 5, width: "100%", maxHeight: 45 }}
             inputStyle={{
               borderRadius: 5,
-              width: "100%",
+              width: "85%",
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
               textAlign: "left",
-              paddingLeft: 10,
+              paddingLeft: 15,
               fontSize: 12,
+              borderRightWidth: 0.5,
             }}
             editable={!disabled}
+            step={decimal ? 0.01 : 1}
+            minValue={0}
           />
           {error && <Text style={{ color: "red" }}>{error.message}</Text>}
         </View>
