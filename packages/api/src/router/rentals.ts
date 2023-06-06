@@ -1,16 +1,20 @@
 // import { add } from "date-fns";
 import {
   CheckInRentalSchema,
+  CreateNoteForRentalSchema,
   CreateRentalSchema,
   RentalCalculationSchema,
+  UpdateNoteSchema,
   UpdateRentalSchema,
   z,
 } from "@acme/validator";
 
 import { CalculationLogic } from "../logic/calculation";
+import { NoteLogic } from "../logic/note";
 import { RentalLogic } from "../logic/rental";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
+const IdInputSchema = z.object({ id: z.string() });
 export const rentalsRouter = createTRPCRouter({
   calculate: protectedProcedure
     .input(RentalCalculationSchema)
@@ -21,7 +25,7 @@ export const rentalsRouter = createTRPCRouter({
     return await RentalLogic.getAll(ctx.user, "agreement");
   }),
   getAgreement: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(IdInputSchema)
     .query(async ({ ctx, input }) => {
       // const now = new Date();
       // const checkinDate = add(now, { days: 3 });
@@ -46,13 +50,18 @@ export const rentalsRouter = createTRPCRouter({
       return await RentalLogic.getById(ctx.user, "agreement", input);
     }),
   getAgreementSummary: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(IdInputSchema)
     .query(async ({ ctx, input }) => {
       return await CalculationLogic.getCalculationByRentalId(
         ctx.user,
         "agreement",
         input,
       );
+    }),
+  getAgreementNotes: protectedProcedure
+    .input(IdInputSchema)
+    .query(async ({ ctx, input }) => {
+      return await NoteLogic.getNotesForRental(ctx.user, "agreement", input.id);
     }),
   createAgreement: protectedProcedure
     .input(CreateRentalSchema)
@@ -63,10 +72,20 @@ export const rentalsRouter = createTRPCRouter({
         input,
       );
     }),
+  createAgreementNote: protectedProcedure
+    .input(CreateNoteForRentalSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await NoteLogic.createNoteForRental(ctx.user, "agreement", input);
+    }),
   updateAgreement: protectedProcedure
     .input(UpdateRentalSchema)
     .mutation(async ({ ctx, input }) => {
       return await RentalLogic.updateById(ctx.user, "agreement", input);
+    }),
+  updateAgreementNote: protectedProcedure
+    .input(UpdateNoteSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await NoteLogic.updateNote(ctx.user, input);
     }),
   checkinAgreement: protectedProcedure
     .input(CheckInRentalSchema)
