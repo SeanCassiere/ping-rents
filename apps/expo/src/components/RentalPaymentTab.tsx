@@ -1,8 +1,15 @@
 import React, { useMemo, useRef, useState } from "react";
-import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
-import { Heading, Button as NativeBaseButton, Text, View } from "native-base";
+import {
+  Heading,
+  Button as NativeBaseButton,
+  ScrollView,
+  Text,
+  View,
+  useTheme,
+} from "native-base";
 
 import { useRefreshOnFocus } from "../hooks/useRefreshOnFocus";
 import { api, type RouterOutputs } from "../utils/api";
@@ -32,22 +39,55 @@ const RentalPaymentTab = ({ agreementId }: { agreementId: string }) => {
     }
   };
 
-  const summary = api.rental.getAgreementSummary.useQuery({ id: agreementId });
-  useRefreshOnFocus(summary.refetch);
-  const balanceDue: number | null =
-    summary.status === "success" ? summary.data.balanceDue : null;
-  const amountPaid: number | null =
-    summary.status === "success" ? summary.data.amountPaid : null;
+  const theme = useTheme();
+  const gray700 = theme.colors.gray[700];
 
-  const payments = api.rental.getAgreementPayments.useQuery({
+  // get summary for agreement
+  const agreementSummary = api.rental.getAgreementSummary.useQuery({
     id: agreementId,
   });
-  useRefreshOnFocus(payments.refetch);
+  useRefreshOnFocus(agreementSummary.refetch);
+
+  const balanceDue: number | null =
+    agreementSummary.status === "success"
+      ? agreementSummary.data.balanceDue
+      : null;
+  const amountPaid: number | null =
+    agreementSummary.status === "success"
+      ? agreementSummary.data.amountPaid
+      : null;
+
+  // get payments for agreement
+  const agreementPayments = api.rental.getAgreementPayments.useQuery({
+    id: agreementId,
+  });
+  useRefreshOnFocus(agreementPayments.refetch);
 
   return (
     <View flex={1}>
       <View
-        mt={2}
+        mt={4}
+        bg="gray.100"
+        p={4}
+        borderRadius={5}
+        flexDirection="row"
+        justifyContent="space-between"
+      >
+        <View>
+          <Text fontSize={32} fontWeight="medium">
+            ${Number(balanceDue === null ? 0 : balanceDue).toFixed(2)}
+          </Text>
+          <Text>Balance due</Text>
+        </View>
+        <View alignItems="flex-end">
+          <Text fontSize={32} fontWeight="medium">
+            ${Number(amountPaid === null ? 0 : amountPaid).toFixed(2)}
+          </Text>
+          <Text>Amount paid</Text>
+        </View>
+      </View>
+      <View
+        mt={3}
         flexDirection="row"
         style={{ gap: 15 }}
         w="full"
@@ -72,7 +112,7 @@ const RentalPaymentTab = ({ agreementId }: { agreementId: string }) => {
               gap: 5,
             }}
           >
-            <AntDesign name="plus" size={16} color="white" />
+            <MaterialCommunityIcons name="cash-plus" size={20} color="white" />
             <Text color="white" fontSize={16}>
               Payment
             </Text>
@@ -97,34 +137,41 @@ const RentalPaymentTab = ({ agreementId }: { agreementId: string }) => {
               gap: 5,
             }}
           >
-            <AntDesign name="minus" size={16} color="white" />
+            <MaterialCommunityIcons name="cash-minus" size={20} color="white" />
             <Text color="white" fontSize={16}>
               Refund
             </Text>
           </View>
         </Button>
       </View>
-      <View flex={1} mt={2}>
-        {payments.status === "success" && payments.data.length > 0 && (
-          <FlashList
-            data={payments.data}
-            renderItem={({ item }) => <PaymentListItem payment={item} />}
-            estimatedItemSize={200}
-            onRefresh={payments.refetch}
-            refreshing={payments.isLoading}
-          />
-        )}
-        {payments.status === "success" && payments.data.length === 0 && (
-          <View mt={4}>
-            <EmptyState
-              renderIcon={() => (
-                <FontAwesome5 name="cash-register" size={38} color="black" />
-              )}
-              title="No payments yet"
-              description="No payments have been made  yet."
+      <View flex={1} mt={4}>
+        {agreementPayments.status === "success" &&
+          agreementPayments.data.length > 0 && (
+            <FlashList
+              data={agreementPayments.data || []}
+              renderItem={({ item }) => <PaymentListItem payment={item} />}
+              estimatedItemSize={200}
+              onRefresh={agreementPayments.refetch}
+              refreshing={agreementPayments.isLoading}
             />
-          </View>
-        )}
+          )}
+
+        {agreementPayments.status === "success" &&
+          agreementPayments.data.length === 0 && (
+            <View mt={4}>
+              <EmptyState
+                renderIcon={() => (
+                  <MaterialCommunityIcons
+                    name="cash-register"
+                    size={38}
+                    color="black"
+                  />
+                )}
+                title="No payments yet"
+                description="No payments have been made  yet."
+              />
+            </View>
+          )}
       </View>
       <BottomSheetModal
         snapPoints={snapPoints}
@@ -134,14 +181,14 @@ const RentalPaymentTab = ({ agreementId }: { agreementId: string }) => {
         handleComponent={null}
       >
         <View
-          bgColor="gray.100"
+          bgColor="gray.50"
           flex={1}
           borderTopColor="gray.200"
           borderTopWidth={1.5}
           px={4}
           justifyContent="space-between"
-          pb={4}
           pt={4}
+          pb={4}
         >
           <View>
             <Heading mb={2}>
@@ -160,7 +207,7 @@ const RentalPaymentTab = ({ agreementId }: { agreementId: string }) => {
               </Text>
             </Heading>
           </View>
-          <View>
+          <View pb={2}>
             <Button onPress={handleDismissPress}>
               <Text color="white" fontSize={16}>
                 {paymentType === "pay" ? "Add payment" : "Issue refund"}
@@ -186,39 +233,39 @@ export default RentalPaymentTab;
 type OutputPayment = RouterOutputs["rental"]["getAgreementPayments"][number];
 
 const PaymentListItem = ({ payment }: { payment: OutputPayment }) => {
+  const theme = useTheme();
+  const gray700 = theme.colors.gray[700];
+
   return (
     <View
       my={1}
       py={2}
       px={2}
       borderStyle="solid"
-      borderWidth={2}
-      borderColor="gray.900"
+      borderWidth={1.5}
+      borderColor="gray.500"
       borderRadius={5}
       flexDirection="row"
       style={{ gap: 10 }}
-      alignItems="center"
     >
-      <View alignItems="center" justifyContent="center" px={2}>
+      <View alignItems="center" justifyContent="flex-start" px={2}>
         {payment.mode === "pay" ? (
-          <AntDesign name="plus" size={14} color="black" />
+          <MaterialCommunityIcons name="cash-plus" size={40} color={gray700} />
         ) : (
-          <AntDesign name="minus" size={14} color="black" />
+          <MaterialCommunityIcons name="cash-minus" size={40} color={gray700} />
         )}
       </View>
       <View flex={1}>
-        {payment.mode === "pay" ? (
-          <Text fontSize={18} color="green.600">
-            ${payment.value.toFixed(2)}
-          </Text>
-        ) : (
-          <Text fontSize={18} color="red.600">
-            ${payment.value.toFixed(2)}
-          </Text>
-        )}
-      </View>
-      <View fontSize={16}>
-        <Text>{DateFormatter.rentalListView(payment.createdAt)}</Text>
+        <Text
+          fontSize={24}
+          fontWeight="medium"
+          color={payment.mode === "refund" ? "red.500" : "gray.800"}
+        >
+          ${payment.value.toFixed(2)}
+        </Text>
+        <Text color="gray.600">
+          {DateFormatter.rentalListView(payment.createdAt)}
+        </Text>
       </View>
     </View>
   );
