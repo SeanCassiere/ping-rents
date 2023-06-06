@@ -9,6 +9,7 @@ import { ScrollView, Text, View } from "native-base";
 import Button from "../../../components/Button";
 import MainHeader from "../../../components/MainHeader";
 import { RentalListStatusIndicator } from "../../../components/RentalListStatusIndicator";
+import RentalPaymentTab from "../../../components/RentalPaymentTab";
 import RentalRatesSummary from "../../../components/RentalRatesSummary";
 import RentalTabList from "../../../components/RentalTabList";
 import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
@@ -123,6 +124,7 @@ const AgreementViewScreen = (props: Props) => {
               {view === "details" && (
                 <AgreementDetailsTab agreement={agreement.data} />
               )}
+              {view === "payments" && <RentalPaymentTab />}
             </>
           )}
         </View>
