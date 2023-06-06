@@ -1,6 +1,8 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Button } from "native-base";
+
+// import { Button } from "native-base";
+import Button from "./Button";
 
 const EmptyState = (props: {
   renderIcon?: () => React.ReactNode;
