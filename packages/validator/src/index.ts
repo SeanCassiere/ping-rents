@@ -8,3 +8,4 @@ export * from "./tax";
 export * from "./tax";
 export * from "./vehicle";
 export * from "./vehicleType";
+export * from "./note";
