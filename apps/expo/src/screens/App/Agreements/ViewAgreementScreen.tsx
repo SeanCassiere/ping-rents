@@ -11,7 +11,6 @@ import MainHeader from "../../../components/MainHeader";
 import { RentalListStatusIndicator } from "../../../components/RentalListStatusIndicator";
 import RentalRatesSummary from "../../../components/RentalRatesSummary";
 import RentalTabList from "../../../components/RentalTabList";
-import { useIsomorphicConfirm } from "../../../hooks/useIsomorphicConfirm";
 import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
 import { type GlobalRoutingType } from "../../../navigation/types";
 import { api, type RouterOutputs } from "../../../utils/api";
@@ -36,8 +35,6 @@ const AgreementViewScreen = (props: Props) => {
 
   const agreement = api.rental.getAgreement.useQuery({ id: agreementId });
   useRefreshOnFocus(agreement.refetch);
-
-  const confirm = useIsomorphicConfirm();
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
@@ -135,10 +132,8 @@ const AgreementViewScreen = (props: Props) => {
             <View mb={5}>
               <Button
                 onPress={() => {
-                  confirm("Checkin rental", "Are you sure?", {
-                    onConfirm: async () => {
-                      console.log("checking in rental");
-                    },
+                  props.navigation.push("AgreementCheckInScreen", {
+                    agreementId,
                   });
                 }}
               >

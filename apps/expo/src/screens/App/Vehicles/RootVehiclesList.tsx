@@ -6,11 +6,13 @@ import { AntDesign, Entypo, FontAwesome5 } from "@expo/vector-icons";
 import { DrawerActions } from "@react-navigation/native";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
+import { Box } from "native-base";
 
 import { type RouterOutputs } from "@acme/api";
 
 import EmptyState from "../../../components/EmptyState";
 import MainHeader from "../../../components/MainHeader";
+import { VehicleListStatusIndicator } from "../../../components/VehicleListStatusIndicator";
 import { useRefreshOnFocus } from "../../../hooks/useRefreshOnFocus";
 import { type GlobalRoutingType } from "../../../navigation/types";
 import { api } from "../../../utils/api";
@@ -157,6 +159,12 @@ const VehicleListItem = (props: {
         <FontAwesome5 name="car" size={18} color="white" />
       </View>
       <View style={{ marginLeft: 10 }}>
+        <Box flexDirection="row">
+          <Text ellipsizeMode="tail" numberOfLines={1}>
+            Status:
+          </Text>
+          <VehicleListStatusIndicator status={vehicle.status} />
+        </Box>
         <Text>License: {vehicle.licensePlate}</Text>
         <Text>
           Vehicle: {vehicle.displayMake} {vehicle.displayModel}
