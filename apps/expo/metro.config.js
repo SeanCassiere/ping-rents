@@ -2,6 +2,8 @@
 const { getDefaultConfig } = require("expo/metro-config");
 const path = require("path");
 
+const NODE_ENV = process.env.NODE_ENV;
+
 const projectRoot = __dirname;
 const workspaceRoot = path.resolve(projectRoot, "../..");
 
@@ -23,6 +25,7 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, "node_modules"),
 ];
 // 3. Force Metro to resolve (sub)dependencies only from the `nodeModulesPaths`
-config.resolver.disableHierarchicalLookup = true;
+config.resolver.disableHierarchicalLookup =
+  NODE_ENV !== "development" ? true : false;
 
 module.exports = config;
