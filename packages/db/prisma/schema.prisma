@@ -29,6 +29,7 @@ model Company {
     rates                     Rate[]
     rentals                   Rental[]
     notes                     Note[]
+    payments                  Payment[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -310,6 +311,8 @@ model Rental {
     agreementNotes   Note[] @relation("AgreementNotes")
     reservationNotes Note[] @relation("ReservationNotes")
 
+    payments Payment[]
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -330,6 +333,25 @@ model Note {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@unique([companyId, id], name: "companyId_id")
+}
+
+enum PaymentMode {
+    pay
+    refund
+}
+
+model Payment {
+    id    String      @id @default(cuid())
+    value Float       @default(0.00) @db.Float
+    mode  PaymentMode
+
+    rentalId String
+    rental   Rental @relation(fields: [rentalId], references: [id], onDelete: Cascade)
+
+    companyId String
+    company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
     @@unique([companyId, id], name: "companyId_id")
 }
