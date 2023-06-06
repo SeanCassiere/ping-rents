@@ -7,5 +7,6 @@
     "noImplicitAny": false
   },
   "extends": "../../tsconfig.package.json",
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["src/seed.ts"]
 }
