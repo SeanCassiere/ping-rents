@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import * as Network from "expo-network";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { NavigationContainer } from "@react-navigation/native";
 import { NativeBaseProvider } from "native-base";
 
@@ -39,7 +40,9 @@ function App() {
       <SafeAreaProvider>
         <NativeBaseProvider>
           <NavigationContainer>
-            <TrpcChildrenProvider />
+            <BottomSheetModalProvider>
+              <TrpcChildrenProvider />
+            </BottomSheetModalProvider>
           </NavigationContainer>
         </NativeBaseProvider>
       </SafeAreaProvider>
