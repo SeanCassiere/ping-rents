@@ -35,7 +35,7 @@
       "outputs": [".next/**", ".expo/**", "dist/**", "web-build/**"]
     },
     "build": {
-      "dependsOn": ["^db:generate", "^build"],
+      "dependsOn": ["^build"],
       "outputs": [".next/**", ".expo/**", "dist/**", "web-build/**"]
     },
     "lint": {},
