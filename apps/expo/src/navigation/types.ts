@@ -39,6 +39,9 @@ export type GlobalRoutingType = {
       reservationId?: string | null;
       locationId?: string;
     };
+    AgreementCheckInScreen: {
+      agreementId: string;
+    };
   };
   ReservationsStackNavigator: {
     RootReservationsList: undefined;

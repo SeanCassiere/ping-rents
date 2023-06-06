@@ -4,7 +4,7 @@ import * as SplashScreen from "expo-splash-screen";
 import {
   FontAwesome5,
   Ionicons,
-  MaterialCommunityIcons,
+  // MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -12,6 +12,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import DrawerNavigation from "../components/DrawerNavigation";
 import { useAuthContext } from "../context/auth.context";
+import AgreementCheckInScreen from "../screens/App/Agreements/AgreementCheckInScreen";
 import AgreementEditScreen from "../screens/App/Agreements/AgreementEditScreen";
 import AgreementsListScreen from "../screens/App/Agreements/RootAgreementsList";
 import AgreementViewScreen from "../screens/App/Agreements/ViewAgreementScreen";
@@ -360,6 +361,11 @@ const AgreementStackRoutes = () => {
       <AgreementStack.Screen
         name="AgreementEditScreen"
         component={AgreementEditScreen}
+        options={{ headerShown: false }}
+      />
+      <AgreementStack.Screen
+        name="AgreementCheckInScreen"
+        component={AgreementCheckInScreen}
         options={{ headerShown: false }}
       />
     </AgreementStack.Navigator>

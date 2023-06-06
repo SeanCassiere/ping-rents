@@ -10,7 +10,7 @@ type RentalSummary = RouterOutputs["rental"]["getAgreementSummary"];
 
 type Props = {
   rate: RentalRate;
-  summary: RentalSummary;
+  summary: RentalSummary | null;
   checkoutDate?: Date;
   checkinDate?: Date;
   hideRateName?: boolean;
@@ -58,22 +58,22 @@ const RentalRatesSummary = ({
         </View>
       )}
       <View rounded="xs" mt={4} py={4} bgColor="gray.100" style={{ gap: 10 }}>
-        <TableRow label="Base rate" value={summary.baseRate} />
-        <TableRow label="Subtotal" value={summary.subtotal} />
-        <TableRow label="Total tax" value={summary.totalTax} />
+        <TableRow label="Base rate" value={summary?.baseRate || 0} />
+        <TableRow label="Subtotal" value={summary?.subtotal || 0} />
+        <TableRow label="Total tax" value={summary?.totalTax || 0} />
         <TableRow
           label="Grand total"
-          value={summary.grandTotal}
+          value={summary?.grandTotal || 0}
           large
           highlight
         />
-        <TableRow label="Amount paid" value={summary.amountPaid} />
+        <TableRow label="Amount paid" value={summary?.amountPaid || 0} />
         <TableRow
           label="Balance due"
-          value={summary.balanceDue}
+          value={summary?.balanceDue || 0}
           bold
           large
-          red={Boolean(summary.balanceDue)}
+          red={Boolean(summary?.balanceDue)}
         />
       </View>
     </ScrollView>
