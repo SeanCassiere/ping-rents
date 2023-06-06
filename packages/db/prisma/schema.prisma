@@ -353,5 +353,8 @@ model Payment {
     companyId String
     company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
     @@unique([companyId, id], name: "companyId_id")
 }
