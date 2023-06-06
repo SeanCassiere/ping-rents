@@ -12,7 +12,7 @@ const config = getDefaultConfig(projectRoot);
 config.resolver.sourceExts.push("cjs");
 
 const monorepoPackages = {
-  // "@acme/validator": path.resolve(workspaceRoot, "packages/validator"),
+  "@acme/validator": path.resolve(workspaceRoot, "packages/validator"),
 };
 
 // 1. Watch all files within the monorepo
@@ -23,6 +23,6 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, "node_modules"),
 ];
 // 3. Force Metro to resolve (sub)dependencies only from the `nodeModulesPaths`
-// config.resolver.disableHierarchicalLookup = true;
+config.resolver.disableHierarchicalLookup = true;
 
 module.exports = config;
