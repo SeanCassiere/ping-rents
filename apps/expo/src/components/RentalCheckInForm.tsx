@@ -92,7 +92,7 @@ const RentalCheckInForm = (props: RentalCheckInFormProps) => {
   const onConfirm = handleSubmit(async (data) => {
     confirm("Are you sure?", "You can't undo this action", {
       onConfirm: () => {
-        console.log("checkin data", data);
+        checkinMutation.mutate(data);
       },
     });
   });
