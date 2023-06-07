@@ -91,7 +91,7 @@ const CustomerViewScreen = (props: Props) => {
             )}
           </View>
         </View>
-        <View
+        {/* <View
           style={{
             paddingBottom: 20,
             flexDirection: "row",
@@ -129,7 +129,7 @@ const CustomerViewScreen = (props: Props) => {
               <Entypo name="plus" size={24} color="white" />
             </View>
           </Button>
-        </View>
+        </View> */}
       </View>
     </SafeAreaView>
   );
