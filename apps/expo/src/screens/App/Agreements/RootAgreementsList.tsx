@@ -6,7 +6,7 @@ import { AntDesign, Entypo, FontAwesome5 } from "@expo/vector-icons";
 import { DrawerActions } from "@react-navigation/native";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
-import { Box, Text } from "native-base";
+import { Box, Text, useTheme } from "native-base";
 
 import { type RouterOutputs } from "@acme/api";
 
@@ -131,6 +131,8 @@ const AgreementListItem = ({
   index: number;
   onPress: () => void;
 }) => {
+  const theme = useTheme();
+  const gray300 = theme.colors.gray[300];
   return (
     <TouchableOpacity
       style={{
@@ -139,9 +141,9 @@ const AgreementListItem = ({
         paddingHorizontal: 15,
         paddingVertical: 15,
         borderRadius: 5,
-        borderColor: "black",
+        borderColor: gray300,
         borderStyle: "solid",
-        borderWidth: 2,
+        borderWidth: 1.5,
         marginTop: index === 0 ? 20 : 10,
       }}
       onPress={onPress}

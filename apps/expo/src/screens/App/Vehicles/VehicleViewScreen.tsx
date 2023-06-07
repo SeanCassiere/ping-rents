@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useTheme } from "native-base";
 
 import MainHeader from "../../../components/MainHeader";
 import { VehicleListStatusIndicator } from "../../../components/VehicleListStatusIndicator";
@@ -27,6 +28,9 @@ const VehicleViewScreen = (props: Props) => {
 
   const vehicle = api.vehicle.getVehicle.useQuery({ id: vehicleId });
   useRefreshOnFocus(vehicle.refetch);
+
+  const theme = useTheme();
+  const grayDark = theme.colors.gray[600];
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
@@ -56,7 +60,7 @@ const VehicleViewScreen = (props: Props) => {
               style={{
                 paddingVertical: 10,
                 paddingHorizontal: 10,
-                backgroundColor: "black",
+                backgroundColor: grayDark,
                 borderRadius: 100,
                 width: 90,
                 height: 90,

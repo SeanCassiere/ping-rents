@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useTheme } from "native-base";
 
 import Button from "../../../components/Button";
 import MainHeader from "../../../components/MainHeader";
@@ -28,6 +29,9 @@ const CustomerViewScreen = (props: Props) => {
     id: props.route.params.customerId,
   });
   useRefreshOnFocus(customer.refetch);
+
+  const theme = useTheme();
+  const grayDark = theme.colors.gray[600];
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
@@ -56,7 +60,7 @@ const CustomerViewScreen = (props: Props) => {
               style={{
                 paddingVertical: 10,
                 paddingHorizontal: 10,
-                backgroundColor: "black",
+                backgroundColor: grayDark,
                 borderRadius: 100,
                 width: 90,
                 height: 90,
