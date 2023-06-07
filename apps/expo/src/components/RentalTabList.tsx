@@ -14,8 +14,8 @@ const RentalTabList = (props: Props) => {
         bgColor="gray.100"
         maxHeight="16"
         flex={0}
-        horizontal
         p={2}
+        horizontal
       >
         {props.tabs.map((tab) => {
           const isActive = props.activeKey === tab.key;
@@ -39,6 +39,7 @@ const RentalTabList = (props: Props) => {
             </TouchableOpacity>
           );
         })}
+        <View width={4}></View>
       </ScrollView>
     </View>
   );
