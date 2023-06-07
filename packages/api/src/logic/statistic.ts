@@ -6,7 +6,22 @@ import { type AuthMetaUser } from "../trpc";
 import { CalculationLogic, formatNumber } from "./calculation";
 
 class StatisticController {
-  public async getOpenAgreementsCount(user: AuthMetaUser) {}
+  public async getOnRentAgreementsCount(user: AuthMetaUser): Promise<number> {
+    const agreements = await prisma.rental.findMany({
+      where: {
+        companyId: user.companyId,
+        status: "on_rent",
+        type: "agreement",
+      },
+    });
+
+    return agreements.length;
+  }
+
+  public async getClosedThisMonthAgreementsCount(
+    user: AuthMetaUser,
+    clientDate: Date,
+  ) {}
 
   public async getAvailableVehiclesCount(user: AuthMetaUser) {}
 

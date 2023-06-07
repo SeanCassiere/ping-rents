@@ -12,4 +12,7 @@ export const statisticsRouter = createTRPCRouter({
         input.clientDate,
       );
     }),
+  getOnRentAgreementsCount: protectedProcedure.query(async ({ ctx }) => {
+    return await StatisticLogic.getOnRentAgreementsCount(ctx.user);
+  }),
 });
