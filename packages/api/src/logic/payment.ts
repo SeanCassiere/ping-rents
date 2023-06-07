@@ -41,12 +41,26 @@ class PaymentController {
       throw new Error("Refund amount is more than amount paid");
     }
     return await prisma.$transaction(async (tx) => {
+      const company = await tx.company.findFirstOrThrow({
+        where: { id: user.companyId },
+      });
+
       await tx.payment.create({
         data: {
           value: input.value,
           mode: input.mode,
+          displayRefNo: `${company.nextPaymentTrackNumber}`,
           rental: { connect: { id: input.rentalId } },
           company: { connect: { id: user.companyId } },
+        },
+      });
+
+      await tx.company.update({
+        where: { id: user.companyId },
+        data: {
+          nextPaymentTrackNumber: {
+            increment: 1,
+          },
         },
       });
 
@@ -64,9 +78,8 @@ class PaymentController {
       // if balance is zero and agreement is in pending_payment, close it
       if (
         newSummary.balanceDue <= 0 &&
-        rental.status !== "open" &&
-        rental.status !== "on_rent" &&
-        rental.status !== "checkout"
+        rental.type === "agreement" &&
+        rental.status === "pending_payment"
       ) {
         await tx.rental.update({
           where: { id: input.rentalId },
@@ -75,7 +88,11 @@ class PaymentController {
       }
 
       // if balance is not zero and agreement is closed, reopen it
-      if (newSummary.balanceDue > 0 && rental.status === "closed") {
+      if (
+        newSummary.balanceDue > 0 &&
+        rental.type === "agreement" &&
+        rental.status === "closed"
+      ) {
         await tx.rental.update({
           where: { id: input.rentalId },
           data: { status: "pending_payment" },
