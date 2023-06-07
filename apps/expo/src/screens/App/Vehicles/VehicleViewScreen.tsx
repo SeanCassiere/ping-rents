@@ -107,10 +107,6 @@ const VehicleViewScreen = (props: Props) => {
                   <Text style={textStyle.tagStyle}>VIN no:</Text>
                   <Text style={textStyle.labelStyle}>{vehicle.data.vin}</Text>
                 </View>
-                <View style={[textStyle.labelWrapper, { marginTop: 45 }]}>
-                  <Text style={textStyle.tagStyle}>Current renter:</Text>
-                  <Text style={textStyle.labelStyle}>n/a</Text>
-                </View>
               </View>
             )}
           </View>
