@@ -4,6 +4,7 @@ import { customersRouter } from "./router/customer";
 import { locationsRouter } from "./router/location";
 import { ratesRouter } from "./router/rate";
 import { rentalsRouter } from "./router/rentals";
+import { statisticsRouter } from "./router/stats";
 import { taxesRouter } from "./router/tax";
 import { vehiclesRouter } from "./router/vehicle";
 import { vehicleTypesRouter } from "./router/vehicleType";
@@ -16,6 +17,7 @@ export const appRouter = createTRPCRouter({
   location: locationsRouter,
   rate: ratesRouter,
   rental: rentalsRouter,
+  stats: statisticsRouter,
   tax: taxesRouter,
   vehicle: vehiclesRouter,
   vehicleType: vehicleTypesRouter,
