@@ -15,6 +15,7 @@ class StatisticController {
         status: "on_rent",
         type: "agreement",
       },
+      select: { id: true },
     });
 
     return { count: agreements.length };
@@ -36,6 +37,7 @@ class StatisticController {
           lte: monthEndDate,
         },
       },
+      select: { id: true },
     });
     return { count: agreements.length };
   }
