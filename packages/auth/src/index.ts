@@ -86,7 +86,7 @@ export class AuthService {
       data: { name: input.companyName },
     });
 
-    await prisma.location.create({
+    const location = await prisma.location.create({
       data: { name: "Main Office", company: { connect: { id: company.id } } },
     });
 
@@ -121,7 +121,12 @@ export class AuthService {
       },
     });
 
-    return { companyId: company.id, userId, grantId: connection.id };
+    return {
+      companyId: company.id,
+      userId,
+      grantId: connection.id,
+      locationId: location.id,
+    };
   }
 
   static async initEmailLoginWithAccessCode(email: string) {
