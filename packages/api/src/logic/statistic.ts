@@ -38,7 +38,27 @@ class StatisticController {
     return agreements.length;
   }
 
-  public async getAvailableVehiclesCount(user: AuthMetaUser) {}
+  public async getVehicleStatusCounts(
+    user: AuthMetaUser,
+  ): Promise<{ available: number; onRent: number; total: number }> {
+    const vehicles = await prisma.vehicle.findMany({
+      where: { companyId: user.companyId },
+    });
+
+    const available = vehicles.filter(
+      (vehicle) => vehicle.status === "available",
+    ).length;
+    const onRent = vehicles.filter(
+      (vehicle) => vehicle.status === "on_rental",
+    ).length;
+    const total = vehicles.length;
+
+    return {
+      available,
+      onRent,
+      total,
+    };
+  }
 
   public async getTotalMonthlyEarnings(
     user: AuthMetaUser,

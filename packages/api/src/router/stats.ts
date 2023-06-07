@@ -23,4 +23,7 @@ export const statisticsRouter = createTRPCRouter({
         input.clientDate,
       );
     }),
+  getVehicleStatusCounts: protectedProcedure.query(async ({ ctx }) => {
+    return await StatisticLogic.getVehicleStatusCounts(ctx.user);
+  }),
 });
