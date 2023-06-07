@@ -2,7 +2,7 @@ import { prisma } from "./index";
 
 const MainOfficeName = "Main Office";
 
-const CompanyNames = ["Ping Rentals"] as const;
+const CompanyNames = ["New company 1"] as const;
 const VehicleDetails = [
   {
     make: "BMW",
@@ -56,9 +56,12 @@ const BaseRates = [
   { name: "base", dailyRate: 20 },
 ] as const;
 
-async function createCompanySeedData(companyName: string): Promise<void> {
-  await prisma.$transaction(async (tx) => {
+async function createCompanySeedData(
+  companyName: string,
+): Promise<{ success: boolean }> {
+  const result = await prisma.$transaction(async (tx) => {
     let companyId = "";
+    let accountId = "";
     let locationId = "";
     let vehicleType1 = "";
     let vehicleType2 = "";
@@ -67,15 +70,22 @@ async function createCompanySeedData(companyName: string): Promise<void> {
     const company = await tx.company.create({ data: { name: companyName } });
     companyId = company.id;
 
+    const email = "sean.cassiere@gmail.com";
     // create the account
-    const account = await tx.account.create({
-      data: { email: "sean.cassiere@gmail.com" },
-    });
+    const existingAccount = await tx.account.findFirst({ where: { email } });
+    if (existingAccount) {
+      accountId = existingAccount.id;
+    } else {
+      const newAccount = await tx.account.create({
+        data: { email },
+      });
+      accountId = newAccount.id;
+    }
 
     // create the connections between accounts and
     await tx.companyAccountConnection.create({
       data: {
-        account: { connect: { id: account.id } },
+        account: { connect: { id: accountId } },
         company: { connect: { id: companyId } },
         role: "admin",
         isOwner: true,
@@ -107,7 +117,8 @@ async function createCompanySeedData(companyName: string): Promise<void> {
     }
 
     // create vehicle types for the location
-    for (const vehicleType of VehicleTypes) {
+    for (let index = 0; index < VehicleTypes.length; index++) {
+      const vehicleType = VehicleTypes[index];
       const type = await tx.vehicleType.create({
         data: {
           name: vehicleType.name,
@@ -174,9 +185,11 @@ async function createCompanySeedData(companyName: string): Promise<void> {
         },
       });
     }
+
+    return { success: true };
   });
 
-  return;
+  return result;
 }
 
 async function main() {
