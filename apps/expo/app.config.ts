@@ -5,7 +5,6 @@ const defineConfig = (): ExpoConfig => ({
   slug: "pingrents",
   owner: "seancassiere",
   scheme: "expo",
-  version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
   userInterfaceStyle: "light",

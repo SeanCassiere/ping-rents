@@ -1,14 +1,13 @@
 {
   "cli": {
-    "version": ">= 3.3.0"
+    "version": ">= 3.3.0",
+    "appVersionSource": "remote"
   },
   "build": {
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "ios": {
-        "resourceClass": "m1-medium"
-      }
+      "ios": { "resourceClass": "m1-medium" }
     },
     "preview": {
       "distribution": "internal",
@@ -16,17 +15,12 @@
         "simulator": true,
         "resourceClass": "m1-medium"
       },
-      "android": {
-        "buildType": "apk"
-      }
+      "android": { "buildType": "apk" }
     },
     "production": {
-      "ios": {
-        "resourceClass": "m1-medium"
-      },
-      "android": {
-        "buildType": "apk"
-      }
+      "autoIncrement": true,
+      "ios": { "resourceClass": "m1-medium" },
+      "android": { "buildType": "apk" }
     }
   },
   "submit": {
