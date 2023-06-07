@@ -347,6 +347,8 @@ model Payment {
     value Float       @default(0.00) @db.Float
     mode  PaymentMode
 
+    displayRefNo String @default("1") @db.VarChar(255)
+
     rentalId String
     rental   Rental @relation(fields: [rentalId], references: [id], onDelete: Cascade)
 

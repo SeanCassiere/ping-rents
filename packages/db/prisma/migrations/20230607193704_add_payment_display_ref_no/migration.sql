@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Payment` ADD COLUMN `displayRefNo` VARCHAR(255) NOT NULL DEFAULT '1';
