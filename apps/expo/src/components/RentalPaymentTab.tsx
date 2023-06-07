@@ -238,7 +238,7 @@ const RentalPaymentTab = ({ agreementId }: { agreementId: string }) => {
         handleComponent={null}
       >
         <View
-          bgColor="gray.50"
+          bgColor="white"
           flex={1}
           borderTopColor="gray.200"
           borderTopWidth={1.5}
