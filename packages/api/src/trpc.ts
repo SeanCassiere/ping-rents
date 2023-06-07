@@ -7,7 +7,6 @@
  * The pieces you will need to use are documented accordingly near the end
  */
 import { TRPCError, initTRPC } from "@trpc/server";
-import { type CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import { type CreateFastifyContextOptions } from "@trpc/server/adapters/fastify";
 import superjson from "superjson";
 import { ZodError } from "zod";

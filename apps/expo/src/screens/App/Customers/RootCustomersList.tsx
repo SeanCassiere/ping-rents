@@ -6,6 +6,7 @@ import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 import { DrawerActions } from "@react-navigation/native";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
+import { useTheme } from "native-base";
 
 import EmptyState from "../../../components/EmptyState";
 import MainHeader from "../../../components/MainHeader";
@@ -108,6 +109,9 @@ const CustomerListItem = (props: {
   onPress: () => void;
 }) => {
   const { customer, position } = props;
+  const theme = useTheme();
+  const gray300 = theme.colors.gray[300];
+  const grayDark = theme.colors.gray[600];
   return (
     <TouchableOpacity
       style={{
@@ -116,9 +120,9 @@ const CustomerListItem = (props: {
         paddingHorizontal: 15,
         paddingVertical: 15,
         borderRadius: 5,
-        borderColor: "black",
+        borderColor: gray300,
         borderStyle: "solid",
-        borderWidth: 2,
+        borderWidth: 1.5,
         marginTop: position === 0 || position === 1 ? 20 : 10,
       }}
       onPress={props.onPress}
@@ -128,7 +132,7 @@ const CustomerListItem = (props: {
         style={{
           paddingVertical: 5,
           paddingHorizontal: 6,
-          backgroundColor: "black",
+          backgroundColor: grayDark,
           borderRadius: 100,
         }}
       >

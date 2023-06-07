@@ -18,11 +18,24 @@ type CalculationOutput = {
   balanceDue: number;
 };
 
-function formatNumber(num: number, decimals = 2): number {
+export function formatNumber(num: number, decimals = 2): number {
   return parseFloat(num.toFixed(decimals));
 }
 
 class CalculationController {
+  public calculateRentalPaymentsAndRefunds(input: CalculationPayment[]): {
+    payments: number;
+    refunds: number;
+  } {
+    const payments = input
+      .filter((p) => p.mode === "pay")
+      .reduce((acc, p) => acc + p.value, 0);
+    const refunds = input
+      .filter((p) => p.mode === "refund")
+      .reduce((acc, p) => acc + p.value, 0);
+    return { payments, refunds };
+  }
+
   private calculateBaseRate(input: InputRentalCalculation): number {
     if (input.rate.calculationType === "retail") {
       const leftDate = input.isCheckIn ? input.returnDate : input.checkinDate;
@@ -52,13 +65,8 @@ class CalculationController {
   }
 
   private calculateAmountPaidFromPayments(input: CalculationPayment[]): number {
-    const addPayments = input
-      .filter((p) => p.mode === "pay")
-      .reduce((acc, p) => acc + p.value, 0);
-    const subtractPayments = input
-      .filter((p) => p.mode === "refund")
-      .reduce((acc, p) => acc + p.value, 0);
-    return addPayments - subtractPayments;
+    const { payments, refunds } = this.calculateRentalPaymentsAndRefunds(input);
+    return payments - refunds;
   }
 
   private calculate(

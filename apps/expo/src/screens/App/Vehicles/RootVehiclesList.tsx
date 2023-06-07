@@ -6,7 +6,7 @@ import { AntDesign, Entypo, FontAwesome5 } from "@expo/vector-icons";
 import { DrawerActions } from "@react-navigation/native";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
-import { Box } from "native-base";
+import { Box, useTheme } from "native-base";
 
 import { type RouterOutputs } from "@acme/api";
 
@@ -132,6 +132,9 @@ const VehicleListItem = (props: {
   onPress: () => void;
 }) => {
   const { vehicle, position, onPress } = props;
+  const theme = useTheme();
+  const gray300 = theme.colors.gray[300];
+  const grayDark = theme.colors.gray[600];
   return (
     <TouchableOpacity
       style={{
@@ -140,9 +143,9 @@ const VehicleListItem = (props: {
         paddingHorizontal: 15,
         paddingVertical: 15,
         borderRadius: 5,
-        borderColor: "black",
+        borderColor: gray300,
         borderStyle: "solid",
-        borderWidth: 2,
+        borderWidth: 1.5,
         marginTop: position === 0 || position === 1 ? 20 : 10,
       }}
       onPress={onPress}
@@ -152,7 +155,7 @@ const VehicleListItem = (props: {
         style={{
           paddingVertical: 5,
           paddingHorizontal: 6,
-          backgroundColor: "black",
+          backgroundColor: grayDark,
           borderRadius: 100,
         }}
       >

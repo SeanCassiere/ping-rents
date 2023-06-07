@@ -16,7 +16,8 @@ import { ENV_VARS } from "./vars";
 
 export async function makeFastifyServer() {
   const app = fastify({
-    logger: true,
+    logger: false,
+    maxParamLength: 10000,
   });
 
   await app.register(fastifyCors);
