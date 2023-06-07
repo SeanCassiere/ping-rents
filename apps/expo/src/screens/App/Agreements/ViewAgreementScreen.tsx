@@ -9,6 +9,7 @@ import { ScrollView, Text, View } from "native-base";
 import Button from "../../../components/Button";
 import MainHeader from "../../../components/MainHeader";
 import { RentalListStatusIndicator } from "../../../components/RentalListStatusIndicator";
+import RentalNoteTab from "../../../components/RentalNoteTab";
 import RentalPaymentTab from "../../../components/RentalPaymentTab";
 import RentalRatesSummary from "../../../components/RentalRatesSummary";
 import RentalTabList from "../../../components/RentalTabList";
@@ -127,6 +128,7 @@ const AgreementViewScreen = (props: Props) => {
               {view === "payments" && (
                 <RentalPaymentTab agreementId={agreementId} />
               )}
+              {view === "notes" && <RentalNoteTab agreementId={agreementId} />}
             </>
           )}
         </View>
