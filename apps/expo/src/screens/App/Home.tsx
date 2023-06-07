@@ -36,14 +36,26 @@ const HomeScreen = (props: Props) => {
               icon="arrow-up-right"
             />
             <NumberFigure
-              label="Returns closed this month"
+              label="Rentals closed this month"
               value={0}
               icon="arrow-down-left"
             />
             <NumberFigure label="Available vehicles" value={0} icon="car" />
-            <DollarFigure label="Profit" value={0} icon="piggy-bank" />
-            <DollarFigure label="Payments" value={0} icon="cash-plus" />
-            <DollarFigure label="Refunds" value={0} icon="cash-minus" />
+            <DollarFigure
+              label="Profits this month"
+              value={0}
+              icon="piggy-bank"
+            />
+            <DollarFigure
+              label="Payments this month"
+              value={0}
+              icon="cash-plus"
+            />
+            <DollarFigure
+              label="Refunds this month"
+              value={0}
+              icon="cash-minus"
+            />
             <View pb={5}></View>
           </View>
         </ScrollView>
