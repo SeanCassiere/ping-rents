@@ -37,8 +37,8 @@ class PaymentController {
     if (input.mode === "pay" && summary.balanceDue < input.value) {
       throw new Error("Payment amount is greater than balance due");
     }
-    if (input.mode === "refund" && summary.balanceDue > input.value) {
-      throw new Error("Refund amount is greater than balance due");
+    if (input.mode === "refund" && input.value > summary.amountPaid) {
+      throw new Error("Refund amount is more than amount paid");
     }
     return await prisma.$transaction(async (tx) => {
       await tx.payment.create({
