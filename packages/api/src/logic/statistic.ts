@@ -6,7 +6,9 @@ import { type AuthMetaUser } from "../trpc";
 import { CalculationLogic, formatNumber } from "./calculation";
 
 class StatisticController {
-  public async getOnRentAgreementsCount(user: AuthMetaUser): Promise<number> {
+  public async getOnRentAgreementsCount(
+    user: AuthMetaUser,
+  ): Promise<{ count: number }> {
     const agreements = await prisma.rental.findMany({
       where: {
         companyId: user.companyId,
@@ -15,13 +17,13 @@ class StatisticController {
       },
     });
 
-    return agreements.length;
+    return { count: agreements.length };
   }
 
   public async getClosedThisMonthAgreementsCount(
     user: AuthMetaUser,
     clientDate: Date,
-  ): Promise<number> {
+  ): Promise<{ count: number }> {
     const monthStartDate = startOfMonth(clientDate);
     const monthEndDate = endOfMonth(clientDate);
     const agreements = await prisma.rental.findMany({
@@ -35,7 +37,7 @@ class StatisticController {
         },
       },
     });
-    return agreements.length;
+    return { count: agreements.length };
   }
 
   public async getVehicleStatusCounts(

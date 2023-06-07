@@ -5,22 +5,22 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const statisticsRouter = createTRPCRouter({
   getMonthlyEarnings: protectedProcedure
-    .input(z.object({ clientDate: z.date() }))
+    .input(z.object({ clientDate: z.date().optional() }))
     .query(async ({ ctx, input }) => {
       return await StatisticLogic.getTotalMonthlyEarnings(
         ctx.user,
-        input.clientDate,
+        input?.clientDate ?? new Date(),
       );
     }),
   getOnRentAgreementsCount: protectedProcedure.query(async ({ ctx }) => {
     return await StatisticLogic.getOnRentAgreementsCount(ctx.user);
   }),
   getMonthlyClosedAgreementsCount: protectedProcedure
-    .input(z.object({ clientDate: z.date() }))
+    .input(z.object({ clientDate: z.date().optional() }))
     .query(async ({ ctx, input }) => {
       return await StatisticLogic.getClosedThisMonthAgreementsCount(
         ctx.user,
-        input.clientDate,
+        input?.clientDate ?? new Date(),
       );
     }),
   getVehicleStatusCounts: protectedProcedure.query(async ({ ctx }) => {
