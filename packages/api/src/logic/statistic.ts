@@ -21,7 +21,22 @@ class StatisticController {
   public async getClosedThisMonthAgreementsCount(
     user: AuthMetaUser,
     clientDate: Date,
-  ) {}
+  ): Promise<number> {
+    const monthStartDate = startOfMonth(clientDate);
+    const monthEndDate = endOfMonth(clientDate);
+    const agreements = await prisma.rental.findMany({
+      where: {
+        companyId: user.companyId,
+        status: "closed",
+        type: "agreement",
+        returnDate: {
+          gte: monthStartDate,
+          lte: monthEndDate,
+        },
+      },
+    });
+    return agreements.length;
+  }
 
   public async getAvailableVehiclesCount(user: AuthMetaUser) {}
 
