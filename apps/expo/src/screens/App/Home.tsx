@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { Entypo, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { type DrawerScreenProps } from "@react-navigation/drawer";
-import { ScrollView, Text, View, useTheme } from "native-base";
+import { ScrollView, Text, View, useTheme, useToast } from "native-base";
 
 import MainHeader from "../../components/MainHeader";
 import { useAuthContext } from "../../context/auth.context";
@@ -70,8 +70,17 @@ const Widgets = ({
   onPressVehicle: () => void;
   onPressAgreement: () => void;
 }) => {
+  const toast = useToast();
   const auth = useAuthContext();
   const isLoggedIn = auth.state.mode === "logged-in";
+
+  const onPressString = (value: string) => {
+    toast.show({
+      title: value,
+      variant: "top-accent",
+    });
+  };
+
   const openAgreements = api.stats.getOnRentAgreementsCount.useQuery(
     undefined,
     {
@@ -176,6 +185,7 @@ const Widgets = ({
           }
           icon="piggy-bank"
           isLoading={monthlyPayments.isLoading}
+          onPress={onPressString}
         />
         <DollarFigure
           label="Payments this month"
@@ -186,6 +196,7 @@ const Widgets = ({
           }
           icon="cash-plus"
           isLoading={monthlyPayments.isLoading}
+          onPress={onPressString}
         />
         <DollarFigure
           label="Refunds this month"
@@ -196,6 +207,7 @@ const Widgets = ({
           }
           icon="cash-minus"
           isLoading={monthlyPayments.isLoading}
+          onPress={onPressString}
         />
         <View pb={5}></View>
       </View>
