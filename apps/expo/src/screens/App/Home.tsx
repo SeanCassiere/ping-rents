@@ -1,10 +1,10 @@
 import React, { useEffect, useState, type ReactNode } from "react";
-import { RefreshControl } from "react-native";
+import { Pressable, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { Entypo, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { type DrawerScreenProps } from "@react-navigation/drawer";
-import { ScrollView, Text, View, useTheme } from "native-base";
+import { ScrollView, Text, View, useTheme, useToast } from "native-base";
 
 import MainHeader from "../../components/MainHeader";
 import { useAuthContext } from "../../context/auth.context";
@@ -28,6 +28,14 @@ const HomeScreen = (props: Props) => {
     }
   }, [auth.state.mode]);
 
+  const onPressAgreement = () => {
+    props.navigation.navigate("Agreements");
+  };
+
+  const onPressVehicle = () => {
+    props.navigation.navigate("Vehicles");
+  };
+
   return (
     <SafeAreaView style={[styles.safeArea]}>
       <StatusBar />
@@ -44,15 +52,35 @@ const HomeScreen = (props: Props) => {
         <Text mt={6} fontSize={16} color="gray.800">
           These are the current statistics related to your rental business.
         </Text>
-        {showWidgets ? <Widgets /> : null}
+        {showWidgets ? (
+          <Widgets
+            onPressAgreement={onPressAgreement}
+            onPressVehicle={onPressVehicle}
+          />
+        ) : null}
       </View>
     </SafeAreaView>
   );
 };
 
-const Widgets = () => {
+const Widgets = ({
+  onPressAgreement,
+  onPressVehicle,
+}: {
+  onPressVehicle: () => void;
+  onPressAgreement: () => void;
+}) => {
+  const toast = useToast();
   const auth = useAuthContext();
   const isLoggedIn = auth.state.mode === "logged-in";
+
+  const onPressString = (value: string) => {
+    toast.show({
+      title: value,
+      variant: "top-accent",
+    });
+  };
+
   const openAgreements = api.stats.getOnRentAgreementsCount.useQuery(
     undefined,
     {
@@ -100,6 +128,7 @@ const Widgets = () => {
     closedAgreementsRefresh();
     monthlyPaymentsRefresh();
   };
+
   return (
     <ScrollView
       style={{ paddingTop: 20 }}
@@ -123,6 +152,7 @@ const Widgets = () => {
           }
           icon="arrow-up-right"
           isLoading={openAgreements.isLoading}
+          onPress={onPressAgreement}
         />
         <NumberFigure
           label="Rentals closed this month"
@@ -133,6 +163,7 @@ const Widgets = () => {
           }
           icon="arrow-down-left"
           isLoading={closedAgreements.isLoading}
+          onPress={onPressAgreement}
         />
         <NumberFigure
           label="Available vehicles"
@@ -143,6 +174,7 @@ const Widgets = () => {
           }
           icon="car"
           isLoading={vehicleStatusCounts.isLoading}
+          onPress={onPressVehicle}
         />
         <DollarFigure
           label="Profits this month"
@@ -153,6 +185,7 @@ const Widgets = () => {
           }
           icon="piggy-bank"
           isLoading={monthlyPayments.isLoading}
+          onPress={onPressString}
         />
         <DollarFigure
           label="Payments this month"
@@ -163,6 +196,7 @@ const Widgets = () => {
           }
           icon="cash-plus"
           isLoading={monthlyPayments.isLoading}
+          onPress={onPressString}
         />
         <DollarFigure
           label="Refunds this month"
@@ -173,6 +207,7 @@ const Widgets = () => {
           }
           icon="cash-minus"
           isLoading={monthlyPayments.isLoading}
+          onPress={onPressString}
         />
         <View pb={5}></View>
       </View>
@@ -180,18 +215,34 @@ const Widgets = () => {
   );
 };
 
-const CardItem = ({ children }: { children: ReactNode }) => {
+type CbFunction = (value: string) => void;
+
+const CardItem = ({
+  children,
+  onPress = undefined,
+  value,
+}: {
+  children: ReactNode;
+  value: string;
+  onPress?: CbFunction;
+}) => {
   return (
-    <View
-      borderColor="gray.300"
-      borderWidth={1.5}
-      borderStyle="solid"
-      borderRadius="md"
-      px={4}
-      py={3.5}
+    <Pressable
+      onPress={() => {
+        onPress?.(value);
+      }}
     >
-      {children}
-    </View>
+      <View
+        borderColor="gray.300"
+        borderWidth={1.5}
+        borderStyle="solid"
+        borderRadius="md"
+        px={4}
+        py={3.5}
+      >
+        {children}
+      </View>
+    </Pressable>
   );
 };
 
@@ -200,16 +251,18 @@ const NumberFigure = ({
   icon,
   label,
   isLoading = true,
+  onPress,
 }: {
   value: number;
   icon: "arrow-down-left" | "arrow-up-right" | "car";
   label: string;
   isLoading: boolean;
+  onPress?: CbFunction;
 }) => {
   const theme = useTheme();
   const gray = theme.colors.gray[600];
   return (
-    <CardItem>
+    <CardItem onPress={onPress} value={`${value}`}>
       <View flexDirection="row">
         <View px={2} justifyContent="center" alignItems="center">
           {icon === "arrow-up-right" && (
@@ -240,16 +293,18 @@ const DollarFigure = ({
   icon,
   label,
   isLoading = true,
+  onPress,
 }: {
   value: number;
   icon: "cash-plus" | "cash-minus" | "piggy-bank";
   label: string;
   isLoading: boolean;
+  onPress?: CbFunction;
 }) => {
   const theme = useTheme();
   const gray = theme.colors.gray[600];
   return (
-    <CardItem>
+    <CardItem value={`$${Number(value).toFixed(2)}`} onPress={onPress}>
       <View flexDirection="row">
         <View px={2} justifyContent="center" alignItems="center">
           {icon === "cash-plus" && (
