@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -55,7 +55,7 @@ const LoginCompaniesScreen = (props: Props) => {
     },
   );
 
-  const companies = api.auth.getCompaniesWithAccessCode.useQuery(
+  const companies = api.auth.getUserTenantsUsingAccessCode.useQuery(
     {
       email: props.route.params.email,
       accessCode: props.route.params.accessCode,
@@ -63,6 +63,7 @@ const LoginCompaniesScreen = (props: Props) => {
     {
       enabled: props.route.params.companyId === "",
       onSuccess: (data) => {
+        console.log("data");
         if (data.length === 0) {
           toast.show({
             title: "Error",
@@ -71,8 +72,7 @@ const LoginCompaniesScreen = (props: Props) => {
           });
           navigation.navigate(NAVIGATION_KEYS.LOGIN_EMAIL_VIEW.view);
         } else if (data.length === 1 && data[0]) {
-          // auto mutate
-          // setSelectedCompanyId(data)
+          // auto mutate off
         } else {
           if (data[0]) {
             setSelectedCompanyId(data[0].id);
@@ -88,6 +88,16 @@ const LoginCompaniesScreen = (props: Props) => {
       },
     },
   );
+
+  useEffect(() => {
+    if (props.route.params.companyId && !finalLoginMutation.isLoading) {
+      finalLoginMutation.mutate({
+        accountEmail: props.route.params.email,
+        accessCode: props.route.params.accessCode,
+        companyId: props.route.params.companyId,
+      });
+    }
+  }, [finalLoginMutation, props.route.params]);
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
