@@ -18,6 +18,7 @@ import {
 import { useIsomorphicConfirm } from "../hooks/useIsomorphicConfirm";
 import { useRefreshOnFocus } from "../hooks/useRefreshOnFocus";
 import { api } from "../utils/api";
+import { ellipsizeString } from "../utils/ellipsizeString";
 
 const LOGO_BG = "#F8F9FA";
 
@@ -31,13 +32,16 @@ const DrawerNavigation = (
   const authUser = api.auth.getAuthUser.useQuery();
   useRefreshOnFocus(authUser.refetch);
 
+  const companyQuery = api.company.getCompany.useQuery();
+  useRefreshOnFocus(companyQuery.refetch);
+
   return (
     <View style={[drawerStyles.container]}>
       <DrawerContentScrollView
         {...drawerProps}
         contentContainerStyle={{ paddingTop: 0 }}
       >
-        <View style={[drawerStyles.infoCard, { paddingTop: insets.top + 20 }]}>
+        <View style={[drawerStyles.infoCard, { paddingTop: insets.top + 45 }]}>
           <View style={[drawerStyles.logoBlock]}>
             <Image
               source={require("../../assets/images/icon.png")}
@@ -45,11 +49,21 @@ const DrawerNavigation = (
               alt="Logo"
             />
             <View style={{ alignItems: "flex-start" }}>
-              <Text style={[drawerStyles.logoText]}>PingRents</Text>
-              <Text style={{ paddingTop: 5, fontSize: 16 }}>
+              <Text
+                style={[drawerStyles.logoText]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {ellipsizeString(`${companyQuery.data?.name}`)}
+              </Text>
+              <Text
+                style={{ paddingTop: 5, fontSize: 16 }}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
                 Hi!{" "}
                 <Text style={{ fontWeight: "500", color: "#636262" }}>
-                  {authUser.data?.name}
+                  {ellipsizeString(`${authUser.data?.name}`, 15)}
                 </Text>
               </Text>
             </View>
@@ -72,6 +86,16 @@ const DrawerNavigation = (
             <Text>Sign out</Text>
           </View>
         </TouchableOpacity>
+        <Text
+          style={{
+            marginTop: 20,
+            fontSize: 13,
+            textAlign: "left",
+            color: "#898989",
+          }}
+        >
+          PingRents v1
+        </Text>
       </View>
     </View>
   );
@@ -97,7 +121,7 @@ const drawerStyles = StyleSheet.create({
   infoCard: {
     paddingHorizontal: 20,
     paddingBottom: 20,
-    minHeight: 140,
+    minHeight: 165,
     backgroundColor: LOGO_BG,
   },
   logoBlock: {
