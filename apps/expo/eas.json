@@ -7,7 +7,8 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "ios": { "resourceClass": "m1-medium" }
+      "ios": { "resourceClass": "m1-medium" },
+      "android": { "buildType": "apk" }
     },
     "preview": {
       "distribution": "internal",
@@ -20,7 +21,7 @@
     "production": {
       "autoIncrement": true,
       "ios": { "resourceClass": "m1-medium" },
-      "android": { "buildType": "apk" }
+      "android": { "buildType": "app-bundle" }
     }
   },
   "submit": {
