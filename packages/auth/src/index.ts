@@ -163,7 +163,10 @@ export class AuthService {
     return { expiresInMinutes: accessCodeExpiryMinutes };
   }
 
-  static async getPortalsWithAccessCode(email: string, accessCode: string) {
+  static async getTenantsForUserUsingAccessCode(
+    email: string,
+    accessCode: string,
+  ) {
     const hashedAccessCode = sha256(accessCode);
     const attempt = await prisma.accountLoginAttempt.findFirst({
       where: {
