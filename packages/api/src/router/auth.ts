@@ -161,6 +161,14 @@ export const authRouter = createTRPCRouter({
   getTenantsForUser: protectedProcedure.query(async ({ ctx }) => {
     return await AuthService.getAvailableTenantsForSession(ctx.sessionId);
   }),
+  switchTenantForSession: protectedProcedure
+    .input(z.object({ companyId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return await AuthService.switchTenantForSession(
+        ctx.sessionId,
+        input.companyId,
+      );
+    }),
   logout: publicProcedure.mutation(({ ctx }) => {
     ctx.res.header(
       "Set-Cookie",
