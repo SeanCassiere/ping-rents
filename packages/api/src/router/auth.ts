@@ -142,9 +142,6 @@ export const authRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       try {
         const result = await AuthService.userLoginWithAccessCode(input);
-        // ctx.res.cookie(COOKIE_SESSION_ID_IDENTIFIER, result.sessionId, {
-        //   httpOnly: true,
-        // });
         ctx.res.header(
           "Set-Cookie",
           COOKIE_SESSION_ID_IDENTIFIER +
@@ -161,8 +158,10 @@ export const authRouter = createTRPCRouter({
         });
       }
     }),
+  getTenantsForUser: protectedProcedure.query(async ({ ctx }) => {
+    return await AuthService.getAvailableTenantsForSession(ctx.sessionId);
+  }),
   logout: publicProcedure.mutation(({ ctx }) => {
-    // ctx.res.clearCookie(COOKIE_SESSION_ID_IDENTIFIER);
     ctx.res.header(
       "Set-Cookie",
       COOKIE_SESSION_ID_IDENTIFIER +
