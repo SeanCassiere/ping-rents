@@ -196,6 +196,38 @@ export class AuthService {
     }));
   }
 
+  static async getAvailableTenantsForSession(sessionId: string) {
+    const session = await prisma.session.findFirst({
+      where: { id: sessionId },
+    });
+
+    if (!session) {
+      throw new Error("Session not found");
+    }
+
+    if (session.expiresAt < new Date()) {
+      throw new Error("Session expired");
+    }
+
+    const tenants = await prisma.companyAccountConnection.findMany({
+      where: {
+        accountId: session.accountId,
+      },
+      include: {
+        company: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    return tenants.map((tenant) => ({
+      id: tenant.companyId,
+      name: tenant.company.name,
+    }));
+  }
+
   static async userLoginWithAccessCode(payload: InputLoginWithCompanyAndUser) {
     const accessCode = payload.accessCode;
 
