@@ -290,6 +290,58 @@ export class AuthService {
     };
   }
 
+  static async switchTenantForSession(
+    sessionId: string,
+    intendedCompanyId: string,
+  ) {
+    const session = await prisma.session.findFirst({
+      where: { id: sessionId },
+    });
+
+    if (!session) {
+      throw new Error("Session not found");
+    }
+
+    if (session.expiresAt < new Date()) {
+      throw new Error("Session expired");
+    }
+
+    const tenantConnections = await prisma.companyAccountConnection.findMany({
+      where: {
+        accountId: session.accountId,
+      },
+    });
+
+    const intendedTenantConnection = tenantConnections.find(
+      (tenant) => tenant.companyId === intendedCompanyId,
+    );
+
+    if (!intendedTenantConnection) {
+      throw new Error("You are not connected to this company.");
+    }
+
+    const updatedSession = await prisma.session.update({
+      where: { id: sessionId },
+      data: {
+        expiresAt: add(new Date(), { days: 7 }),
+        company: { connect: { id: intendedCompanyId } },
+      },
+    });
+
+    const generatedJwt = this.generateJWTToken(
+      session.accountId,
+      intendedCompanyId,
+      intendedTenantConnection.id,
+    );
+
+    return {
+      sessionId,
+      accessToken: generatedJwt.jwt,
+      accessTokenExpiresAt: generatedJwt.date,
+      sessionExpiresAt: updatedSession.expiresAt,
+    };
+  }
+
   static async refreshAccessTokenWithSessionId(sessionId: string) {
     const session = await prisma.session.findFirst({
       where: { id: sessionId },
