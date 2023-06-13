@@ -163,7 +163,10 @@ export class AuthService {
     return { expiresInMinutes: accessCodeExpiryMinutes };
   }
 
-  static async getPortalsWithAccessCode(email: string, accessCode: string) {
+  static async getTenantsForUserUsingAccessCode(
+    email: string,
+    accessCode: string,
+  ) {
     const hashedAccessCode = sha256(accessCode);
     const attempt = await prisma.accountLoginAttempt.findFirst({
       where: {
@@ -190,6 +193,38 @@ export class AuthService {
     return portals.map((portal) => ({
       id: portal.company.id,
       name: portal.company.name,
+    }));
+  }
+
+  static async getAvailableTenantsForSession(sessionId: string) {
+    const session = await prisma.session.findFirst({
+      where: { id: sessionId },
+    });
+
+    if (!session) {
+      throw new Error("Session not found");
+    }
+
+    if (session.expiresAt < new Date()) {
+      throw new Error("Session expired");
+    }
+
+    const tenants = await prisma.companyAccountConnection.findMany({
+      where: {
+        accountId: session.accountId,
+      },
+      include: {
+        company: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    return tenants.map((tenant) => ({
+      id: tenant.companyId,
+      name: tenant.company.name,
     }));
   }
 
@@ -252,6 +287,58 @@ export class AuthService {
       accessToken: generatedJwt.jwt,
       accessTokenExpiresAt: add(generatedJwt.date, { hours: 1 }),
       sessionExpiresAt: session.expiresAt,
+    };
+  }
+
+  static async switchTenantForSession(
+    sessionId: string,
+    intendedCompanyId: string,
+  ) {
+    const session = await prisma.session.findFirst({
+      where: { id: sessionId },
+    });
+
+    if (!session) {
+      throw new Error("Session not found");
+    }
+
+    if (session.expiresAt < new Date()) {
+      throw new Error("Session expired");
+    }
+
+    const tenantConnections = await prisma.companyAccountConnection.findMany({
+      where: {
+        accountId: session.accountId,
+      },
+    });
+
+    const intendedTenantConnection = tenantConnections.find(
+      (tenant) => tenant.companyId === intendedCompanyId,
+    );
+
+    if (!intendedTenantConnection) {
+      throw new Error("You are not connected to this company.");
+    }
+
+    const updatedSession = await prisma.session.update({
+      where: { id: sessionId },
+      data: {
+        expiresAt: add(new Date(), { days: 7 }),
+        company: { connect: { id: intendedCompanyId } },
+      },
+    });
+
+    const generatedJwt = this.generateJWTToken(
+      session.accountId,
+      intendedCompanyId,
+      intendedTenantConnection.id,
+    );
+
+    return {
+      sessionId,
+      accessToken: generatedJwt.jwt,
+      accessTokenExpiresAt: generatedJwt.date,
+      sessionExpiresAt: updatedSession.expiresAt,
     };
   }
 

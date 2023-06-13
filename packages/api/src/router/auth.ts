@@ -104,11 +104,29 @@ export const authRouter = createTRPCRouter({
         });
       }
     }),
+  /**
+   * @deprecated this functionality has been moved to the auth.getTenantsWithAccessCode endpoint
+   */
   getCompaniesWithAccessCode: publicProcedure
     .input(z.object({ email: z.string().email(), accessCode: z.string() }))
     .query(async ({ input }) => {
       try {
-        return await AuthService.getPortalsWithAccessCode(
+        return await AuthService.getTenantsForUserUsingAccessCode(
+          input.email,
+          input.accessCode,
+        );
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: (error as any)?.message ?? "Something went wrong",
+        });
+      }
+    }),
+  getUserTenantsUsingAccessCode: publicProcedure
+    .input(z.object({ email: z.string().email(), accessCode: z.string() }))
+    .query(async ({ input }) => {
+      try {
+        return await AuthService.getTenantsForUserUsingAccessCode(
           input.email,
           input.accessCode,
         );
@@ -124,9 +142,6 @@ export const authRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       try {
         const result = await AuthService.userLoginWithAccessCode(input);
-        // ctx.res.cookie(COOKIE_SESSION_ID_IDENTIFIER, result.sessionId, {
-        //   httpOnly: true,
-        // });
         ctx.res.header(
           "Set-Cookie",
           COOKIE_SESSION_ID_IDENTIFIER +
@@ -143,8 +158,18 @@ export const authRouter = createTRPCRouter({
         });
       }
     }),
+  getTenantsForUser: protectedProcedure.query(async ({ ctx }) => {
+    return await AuthService.getAvailableTenantsForSession(ctx.sessionId);
+  }),
+  switchTenantForSession: protectedProcedure
+    .input(z.object({ companyId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return await AuthService.switchTenantForSession(
+        ctx.sessionId,
+        input.companyId,
+      );
+    }),
   logout: publicProcedure.mutation(({ ctx }) => {
-    // ctx.res.clearCookie(COOKIE_SESSION_ID_IDENTIFIER);
     ctx.res.header(
       "Set-Cookie",
       COOKIE_SESSION_ID_IDENTIFIER +
