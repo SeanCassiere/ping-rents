@@ -1,6 +1,6 @@
 import * as crypto from "crypto";
 import SendGrid from "@sendgrid/mail";
-import { add } from "date-fns";
+import { add, format } from "date-fns";
 import jwt from "jsonwebtoken";
 
 import { prisma } from "@acme/db";
@@ -9,6 +9,8 @@ import {
   type InputLoginWithCompanyAndUser,
   type InputRegisterNewCompanyAndAccount,
 } from "@acme/validator";
+
+import { generateLoginCodeEmailTemplateHtml } from "./generateLoginCodeEmailTemplateHtml";
 
 function sha256(content: string) {
   return crypto.createHash("sha256").update(content).digest("hex");
@@ -152,11 +154,21 @@ export class AuthService {
       },
     });
 
+    const formattedCreatedDate = format(
+      attempt.createdAt,
+      "dd/MM/yyyy HH:mm a",
+    );
+
     await SendGrid.send({
       from: { email: SendGridFromEmail!, name: "NoReply@pingstash.com" },
       to: { email: user.email },
-      subject: `Ping Rents | Access Code | Attempt ID#${attempt.id}`,
-      html: `<p>Access Code: <b>${accessCode}</b>.<br>expires in ${accessCodeExpiryMinutes} minutes.</p>`,
+      subject: `Login access code - ${formattedCreatedDate} | PingRents`,
+      html: generateLoginCodeEmailTemplateHtml(
+        accessCode,
+        accessCodeExpiryMinutes,
+        attempt.id,
+        formattedCreatedDate,
+      ),
       text: `Access Code: ${accessCode}, Expires in ${accessCodeExpiryMinutes} minutes.`,
     });
 
