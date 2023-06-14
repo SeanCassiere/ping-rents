@@ -1,4 +1,8 @@
-Add this to the package.json when running an Expo build:
+# PingRents mobile application
+
+## Build
+
+_Before running a build_, ensure that the following postinstall script is present in the package.json of the app:
 
 ```json
 {
@@ -8,10 +12,17 @@ Add this to the package.json when running an Expo build:
 }
 ```
 
-Commands for running a build
+Make sure the `postinstall` script is NOT committed to the repository as it will interfere with the building of the server.
+
+To build the app, run one of following commands based on the intended target environment:
 
 ```bash
-npx cross-env APP_ENV=production eas build -p android --profile production
-npx cross-env APP_ENV=preview eas build -p android --profile preview
-npx cross-env APP_ENV=development eas build -p android --profile development
+# Development
+eas build -p android --profile development
+
+# Preview
+eas build -p android --profile preview
+
+# Production
+eas build -p android --profile production
 ```
