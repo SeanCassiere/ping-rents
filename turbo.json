@@ -36,6 +36,7 @@
     }
   },
   "globalEnv": [
+    "APP_ENV",
     "CI",
     "DATABASE_URL",
     "EXPO_ROUTER_APP_ROOT",

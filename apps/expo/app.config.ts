@@ -1,7 +1,24 @@
-import type { ExpoConfig } from "@expo/config";
+import type { ConfigContext, ExpoConfig } from "@expo/config";
 
-const defineConfig = (): ExpoConfig => ({
-  name: "PingRents",
+function getAppVariant(env: string | undefined) {
+  switch (env) {
+    case "production":
+      return "production";
+    case "preview":
+      return "preview";
+    default:
+      return "development";
+  }
+}
+const appVariant = getAppVariant(process.env.APP_ENV);
+
+const defineConfig = (_: ConfigContext): ExpoConfig => ({
+  name:
+    appVariant === "production"
+      ? "PingRents"
+      : appVariant === "preview"
+      ? "prev_PingRents"
+      : "dev_PingRents",
   slug: "pingrents",
   owner: "seancassiere",
   scheme: "expo",
@@ -29,9 +46,15 @@ const defineConfig = (): ExpoConfig => ({
       foregroundImage: "./assets/images/adaptive-icon.png",
       backgroundColor: "#FFFFFF",
     },
-    package: "com.pingstash.pingrents",
+    package:
+      appVariant === "production"
+        ? "com.pingstash.pingrents"
+        : appVariant === "preview"
+        ? "com.pingstash.pingrents_preview"
+        : "com.pingstash.pingrents_dev",
   },
   extra: {
+    APP_ENV: appVariant,
     PUBLIC_API_URL: process.env.PUBLIC_API_URL ?? null,
     eas: {
       projectId: "d4d476ca-f6fa-4c8c-b203-dc6f66eaf124",
