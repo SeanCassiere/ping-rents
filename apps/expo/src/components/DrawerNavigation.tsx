@@ -1,20 +1,15 @@
 import React from "react";
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Feather } from "@expo/vector-icons";
+import { Entypo, Feather } from "@expo/vector-icons";
 import {
   DrawerContentScrollView,
   DrawerItemList,
   type DrawerContentComponentProps,
 } from "@react-navigation/drawer";
+import { Actionsheet, Text, View, useDisclose, useToast } from "native-base";
 
+import { useAuthContext } from "../context/auth.context";
 import { useIsomorphicConfirm } from "../hooks/useIsomorphicConfirm";
 import { useRefreshOnFocus } from "../hooks/useRefreshOnFocus";
 import { api } from "../utils/api";
@@ -26,14 +21,52 @@ const DrawerNavigation = (
   props: DrawerContentComponentProps & { onLogout: () => Promise<void> },
 ) => {
   const { onLogout, ...drawerProps } = props;
+
   const insets = useSafeAreaInsets();
   const confirm = useIsomorphicConfirm();
+  const { login } = useAuthContext();
+  const toast = useToast();
+
+  const {
+    isOpen: isTenantModalOpen,
+    onOpen: onTenantModalOpen,
+    onClose: onTenantModalClose,
+  } = useDisclose();
 
   const authUser = api.auth.getAuthUser.useQuery();
   useRefreshOnFocus(authUser.refetch);
 
   const companyQuery = api.company.getCompany.useQuery();
   useRefreshOnFocus(companyQuery.refetch);
+  const currentTenantId = companyQuery.data?.id || "";
+
+  const tenants = api.auth.getTenantsForUser.useQuery();
+  useRefreshOnFocus(tenants.refetch);
+
+  const switchAccountMutation = api.auth.switchTenantForSession.useMutation({
+    onError: (err) => {
+      const msg = err.message;
+      toast.show({
+        title: "Error!",
+        variant: "top-accent",
+        description: msg,
+      });
+    },
+    onSuccess: (data) => {
+      login(data);
+    },
+    onSettled: () => {
+      onTenantModalClose();
+    },
+  });
+
+  const handlePresentTenantModal = () => {
+    onTenantModalOpen();
+  };
+  const handleDismissTenantPress = () => {
+    if (switchAccountMutation.isLoading) return;
+    onTenantModalClose();
+  };
 
   return (
     <View style={[drawerStyles.container]}>
@@ -74,6 +107,14 @@ const DrawerNavigation = (
         </View>
       </DrawerContentScrollView>
       <View style={[drawerStyles.bottomFold]}>
+        {(tenants?.data || []).length > 1 && (
+          <TouchableOpacity onPress={handlePresentTenantModal}>
+            <View style={[drawerStyles.bottomFoldBtn, { marginBottom: 25 }]}>
+              <Entypo name="select-arrows" size={24} color="black" />
+              <Text>Switch company</Text>
+            </View>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           onPress={() =>
             confirm("Sign out?", "Are you sure you want to sign out?", {
@@ -97,6 +138,28 @@ const DrawerNavigation = (
           PingRents v1
         </Text>
       </View>
+      <Actionsheet
+        isOpen={isTenantModalOpen}
+        onClose={handleDismissTenantPress}
+      >
+        <Actionsheet.Content>
+          {(tenants?.data || []).map((tenant, idx) => (
+            <Actionsheet.Item
+              key={`select_tenant_${tenant.id}`}
+              onPress={() => {
+                switchAccountMutation.mutate({ companyId: tenant.id });
+              }}
+              isDisabled={
+                tenant.id === currentTenantId || switchAccountMutation.isLoading
+              }
+            >
+              <Text>
+                {idx + 1}. {tenant.name}
+              </Text>
+            </Actionsheet.Item>
+          ))}
+        </Actionsheet.Content>
+      </Actionsheet>
     </View>
   );
 };
