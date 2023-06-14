@@ -63,7 +63,6 @@ const LoginCompaniesScreen = (props: Props) => {
     {
       enabled: props.route.params.companyId === "",
       onSuccess: (data) => {
-        console.log("data");
         if (data.length === 0) {
           toast.show({
             title: "Error",
