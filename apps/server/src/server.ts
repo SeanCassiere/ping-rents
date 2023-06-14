@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import fastifyCors from "@fastify/cors";
+import fastifyStatic from "@fastify/static";
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
 import fastify from "fastify";
 import { renderTrpcPanel } from "trpc-panel";
@@ -18,6 +19,12 @@ export async function makeFastifyServer() {
   const app = fastify({
     logger: false,
     maxParamLength: 10000,
+  });
+
+  // static assets
+  await app.register(fastifyStatic, {
+    root: path.join(__dirname, "../public/assets"),
+    prefix: "/public/assets/",
   });
 
   await app.register(fastifyCors);
