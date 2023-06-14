@@ -131,7 +131,7 @@ const Widgets = ({
 
   return (
     <ScrollView
-      style={{ paddingTop: 20 }}
+      style={{ paddingTop: 20, marginHorizontal: -15, paddingHorizontal: 15 }}
       refreshControl={
         <RefreshControl
           refreshing={

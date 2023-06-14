@@ -4,7 +4,7 @@
   "main": "index.tsx",
   "scripts": {
     "clean": "git clean -xdf .expo .turbo node_modules",
-    "start": "pnpm with-env expo start",
+    "start": "pnpm with-env expo start --dev-client",
     "android": "pnpm with-env expo start --android",
     "web": "pnpm with-env expo start --web",
     "ios": "pnpm with-env expo start --ios",
@@ -34,7 +34,9 @@
     "@trpc/server": "^10.18.0",
     "date-fns": "^2.29.3",
     "expo": "^48.0.9",
+    "expo-application": "~5.1.1",
     "expo-constants": "~14.2.1",
+    "expo-dev-client": "~2.2.1",
     "expo-linking": "~4.0.1",
     "expo-network": "~5.2.1",
     "expo-secure-store": "~12.1.1",
