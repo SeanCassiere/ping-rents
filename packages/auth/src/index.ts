@@ -160,7 +160,7 @@ export class AuthService {
     );
 
     await SendGrid.send({
-      from: { email: SendGridFromEmail!, name: "NoReply@pingstash.com" },
+      from: { email: SendGridFromEmail!, name: "noreply - PingRents" },
       to: { email: user.email },
       subject: `Login access code - ${formattedCreatedDate} | PingRents`,
       html: generateLoginCodeEmailTemplateHtml(
