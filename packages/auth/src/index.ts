@@ -16,14 +16,13 @@ function sha256(content: string) {
   return crypto.createHash("sha256").update(content).digest("hex");
 }
 
-const GOOGLE_DEMO_EMAIL = process.env.GOOGLE_DEMO_EMAIL || "demo@example.com";
 /**
  *
- * @param email a user's email
+ * @param isDemoAccount a user's email
  * @returns a 6 digit access code, ranging from 100000 to 999999
  */
-function generateAccessCode(email: string) {
-  if (email === GOOGLE_DEMO_EMAIL) {
+function generateAccessCode(isDemoAccount: boolean) {
+  if (isDemoAccount) {
     return "123456";
   }
   return `${Math.floor(100000 + Math.random() * 900000)}`;
@@ -31,6 +30,7 @@ function generateAccessCode(email: string) {
 
 const SendGridApiKey = process.env.SENDGRID_API_KEY;
 const SendGridFromEmail = process.env.SENDGRID_FROM_EMAIL;
+const GOOGLE_DEMO_EMAIL = process.env.GOOGLE_DEMO_EMAIL || "demo@example.com";
 
 if (!SendGridApiKey) {
   throw new Error(
@@ -149,10 +149,16 @@ export class AuthService {
       return { expiresInMinutes: accessCodeExpiryMinutes };
     }
 
+    const isDemoAccount =
+      user.email.toLowerCase() === GOOGLE_DEMO_EMAIL.toLowerCase();
+    const minutesTillExpiry = isDemoAccount ? 180 : accessCodeExpiryMinutes;
+
     // send email with access-code
-    const accessCode = generateAccessCode(email.toLowerCase());
+    const accessCode = generateAccessCode(isDemoAccount);
     const hashedAccessCode = sha256(accessCode);
-    const expiresAt = add(new Date(), { minutes: accessCodeExpiryMinutes });
+    const expiresAt = add(new Date(), {
+      minutes: minutesTillExpiry,
+    });
 
     const attempt = await prisma.accountLoginAttempt.create({
       data: {
@@ -174,14 +180,14 @@ export class AuthService {
       subject: `Login access code - ${formattedCreatedDate} | PingRents`,
       html: generateLoginCodeEmailTemplateHtml(
         accessCode,
-        accessCodeExpiryMinutes,
+        minutesTillExpiry,
         attempt.id,
         formattedCreatedDate,
       ),
-      text: `Access Code: ${accessCode}, Expires in ${accessCodeExpiryMinutes} minutes.`,
+      text: `Access Code: ${accessCode}, Expires in ${minutesTillExpiry} minutes.`,
     });
 
-    return { expiresInMinutes: accessCodeExpiryMinutes };
+    return { expiresInMinutes: minutesTillExpiry };
   }
 
   static async getTenantsForUserUsingAccessCode(
