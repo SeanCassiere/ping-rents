@@ -16,7 +16,16 @@ function sha256(content: string) {
   return crypto.createHash("sha256").update(content).digest("hex");
 }
 
-function generateAccessCode() {
+const GOOGLE_DEMO_EMAIL = process.env.GOOGLE_DEMO_EMAIL || "demo@example.com";
+/**
+ *
+ * @param email a user's email
+ * @returns a 6 digit access code, ranging from 100000 to 999999
+ */
+function generateAccessCode(email: string) {
+  if (email === GOOGLE_DEMO_EMAIL) {
+    return "123456";
+  }
   return `${Math.floor(100000 + Math.random() * 900000)}`;
 }
 
@@ -141,7 +150,7 @@ export class AuthService {
     }
 
     // send email with access-code
-    const accessCode = generateAccessCode();
+    const accessCode = generateAccessCode(email.toLowerCase());
     const hashedAccessCode = sha256(accessCode);
     const expiresAt = add(new Date(), { minutes: accessCodeExpiryMinutes });
 
