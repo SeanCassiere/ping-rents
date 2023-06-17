@@ -1,6 +1,11 @@
-import type { ConfigContext, ExpoConfig } from "@expo/config";
+const { version } = require("./package.json");
 
-function getAppVariant(env: string | undefined) {
+/**
+ *
+ * @param {String | undefined} env
+ * @returns {"production" | "preview" | "development"}
+ */
+function getAppVariant(env) {
   switch (env) {
     case "production":
       return "production";
@@ -11,8 +16,15 @@ function getAppVariant(env: string | undefined) {
   }
 }
 const appVariant = getAppVariant(process.env.APP_ENV);
+const appVersion = version || "0.1.0";
 
-const defineConfig = (_: ConfigContext): ExpoConfig => ({
+/**
+ *
+ * @param {import("@expo/config").ConfigContext} configContext
+ * @returns {import("@expo/config").ExpoConfig}
+ */
+const defineConfig = ({ config }) => ({
+  ...config,
   name:
     appVariant === "production"
       ? "PingRents"
@@ -25,6 +37,10 @@ const defineConfig = (_: ConfigContext): ExpoConfig => ({
   orientation: "portrait",
   icon: "./assets/images/icon.png",
   userInterfaceStyle: "light",
+  version: appVersion,
+  runtimeVersion: {
+    policy: "appVersion",
+  },
   splash: {
     image: "./assets/images/splash.png",
     resizeMode: "contain",
@@ -32,6 +48,8 @@ const defineConfig = (_: ConfigContext): ExpoConfig => ({
   },
   updates: {
     fallbackToCacheTimeout: 0,
+    url: "https://u.expo.dev/d4d476ca-f6fa-4c8c-b203-dc6f66eaf124",
+    checkAutomatically: "ON_LOAD",
   },
   assetBundlePatterns: ["**/*"],
   ios: {
@@ -63,4 +81,4 @@ const defineConfig = (_: ConfigContext): ExpoConfig => ({
   plugins: ["./expo-plugins/with-modify-gradle.js"],
 });
 
-export default defineConfig;
+module.exports = defineConfig;

@@ -44,6 +44,7 @@ export const getBaseUrl = () => {
   // return `http://${localhost}:4000`;
 
   const debuggerHost = Constants.manifest?.debuggerHost?.split(":")[0]; // this is only available in mobile dev mode
+
   if (debuggerHost) {
     return `http://${debuggerHost}:4000`;
   }
