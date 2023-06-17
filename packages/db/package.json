@@ -21,11 +21,11 @@
     "seed": "pnpm with-env tsx src/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^4.12.0"
+    "@prisma/client": "^4.15.0"
   },
   "devDependencies": {
     "dotenv-cli": "^7.1.0",
-    "prisma": "^4.12.0",
+    "prisma": "^4.15.0",
     "tsx": "^3.12.7",
     "typescript": "^5.0.2"
   }
