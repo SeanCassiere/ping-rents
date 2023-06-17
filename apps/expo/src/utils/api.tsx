@@ -26,7 +26,7 @@ export { type RouterInputs, type RouterOutputs } from "@acme/api";
  * Extend this function when going to production by
  * setting the baseUrl to your production API URL.
  */
-export const getBaseUrl = () => {
+export const getBaseUrl = (): string => {
   /**
    * Gets the IP address of your host-machine. If it cannot automatically find it,
    * you'll have to manually set it. NOTE: Port 3000 should work for most but confirm
@@ -43,11 +43,11 @@ export const getBaseUrl = () => {
 
   // return `http://${localhost}:4000`;
 
-  const debuggerHost = Constants.manifest?.debuggerHost?.split(":")[0]; // this is only available in mobile dev mode
+  // const debuggerHost = Constants.manifest?.debuggerHost?.split(":")[0]; // this is only available in mobile dev mode
 
-  if (debuggerHost) {
-    return `http://${debuggerHost}:4000`;
-  }
+  // if (debuggerHost) {
+  //   return `http://${debuggerHost}:4000`;
+  // }
 
   if (Constants.expoConfig?.extra?.PUBLIC_API_URL) {
     return Constants.expoConfig?.extra?.PUBLIC_API_URL as string;

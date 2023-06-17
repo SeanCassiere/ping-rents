@@ -66,7 +66,7 @@ const LoginEmailScreen = (props: Props) => {
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
-      <StatusBar />
+      <StatusBar style="dark" />
       <View
         style={[
           styles.pageContainer,
