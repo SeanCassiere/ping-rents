@@ -17,6 +17,8 @@ function getAppVariant(env) {
 }
 const appVariant = getAppVariant(process.env.APP_ENV);
 const appVersion = version || "0.1.0";
+const publicApiUrl =
+  process.env.PUBLIC_API_URL ?? "https://pingrents-api.pingstash.com";
 
 /**
  *
@@ -73,7 +75,7 @@ const defineConfig = ({ config }) => ({
   },
   extra: {
     APP_ENV: appVariant,
-    PUBLIC_API_URL: process.env.PUBLIC_API_URL ?? null,
+    PUBLIC_API_URL: publicApiUrl,
     eas: {
       projectId: "d4d476ca-f6fa-4c8c-b203-dc6f66eaf124",
     },
