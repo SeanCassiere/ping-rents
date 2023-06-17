@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-    provider = "mysql"
+    provider = "postgresql"
     url      = env("DATABASE_URL")
 }
 
@@ -127,7 +127,7 @@ enum EnumTaxCalculationType {
 model Tax {
     id              String                 @id @default(cuid())
     name            String                 @db.VarChar(255)
-    value           Float                  @default(0.00) @db.Float
+    value           Float                  @default(0.00) @db.DoublePrecision
     calculationType EnumTaxCalculationType
     accessType      EnumTaxAccessType      @default(config)
 
@@ -228,7 +228,7 @@ enum EnumRateAccessType {
 model Rate {
     id        String @id @default(cuid())
     name      String @db.VarChar(255)
-    dailyRate Float  @default(0.00) @db.Float
+    dailyRate Float  @default(0.00) @db.DoublePrecision
 
     accessType      EnumRateAccessType
     calculationType EnumRateCalculationType
@@ -344,7 +344,7 @@ enum PaymentMode {
 
 model Payment {
     id    String      @id @default(cuid())
-    value Float       @default(0.00) @db.Float
+    value Float       @default(0.00) @db.DoublePrecision
     mode  PaymentMode
 
     displayRefNo String @default("1") @db.VarChar(255)
