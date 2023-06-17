@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import * as Application from "expo-application";
 import * as Updates from "expo-updates";
 import { Entypo, Feather } from "@expo/vector-icons";
 import {
@@ -164,7 +165,8 @@ const DrawerNavigation = (
               color: "#898989",
             }}
           >
-            PingRents v1
+            PingRents - {Application.nativeApplicationVersion} (
+            {Application.nativeBuildVersion})
           </Text>
         </Pressable>
       </View>
