@@ -1,14 +1,10 @@
-import { useCallback } from "react";
-import { View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
-import {
-  FontAwesome5,
-  Ionicons,
-  // MaterialCommunityIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import * as Updates from "expo-updates";
+import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Button, Text, View } from "native-base";
 
 import DrawerNavigation from "../components/DrawerNavigation";
 import { useAuthContext } from "../context/auth.context";
@@ -49,6 +45,7 @@ const RootStack =
 
 export default function RootRoutes({ isLoggedIn }: { isLoggedIn: boolean }) {
   const { isInitialLoad } = useAuthContext();
+  const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
 
   const onLayoutRootView = useCallback(async () => {
     if (!isInitialLoad) {
@@ -56,12 +53,53 @@ export default function RootRoutes({ isLoggedIn }: { isLoggedIn: boolean }) {
     }
   }, [isInitialLoad]);
 
+  useEffect(() => {
+    async function checkUpdates() {
+      try {
+        const update = await Updates.checkForUpdateAsync();
+        if (update.isAvailable) {
+          await Updates.fetchUpdateAsync();
+          setIsUpdateAvailable(true);
+        }
+      } catch (error) {
+        console.log("Update fetch error", error);
+      }
+    }
+    checkUpdates();
+  }, []);
+
   if (isInitialLoad) {
     return null;
   }
 
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      {isUpdateAvailable && (
+        <View
+          pt={8}
+          pb={4}
+          px={4}
+          bgColor="gray.100"
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+          borderBottomColor="gray.300"
+          borderBottomStyle="solid"
+          borderBottomWidth={1}
+        >
+          <Text fontSize={16}>There is an update available.</Text>
+          <Button
+            onPress={() => {
+              Updates.reloadAsync();
+            }}
+            variant="outline"
+            size="sm"
+            color="gray.900"
+          >
+            Update now
+          </Button>
+        </View>
+      )}
       <RootStack.Navigator>
         {isLoggedIn ? (
           <RootStack.Screen

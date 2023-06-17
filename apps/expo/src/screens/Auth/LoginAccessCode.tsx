@@ -51,7 +51,7 @@ const LoginAccessCodeScreen = (props: Props) => {
     defaultValues: { email: props.route.params.email, accessCode },
   });
 
-  const trigger = api.auth.getCompaniesWithAccessCode.useQuery(
+  const trigger = api.auth.getUserTenantsUsingAccessCode.useQuery(
     {
       email: props.route.params.email,
       accessCode,

@@ -1,6 +1,15 @@
 import React from "react";
-import { Image, Platform, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Alert,
+  Image,
+  Platform,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import * as Application from "expo-application";
+import * as Updates from "expo-updates";
 import { Entypo, Feather } from "@expo/vector-icons";
 import {
   DrawerContentScrollView,
@@ -68,6 +77,26 @@ const DrawerNavigation = (
     onTenantModalClose();
   };
 
+  const checkForUpdates = async () => {
+    try {
+      const update = await Updates.checkForUpdateAsync();
+      if (update.isAvailable) {
+        await Updates.fetchUpdateAsync();
+        Updates.reloadAsync();
+      } else {
+        Alert.alert("No new updates", "You are already on the latest version", [
+          { onPress: () => {}, text: "OK" },
+        ]);
+      }
+    } catch (error) {
+      Alert.alert(
+        "Update checking failed",
+        error instanceof Error ? error.message : "Unknown error",
+        [{ onPress: () => {}, text: "OK" }],
+      );
+    }
+  };
+
   return (
     <View style={[drawerStyles.container]}>
       <DrawerContentScrollView
@@ -127,16 +156,19 @@ const DrawerNavigation = (
             <Text>Sign out</Text>
           </View>
         </TouchableOpacity>
-        <Text
-          style={{
-            marginTop: 20,
-            fontSize: 13,
-            textAlign: "left",
-            color: "#898989",
-          }}
-        >
-          PingRents v1
-        </Text>
+        <Pressable onPress={checkForUpdates}>
+          <Text
+            style={{
+              marginTop: 20,
+              fontSize: 13,
+              textAlign: "left",
+              color: "#898989",
+            }}
+          >
+            PingRents - {Application.nativeApplicationVersion} (
+            {Application.nativeBuildVersion})
+          </Text>
+        </Pressable>
       </View>
       <Actionsheet
         isOpen={isTenantModalOpen}

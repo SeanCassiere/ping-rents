@@ -26,3 +26,9 @@ eas build -p android --profile preview
 # Production
 eas build -p android --profile production
 ```
+
+## Update
+
+```bash
+PUBLIC_API_URL="https://pingrents-api.pingstash.com" eas update --branch preview --message "my message"
+```
