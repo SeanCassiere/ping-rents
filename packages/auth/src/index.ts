@@ -174,18 +174,20 @@ export class AuthService {
       "dd/MM/yyyy HH:mm a",
     );
 
-    await SendGrid.send({
-      from: { email: SendGridFromEmail!, name: "noreply - PingRents" },
-      to: { email: user.email },
-      subject: `Login access code - ${formattedCreatedDate} | PingRents`,
-      html: generateLoginCodeEmailTemplateHtml(
-        accessCode,
-        minutesTillExpiry,
-        attempt.id,
-        formattedCreatedDate,
-      ),
-      text: `Access Code: ${accessCode}, Expires in ${minutesTillExpiry} minutes.`,
-    });
+    if (!isDemoAccount) {
+      await SendGrid.send({
+        from: { email: SendGridFromEmail!, name: "noreply - PingRents" },
+        to: { email: user.email },
+        subject: `Login access code - ${formattedCreatedDate} | PingRents`,
+        html: generateLoginCodeEmailTemplateHtml(
+          accessCode,
+          minutesTillExpiry,
+          attempt.id,
+          formattedCreatedDate,
+        ),
+        text: `Access Code: ${accessCode}, Expires in ${minutesTillExpiry} minutes.`,
+      });
+    }
 
     return { expiresInMinutes: minutesTillExpiry };
   }
@@ -210,16 +212,16 @@ export class AuthService {
 
     const userId = attempt.accountId;
 
-    const portals = await prisma.companyAccountConnection.findMany({
+    const tenantConnections = await prisma.companyAccountConnection.findMany({
       where: { accountId: userId },
       select: {
         company: true,
       },
     });
 
-    return portals.map((portal) => ({
-      id: portal.company.id,
-      name: portal.company.name,
+    return tenantConnections.map((connection) => ({
+      id: connection.company.id,
+      name: connection.company.name,
     }));
   }
 
