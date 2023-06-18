@@ -104,24 +104,6 @@ export const authRouter = createTRPCRouter({
         });
       }
     }),
-  /**
-   * @deprecated this functionality has been moved to the auth.getTenantsWithAccessCode endpoint
-   */
-  getCompaniesWithAccessCode: publicProcedure
-    .input(z.object({ email: z.string().email(), accessCode: z.string() }))
-    .query(async ({ input }) => {
-      try {
-        return await AuthService.getTenantsForUserUsingAccessCode(
-          input.email,
-          input.accessCode,
-        );
-      } catch (error) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: (error as any)?.message ?? "Something went wrong",
-        });
-      }
-    }),
   getUserTenantsUsingAccessCode: publicProcedure
     .input(z.object({ email: z.string().email(), accessCode: z.string() }))
     .query(async ({ input }) => {
